@@ -1,0 +1,12 @@
+{
+  "text": "Executive summary\n\nRidgeline supplies permitting, inspections and business-licence workflow to small and mid-sized municipalities. Contracts are typically five years and include a substantial configuration phase.\n\nThe business is a municipal permitting and licensing software platform founded in 2006 and employing 88 people from its Boise, Idaho headquarters. Approximately 58% of total revenue is recurring subscription revenue; revenue grew 11% year over year in FY25.\n\nPublic-sector procurement cycles are long and incumbents are rarely displaced mid-term.",
+  "meta": {
+    "model": "qwen3.5:4b",
+    "ok": true,
+    "error": "",
+    "seconds": 26.62,
+    "tokens_in": 1493,
+    "tokens_out": 479,
+    "dpi": 120
+  }
+}

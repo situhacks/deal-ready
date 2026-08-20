@@ -1,0 +1,12 @@
+{
+  "text": "We need to transcribe the financial summary table. The table has columns: Metric, FY25, Basis. We'll list each row and format as \"Label | Value | Notes\". \n\nLet's extract the values:\n\n1. Annual Recurring Revenue | $4.3M | Contracted, annualised\n2. Monthly Recurring Revenue | $358K | Exit month\n3. Gross margin | 69% | Excl. amortisation\n4. EBITDA | $1.2M | Adjusted\n\nWe also have a note: \"Adjusted EBITDA reflects add-backs for one-time transaction preparation costs and non-recurring legal expenses.\"\n\nNow, we need to present the table as one line per row. So we'll list each metric with its FY25 value and basis.\n\nLet's write:\n\nAnnual Recurring Revenue | $4.3M | Contracted, annualised\nMonthly Recurring Revenue | $358K | Exit month\nGross margin | 69% | Excl. amortisation\nEBITDA | $1.2M | Adjusted\n\nWe should check if any values are unreadable. The numbers are given as $4.3M, $358K, 69%, $1.2M. All are readable.\n\nNow, we need to state the series or category with its value, one per line, as <series or category label>: <value>. So we'll list each line.\n\nAlso, for charts, but there's no chart, just a table. The instructions say \"for each chart, list each series or category with its value, one per line\", but since there's no chart, we just present the table.\n\nWe'll produce the transcription as per the format.\n</think>\n\nAnnual Recurring Revenue | $4.3M | Contracted, annualised\nMonthly Recurring Revenue | $358K | Exit month\nGross margin | 69% | Excl. amortisation\nEBITDA | $1.2M | Adjusted",
+  "meta": {
+    "model": "minicpm-v4.6:latest",
+    "ok": true,
+    "error": "",
+    "seconds": 9.39,
+    "tokens_in": 636,
+    "tokens_out": 435,
+    "dpi": 120
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "text": "Alright, the user wants me to transcribe the given financial summary page. Let me check the instructions.\n\nFirst, I need to reproduce the body text exactly as written. The page is about financial summary for FY25 performance. The table has metrics like Annual Recurring Revenue, Monthly Recurring Revenue, Gross margin, and EBITDA. The basis is listed as Contracted, annualised for Annual, Exit month for Monthly, and Adjusted for the others.\n\nI should structure each row under the Metric, FY25, Basis columns. Let me check if there are any notes or adjustments. The note says Adjusted EBITDA reflects add-backs for one-time transaction preparation costs and non-recurring legal expenses.\n\nNow, for the table, I need to convert it into a line format. Each metric, so FY25 value, and basis. Let me check the values:\n\nAnnual Recurring Revenue is $6.1M, Basis Contracted, annualised.\n\nMonthly Recurring Revenue is $508K, Basis Exit month.\n\nGross margin is 74%, Excl. amortisation.\n\nEBITDA is $1.2M, Adjusted.\n\nI need to make sure to present each line as \"Label | Value | Notes\". But since it's a table, maybe just label and value.\n\nAlso, for charts, but there's no chart here, just a table. The user mentioned \"read values off the axis when the chart has no data labels\", but since this is a table, no charts, so just transcribe the text.\n\nNow, check if any values are unreadable. The numbers like $6.1M seem readable, $508K, 74%, $1.2M. All seem okay.\n\nSo, I'll list each metric with its FY25 value and basis.\n\nLet me structure the transcription accordingly.\n</think>\n\n| Metric | FY25 | Basis |\n|---|---|---|\n| Annual Recurring Revenue | $6.1M | Contracted, annualised |\n| Monthly Recurring Revenue | $508K | Exit month |\n| Gross margin | 74% | Excl. amortisation |\n| EBITDA | $1.2M | Adjusted |",
+  "meta": {
+    "model": "minicpm-v4.6:latest",
+    "ok": true,
+    "error": "",
+    "seconds": 13.46,
+    "tokens_in": 636,
+    "tokens_out": 483,
+    "dpi": 120
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "text": "We are given a section titled \"Customer base\". The description says the customer base is contracted on written agreements with staggered renewal dates. The chart below sets out the distribution of annual recurring revenue across the customer base.\n\nWe need to transcribe the chart. The chart has two categories: \"Largest customer\" and \"Customers 2-5\", and then \"All other customers\". The y-axis is \"Share of ARR (%)\".\n\nLooking at the bar for \"Largest customer\", the value is 6%. For \"Customers 2-5\", it's 13%. And for \"All other customers\", it's 81%. Also, there's a note that \"Top 5 customers: 19% of ARR\".\n\nWe need to present the distribution of annual recurring revenue by customer, FY25.\n\nSo, let's list the series:\n\n1. Largest customer: 6%\n2. Customers 2-5: 13%\n3. All other customers: 81%\n\nWe also note the top 5 customers: 19% of ARR.\n\nNow, we need to format the transcription as per the rules: reproduce body text as written, render tables as one line per row, for each series or category with its value, one per line, and state the units.\n\nWe'll write:\n\nLabel | Value | Notes\n------------------------------------\nLargest customer | 6% | \nCustomers 2-5 | 13% | \nAll other customers | 81% | \nTop 5 customers: 19% of ARR\n\nBut the note says \"Distribution of annual recurring revenue by customer, FY25.\" So we can include that.\n\nLet's structure the transcription accordingly.\n</think>\n\nLabel | Value | Notes\n------------------------------------\nLargest customer | 6% | \nCustomers 2-5 | 13% | \nAll other customers | 81% | \nTop 5 customers: 19% of ARR\n\nDistribution of annual recurring revenue by customer, FY25.",
+  "meta": {
+    "model": "minicpm-v4.6:latest",
+    "ok": true,
+    "error": "",
+    "seconds": 8.24,
+    "tokens_in": 636,
+    "tokens_out": 432,
+    "dpi": 120
+  }
+}

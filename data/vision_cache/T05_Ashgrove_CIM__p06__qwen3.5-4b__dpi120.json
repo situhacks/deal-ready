@@ -1,0 +1,12 @@
+{
+  "text": "Customer base\n\nThe customer base is contracted on written agreements with staggered renewal dates. The chart below sets out the distribution of annual recurring revenue across the customer base.\n\nLargest customer: 11%\nCustomers 2-5: 17%\nAll other customers: 72%\n\nDistribution of annual recurring revenue by customer, FY25.",
+  "meta": {
+    "model": "qwen3.5:4b",
+    "ok": true,
+    "error": "",
+    "seconds": 63.93,
+    "tokens_in": 1493,
+    "tokens_out": 1392,
+    "dpi": 120
+  }
+}

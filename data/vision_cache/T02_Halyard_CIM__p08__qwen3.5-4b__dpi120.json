@@ -1,0 +1,12 @@
+{
+  "text": "Financial summary\n\nThe table below summarises FY25 performance. Figures are unaudited and prepared by management.\n\nAnnual Recurring Revenue | $6.1M | Contracted, annualised\nMonthly Recurring Revenue | $508K | Exit month\nGross margin | 74% | Excl. amortisation\nEBITDA | $1.2M | Adjusted\n\nAdjusted EBITDA reflects add-backs for one-time transaction preparation costs and non-recurring legal expenses.",
+  "meta": {
+    "model": "qwen3.5:4b",
+    "ok": true,
+    "error": "",
+    "seconds": 23.82,
+    "tokens_in": 1493,
+    "tokens_out": 409,
+    "dpi": 120
+  }
+}

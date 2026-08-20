@@ -1,0 +1,12 @@
+{
+  "text": "Retention has been measured on a consistent basis across the periods shown. Gross retention excludes expansion; net retention includes expansion, upsell and contraction within the existing base.\n\nGross revenue retention: 93.0% (FY22)\nGross revenue retention: 94.8% (FY23)\nGross revenue retention: 95.6% (FY24)\nGross revenue retention: 96.2% (FY25)\n\nNet revenue retention: 97.8% (FY22)\nNet revenue retention: 100.2% (FY23)\nNet revenue retention: 102.6% (FY24)\nNet revenue retention: 103.0% (FY25)\n\nGross and net revenue retention, FY22 to FY25.",
+  "meta": {
+    "model": "qwen3.5:4b",
+    "ok": true,
+    "error": "",
+    "seconds": 119.57,
+    "tokens_in": 1493,
+    "tokens_out": 2610,
+    "dpi": 120
+  }
+}

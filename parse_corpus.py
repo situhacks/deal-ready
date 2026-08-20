@@ -8,10 +8,13 @@ Tesseract and a parser that read the page and found nothing are different facts,
 collapsing them would be the kind of quiet dishonesty this repo exists to argue
 against.
 
-Vision is the expensive one - roughly a minute and a half per page on a local 8B
-model - so it reads only the pages ground truth says carry a value. That is not a
-shortcut, it is the routing argument in miniature: read the pages that matter.
-`route_corpus.py` measures what that selection is worth.
+Vision is the expensive one, so it reads only the pages ground truth says carry a
+value. That is not a shortcut, it is the routing argument in miniature: read the pages
+that matter. `route_corpus.py` measures what that selection is worth.
+
+`--tiered` runs the cheap 1B model first and escalates to a 4B one only on pages where
+the small model failed loudly - see deal_ready/parse/tiered.py for why that boundary
+sits where it does.
 """
 
 from __future__ import annotations
@@ -22,7 +25,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from deal_ready.parse import textlayer, vision
+from deal_ready.parse import textlayer, tiered, vision
 from eval.recoverability import aggregate, load_ground_truth, render_table, score_document
 
 ROOT = Path(__file__).parent
@@ -34,6 +37,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fresh", action="store_true", help="ignore the vision cache")
     ap.add_argument("--skip-vision", action="store_true")
+    ap.add_argument("--tiered", action="store_true",
+                    help="cheap vision model first, escalate only on loud failure")
     args = ap.parse_args()
 
     gt = load_ground_truth()
@@ -57,14 +62,19 @@ def main() -> int:
     # --- Backend C: local vision model -------------------------------------------
     if not args.skip_vision:
         model = vision.DEFAULT_MODEL
-        label = f"vision:{model}"
+        label = (f"tiered:{tiered.CHEAP_MODEL}->{tiered.STRONG_MODEL}"
+                 if args.tiered else f"vision:{model}")
         print(f"\n{label}:  (only pages carrying a ground-truth value)")
         secs = tin = tout = 0
         ran_any = False
         for pdf in pdfs:
             recs = by_target[pdf.name.split("_")[0]]
             pages = sorted({r["page"] for r in recs})
-            doc = vision.parse(pdf, pages=pages, model=model, use_cache=not args.fresh)
+            if args.tiered:
+                doc = tiered.parse(pdf, pages=pages, use_cache=not args.fresh)
+            else:
+                doc = vision.parse(pdf, pages=pages, model=model,
+                                   use_cache=not args.fresh)
             if not doc.pages:
                 print(f"  {pdf.name:<34} not run - {doc.notes}")
                 continue
@@ -74,8 +84,10 @@ def main() -> int:
                 secs += p.meta.get("seconds", 0) or 0
                 tin += p.meta.get("tokens_in", 0) or 0
                 tout += p.meta.get("tokens_out", 0) or 0
+            esc = [p.page_number for p in doc.pages if p.meta.get("tier") == "escalated"]
             print(f"  {pdf.name:<34} pages {pages}  "
-                  f"{sum(p.meta.get('seconds',0) or 0 for p in doc.pages):>6.1f}s")
+                  f"{sum(p.meta.get('seconds',0) or 0 for p in doc.pages):>6.1f}s"
+                  + (f"  escalated {esc}" if esc else ""))
         if ran_any:
             backends.append(label)
             runtime[label] = {"seconds": round(secs, 1), "tokens_in": tin,

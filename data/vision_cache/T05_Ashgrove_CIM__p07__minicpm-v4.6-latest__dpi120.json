@@ -1,0 +1,12 @@
+{
+  "text": "We are given a chart titled \"Retention\". The description says: Retention has been measured on a consistent basis across the periods shown. Gross retention excludes expansion; net retention includes expansion, upsell and contraction within the existing base.\n\nThe chart has two series: Gross revenue retention and Net revenue retention. The x-axis is labeled with FY22, FY23, FY24, FY25. The y-axis is labeled \"Percent\". \n\nWe need to read the values for each series. Since the chart has no data labels, we have to estimate the values based on the axis.\n\nFor Gross revenue retention (blue line), the values appear to be around: FY22 ~78, FY23 ~81, FY24 ~84, FY25 ~86. But we need to be precise.\n\nFor Net revenue retention (orange line), the values appear to be: FY22 ~82.5, FY23 ~85, FY24 ~88, FY25 ~90.\n\nWe need to state the values as per the axis. Since the chart is not labeled with exact numbers, we'll estimate.\n\nLet's list each series with its value, one per line.\n\nFor Gross revenue retention:\n- FY22: approximately 78 (unreadable? but we can say 78)\n- FY23: approximately 81 (maybe 81)\n- FY24: approximately 84 (maybe 84)\n- FY25: approximately 86 (maybe 86)\n\nFor Net revenue retention:\n- FY22: approximately 82.5 (maybe 82.5)\n- FY23: approximately 85 (maybe 85)\n- FY24: approximately 88 (maybe 88)\n- FY25: approximately 90 (maybe 90)\n\nWe need to present each series as: <series or category label>: <value>.\n\nAlso, note the units: the y-axis is \"Percent\".\n\nNow, we'll write the transcription.\n</think>\n\nLabel | Value | Notes\n---|---|---\nGross revenue retention | ~78 | Units: Percent\nGross revenue retention | ~81 | Units: Percent\nGross revenue retention | ~84 | Units: Percent\nGross revenue retention | ~86 | Units: Percent\nNet revenue retention | ~82.5 | Units: Percent\nNet revenue retention | ~85 | Units: Percent\nNet revenue retention | ~88 | Units: Percent\nNet revenue retention | ~90 | Units: Percent",
+  "meta": {
+    "model": "minicpm-v4.6:latest",
+    "ok": true,
+    "error": "",
+    "seconds": 10.81,
+    "tokens_in": 636,
+    "tokens_out": 565,
+    "dpi": 120
+  }
+}

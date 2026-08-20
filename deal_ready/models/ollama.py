@@ -115,6 +115,10 @@ def generate(
         "model": model,
         "prompt": prompt,
         "stream": False,
+        # Hold the model resident between pages. Without this Ollama unloads on its
+        # idle timer and every page pays a 6.6GB reload - and, observed here, a call
+        # issued into that window can hang rather than queue.
+        "keep_alive": "30m",
         "options": {"temperature": temperature},
     }
     if num_predict is not None:

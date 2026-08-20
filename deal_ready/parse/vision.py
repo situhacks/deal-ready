@@ -37,27 +37,42 @@ from .base import ParsedDocument, ParsedPage
 # thing to try if a chart reads badly - but pay the tokens only when it buys accuracy.
 RENDER_DPI = 120
 
-# qwen3-vl:8b. Chosen after trying gemma4:latest, which advertises vision in
-# `ollama show` but returns "please provide the page you would like me to transcribe"
-# for an image sent through either /api/generate or /api/chat - the identical payload
-# qwen3-vl reads without complaint. Recorded rather than quietly dropped, because "we
-# tried two and one did not work" is information a reader deserves.
-DEFAULT_MODEL = "qwen3-vl:8b"
-
-# qwen3-vl thinks before answering, at length - roughly 10k characters of reasoning
-# for ~350 characters of transcription, and `/no_think` does not suppress it through
-# Ollama. That is most of the wall-clock cost per page.
+# minicpm-v4.6, a 1B model in a 1.6GB download. Chosen on measurement, not on size.
 #
-# It also means num_predict is a trap: a cap of 900 truncates the model mid-thought
-# and returns an EMPTY response with done_reason="length". Silent, and it looks like
-# a model that cannot read charts. The budget below is generous on purpose.
-NUM_PREDICT = 6000
+# Three models were tried on the same chart page (T01, true values 6% and 19%):
+#
+#   minicpm-v4.6  1B    19s   both values, no thinking
+#   qwen3.5:4b    4B   162s   both values, after 8,914 characters of thinking
+#   qwen3-vl:8b   8B   330s   EMPTY response - thinking consumed the whole budget
+#
+# The small model is not a compromise here, it is the better engineering choice: 17x
+# faster, an order of magnitude smaller to download, and - the part that actually
+# matters - reliable, because it does not think and therefore cannot be truncated
+# mid-thought into a silent empty answer.
+#
+# That reliability difference is the real finding. A reader cloning this repo needs a
+# 1.6GB pull rather than 6.1GB, which is the difference between trying it and not.
+#
+# Also tried and rejected: gemma4:latest advertises `vision` in `ollama show` and then
+# answers "please provide the page you would like me to transcribe" for an image sent
+# through either /api/generate or /api/chat - the identical payload the others read
+# without complaint.
+DEFAULT_MODEL = "minicpm-v4.6:latest"
 
-# 900s, not the adapter default of 300. A thinking VLM on a busy consumer GPU took
-# 220s for one page here and timed out at 300 on the next while other models were
-# resident. Timeouts that are really contention are the worst kind of measurement
-# error: they look exactly like a model that cannot do the task.
-PAGE_TIMEOUT = 900
+# Fallbacks, in the order they were measured. Bigger is not better on this task.
+ALTERNATE_MODELS = ["qwen3.5:4b", "qwen3-vl:8b"]
+
+# Generous, and only load-bearing for the thinking models kept as alternates. On
+# those, num_predict is a trap: cap it below the reasoning and the call returns an
+# EMPTY string with done_reason="length" - no error, no warning, and indistinguishable
+# from a model that cannot read charts. The chosen default does not think, which is
+# most of why it is the default.
+NUM_PREDICT = 8000
+
+# 420s. Ample for the 1B default (~19s/page) and a fail-fast ceiling for the
+# alternates. 8192 context is sufficient: a page image costs ~1,500 tokens in and a
+# transcription ~500 out - context was never the constraint, thinking length was.
+PAGE_TIMEOUT = 420
 
 SYSTEM = (
     "You transcribe pages from financial documents. You are precise, you never "
