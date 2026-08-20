@@ -134,6 +134,16 @@ def _concentration_chart(top1: float, top5: float) -> bytes:
     ax.set_ylim(0, max(vals) * 1.25 + 6)
     ax.spines[["top", "right"]].set_visible(False)
     ax.tick_params(labelsize=9)
+    # Cumulative top-five callout, drawn INTO the raster.
+    # Without this the chart states its components (largest, next four) but never the
+    # top-five total, so scoring "did the parser recover top5" would be scoring
+    # mental arithmetic rather than reading. Real concentration slides carry this
+    # callout; including it keeps the measurement about the page, not about addition.
+    ax.text(0.985, 0.94, f"Top 5 customers: {top5:.0f}% of ARR",
+            transform=ax.transAxes, ha="right", va="top", fontsize=9.5,
+            color="#1F3A5F",
+            bbox=dict(boxstyle="round,pad=0.35", facecolor="#EEF2F6",
+                      edgecolor="#C9D3DD", linewidth=0.8))
     return _chart_png(fig)
 
 

@@ -1,0 +1,255 @@
+"""Verify every published number, offline, from committed artifacts.
+
+    python run_checks.py
+
+No network. No model. No API key. If this is green on a fresh clone, every figure in
+the README and in `reports/` is reproducible by someone who has never run a GPU.
+
+That property is deliberate and it is doing real work. The expensive parts of this
+pipeline - reading pages with a vision model - are slow and hardware-dependent, so a
+reviewer who had to re-run them in order to trust the numbers would simply not check.
+Committing the raw model outputs and recomputing the *scoring* from them separates two
+things that usually get tangled:
+
+    reproducing the measurement   - offline, deterministic, checked here
+    regenerating the raw outputs  - needs local models, and is not required to verify
+
+Where a check cannot run - Tesseract absent, no vision cache - it reports SKIP with a
+reason. A skipped check is never counted as a pass. Knowing what was not verified is
+the point of running this at all.
+"""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+ROOT = Path(__file__).parent
+DATA = ROOT / "data"
+REPORTS = ROOT / "reports"
+
+PASS, FAIL, SKIP = "PASS", "FAIL", "SKIP"
+results: list[tuple[str, str, str]] = []
+
+
+def check(name: str, status: str, detail: str = "") -> None:
+    results.append((name, status, detail))
+    mark = {PASS: "ok  ", FAIL: "FAIL", SKIP: "skip"}[status]
+    print(f"  [{mark}] {name}" + (f"  - {detail}" if detail else ""))
+
+
+def load(p: Path):
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+# --------------------------------------------------------------------------------
+def check_corpus_deterministic() -> None:
+    """Regenerating must reproduce the same ground truth, byte for byte.
+
+    A generator whose output drifts between runs makes every downstream number
+    unfalsifiable - you could never tell a real regression from a reroll.
+    """
+    gt_path = DATA / "ground_truth.json"
+    before = gt_path.read_text(encoding="utf-8") if gt_path.exists() else None
+    if before is None:
+        check("corpus is deterministic", SKIP, "no ground_truth.json - run generate.py")
+        return
+    proc = subprocess.run([sys.executable, str(ROOT / "generate.py")],
+                          capture_output=True, text=True, cwd=ROOT)
+    if proc.returncode != 0:
+        check("corpus is deterministic", FAIL, "generate.py failed (leak check?)")
+        return
+    after = gt_path.read_text(encoding="utf-8")
+    check("corpus is deterministic", PASS if before == after else FAIL,
+          "regenerating reproduces identical ground truth")
+
+
+def check_no_chart_leaks() -> None:
+    """The experiment's control: chart-only values absent from every text layer."""
+    from deal_ready.parse import textlayer
+    gt = load(DATA / "ground_truth.json")
+    if not gt:
+        check("chart values absent from text layer", SKIP, "no ground truth")
+        return
+    from deal_ready.values import value_present
+    by = defaultdict(list)
+    for r in gt:
+        by[r["target_id"]].append(r)
+    leaks = []
+    for pdf in sorted(DATA.glob("*.pdf")):
+        doc = textlayer.parse(pdf)
+        for r in by[pdf.name.split("_")[0]]:
+            if r["carrier"] == "chart" and value_present(doc.text, r["metric"], r["value"]):
+                leaks.append(f"{r['target_id']}/{r['metric']}")
+    check("chart values absent from text layer",
+          PASS if not leaks else FAIL,
+          "no leaks across 5 decks" if not leaks else f"leaked: {leaks}")
+
+
+def check_textlayer_layer_p() -> None:
+    """The published Layer P text-layer row: 100% prose, 100% table, 0% chart."""
+    from collections import defaultdict as dd
+
+    from deal_ready.parse import textlayer
+    from eval.recoverability import aggregate, load_ground_truth, score_document
+    gt = load_ground_truth()
+    by = dd(list)
+    for r in gt:
+        by[r["target_id"]].append(r)
+    rows = []
+    for pdf in sorted(DATA.glob("*.pdf")):
+        rows += score_document(textlayer.parse(pdf), by[pdf.name.split("_")[0]])
+    agg = aggregate(rows)
+    expect = {"prose": 100.0, "table": 100.0, "chart": 0.0}
+    bad = []
+    for carrier, want in expect.items():
+        got = agg.get(f"textlayer|{carrier}", {}).get("attributed_pct")
+        if got != want:
+            bad.append(f"{carrier}: {got} != {want}")
+    check("Layer P text-layer row reproduces",
+          PASS if not bad else FAIL,
+          "prose 100%, table 100%, chart 0%" if not bad else "; ".join(bad))
+
+
+def check_rules_catch_seeded_defects() -> None:
+    """Coverage, not a true-positive rate.
+
+    These rules are tested against defects this repo planted, so a TPR would be
+    circular - the answer key and the exam share an author. What is claimable is
+    whether each rule caught the classes it says it catches.
+    """
+    from deal_ready.generator.profiles import ALL_PROFILES
+    from deal_ready.scorer import rules
+    gt = load(DATA / "ground_truth.json")
+    if not gt:
+        check("seeded defects caught", SKIP, "no ground truth")
+        return
+    vals = defaultdict(dict)
+    for r in gt:
+        vals[r["target_id"]][r["metric"]] = r["value"]
+    crit = rules.load_criteria()
+
+    # Defect class -> the rule that must fire. Some seeded classes are narrative
+    # (key-person, legacy stack) and are deliberately NOT deterministic rules; they
+    # are the judgement layer's job and are excluded rather than quietly passed.
+    RULE_FOR = {
+        "top1_concentration_breach": "top1_concentration_breach",
+        "top5_concentration_breach": "top5_concentration_breach",
+        "recurring_below_floor": "recurring_below_floor",
+        "ebitda_negative": "ebitda_negative",
+        "grr_below_floor": "grr_below_floor",
+    }
+    NOT_DETERMINISTIC = {"key_person_dependency", "legacy_stack_rewrite_risk",
+                         "services_revenue_in_arr", "rule_of_40_fail"}
+
+    missed = []
+    checked = 0
+    for prof in ALL_PROFILES:
+        fired = {f.rule_id for f in rules.evaluate(vals[prof["target_id"]], crit)}
+        for defect in prof["seeded_defects"]:
+            if defect in NOT_DETERMINISTIC:
+                continue
+            want = RULE_FOR.get(defect)
+            if not want:
+                continue
+            checked += 1
+            if want not in fired:
+                missed.append(f"{prof['target_id']}/{defect}")
+    check("seeded defects caught by rules",
+          PASS if not missed else FAIL,
+          f"{checked - len(missed)}/{checked} classes" if not missed else f"missed {missed}")
+
+
+def check_clean_baseline_silent() -> None:
+    """A validator that fires on a healthy company is worse than none.
+
+    People learn to ignore it, and then it is worse than none for the one deal that
+    mattered. This is the check most tools skip.
+    """
+    from deal_ready.scorer import rules
+    gt = load(DATA / "ground_truth.json")
+    if not gt:
+        check("clean baseline is silent", SKIP, "no ground truth")
+        return
+    clean = {r["metric"]: r["value"] for r in gt if r["target_id"] == "T01"}
+    findings = rules.evaluate(clean, rules.load_criteria())
+    noisy = [f.rule_id for f in findings if f.severity in ("blocker", "warning")]
+    check("clean baseline is silent",
+          PASS if not noisy else FAIL,
+          "0 blocker/warning findings on the clean target"
+          if not noisy else f"fired: {noisy}")
+
+
+def check_vision_cache_is_successes_only() -> None:
+    """No cached failure may masquerade as a read.
+
+    This exists because it happened: a 300s timeout under GPU contention wrote an
+    empty result that scored as a miss. Downstream, that is indistinguishable from a
+    model that looked and found nothing.
+    """
+    cache = DATA / "vision_cache"
+    files = sorted(cache.glob("*.json")) if cache.exists() else []
+    if not files:
+        check("vision cache holds only successes", SKIP, "no vision cache committed")
+        return
+    bad = []
+    for f in files:
+        d = load(f)
+        if not d["meta"].get("ok") or not d["text"].strip():
+            bad.append(f.name)
+    check("vision cache holds only successes",
+          PASS if not bad else FAIL,
+          f"{len(files)} cached pages, all non-empty successes"
+          if not bad else f"{len(bad)} empty/failed: {bad[:3]}")
+
+
+def check_reports_match_artifacts() -> None:
+    """Published Layer P must recompute from the committed rows, not be hand-typed."""
+    from eval.recoverability import aggregate
+    rep = load(REPORTS / "layer_p.json")
+    if not rep:
+        check("Layer P report matches its rows", SKIP, "run parse_corpus.py first")
+        return
+    recomputed = aggregate(rep["rows"])
+    check("Layer P report matches its rows",
+          PASS if recomputed == rep["aggregate"] else FAIL,
+          f"{len(rep['rows'])} scored fields recompute to the published aggregate")
+
+
+def check_deterministic_path_needs_no_model() -> None:
+    """screen.py --no-vision must complete with nothing installed."""
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "screen.py"), str(DATA), "--no-vision"],
+        capture_output=True, text=True, cwd=ROOT)
+    # exit 1 is correct here: blocker findings exist in this corpus.
+    ok = proc.returncode in (0, 1) and "Traceback" not in proc.stderr
+    check("deterministic path runs with no model",
+          PASS if ok else FAIL,
+          "screen.py --no-vision completed" if ok else proc.stderr.strip()[-160:])
+
+
+# --------------------------------------------------------------------------------
+def main() -> int:
+    print("\ndeal-ready checks - offline, no model, no network\n")
+    check_corpus_deterministic()
+    check_no_chart_leaks()
+    check_textlayer_layer_p()
+    check_rules_catch_seeded_defects()
+    check_clean_baseline_silent()
+    check_vision_cache_is_successes_only()
+    check_reports_match_artifacts()
+    check_deterministic_path_needs_no_model()
+
+    n_pass = sum(1 for _, s, _ in results if s == PASS)
+    n_fail = sum(1 for _, s, _ in results if s == FAIL)
+    n_skip = sum(1 for _, s, _ in results if s == SKIP)
+    print(f"\n  {n_pass} passed, {n_fail} failed, {n_skip} skipped "
+          f"(skipped checks are NOT passes)\n")
+    return 1 if n_fail else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

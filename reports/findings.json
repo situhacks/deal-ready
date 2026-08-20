@@ -1,0 +1,757 @@
+[
+  {
+    "target_id": "T01",
+    "code_name": "Meridian",
+    "source": "T01_Meridian_CIM.pdf",
+    "metrics": {
+      "arr_usd": 8400000,
+      "mrr_usd": 700000,
+      "recurring_pct": 91.0,
+      "gross_margin_pct": 78.0,
+      "ebitda_usd": 1850000,
+      "yoy_growth_pct": 14.0
+    },
+    "citations": {
+      "arr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "mrr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "recurring_pct": {
+        "page": 2,
+        "method": "textlayer"
+      },
+      "gross_margin_pct": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "ebitda_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "yoy_growth_pct": {
+        "page": 2,
+        "method": "textlayer"
+      }
+    },
+    "metrics_recovered": "6/10",
+    "recovered_by_textlayer": 6,
+    "recovered_by_vision": 0,
+    "pages_in_document": 12,
+    "pages_read_with_vision": [],
+    "findings": [
+      {
+        "rule_id": "rule_of_40_below_growth_benchmark",
+        "severity": "info",
+        "headline": "Rule of 40 score is 36, below the growth-investor benchmark",
+        "detail": "Growth of 14% plus an EBITDA margin of 22% totals 36. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.",
+        "values": {
+          "growth_pct": 14.0,
+          "ebitda_margin_pct": 22.0,
+          "rule_of_40": 36.0
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "metrics_not_stated",
+        "severity": "info",
+        "headline": "1 core metric(s) not stated in the document",
+        "detail": "Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.",
+        "values": {
+          "missing": [
+            "grr_pct"
+          ]
+        },
+        "citation": null
+      }
+    ],
+    "severity_counts": {
+      "blocker": 0,
+      "warning": 0,
+      "info": 2
+    },
+    "fit": {
+      "score": 60.0,
+      "tier": "tier_2",
+      "tier_label": "Tier 2 - diligence questions attached",
+      "blocked_by": [],
+      "components": [
+        {
+          "key": "arr_band",
+          "label": "ARR within mandate band",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "within band"
+        },
+        {
+          "key": "recurring",
+          "label": "Recurring revenue share",
+          "weight": 20,
+          "earned": 20,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "grr",
+          "label": "Gross revenue retention",
+          "weight": 20,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "nrr",
+          "label": "Net revenue retention",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "gross_margin",
+          "label": "Gross margin",
+          "weight": 10,
+          "earned": 10,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "ebitda",
+          "label": "Profitability",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "profitable"
+        },
+        {
+          "key": "concentration",
+          "label": "Customer concentration",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        }
+      ]
+    }
+  },
+  {
+    "target_id": "T02",
+    "code_name": "Halyard",
+    "source": "T02_Halyard_CIM.pdf",
+    "metrics": {
+      "arr_usd": 6100000,
+      "mrr_usd": 508333,
+      "recurring_pct": 88.0,
+      "gross_margin_pct": 74.0,
+      "ebitda_usd": 1220000,
+      "yoy_growth_pct": 9.0
+    },
+    "citations": {
+      "arr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "mrr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "recurring_pct": {
+        "page": 2,
+        "method": "textlayer"
+      },
+      "gross_margin_pct": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "ebitda_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "yoy_growth_pct": {
+        "page": 2,
+        "method": "textlayer"
+      }
+    },
+    "metrics_recovered": "6/10",
+    "recovered_by_textlayer": 6,
+    "recovered_by_vision": 0,
+    "pages_in_document": 12,
+    "pages_read_with_vision": [],
+    "findings": [
+      {
+        "rule_id": "rule_of_40_below_growth_benchmark",
+        "severity": "info",
+        "headline": "Rule of 40 score is 29, below the growth-investor benchmark",
+        "detail": "Growth of 9% plus an EBITDA margin of 20% totals 29. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.",
+        "values": {
+          "growth_pct": 9.0,
+          "ebitda_margin_pct": 20.0,
+          "rule_of_40": 29.0
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "metrics_not_stated",
+        "severity": "info",
+        "headline": "1 core metric(s) not stated in the document",
+        "detail": "Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.",
+        "values": {
+          "missing": [
+            "grr_pct"
+          ]
+        },
+        "citation": null
+      }
+    ],
+    "severity_counts": {
+      "blocker": 0,
+      "warning": 0,
+      "info": 2
+    },
+    "fit": {
+      "score": 60.0,
+      "tier": "tier_2",
+      "tier_label": "Tier 2 - diligence questions attached",
+      "blocked_by": [],
+      "components": [
+        {
+          "key": "arr_band",
+          "label": "ARR within mandate band",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "within band"
+        },
+        {
+          "key": "recurring",
+          "label": "Recurring revenue share",
+          "weight": 20,
+          "earned": 20,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "grr",
+          "label": "Gross revenue retention",
+          "weight": 20,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "nrr",
+          "label": "Net revenue retention",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "gross_margin",
+          "label": "Gross margin",
+          "weight": 10,
+          "earned": 10,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "ebitda",
+          "label": "Profitability",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "profitable"
+        },
+        {
+          "key": "concentration",
+          "label": "Customer concentration",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        }
+      ]
+    }
+  },
+  {
+    "target_id": "T03",
+    "code_name": "Ridgeline",
+    "source": "T03_Ridgeline_CIM.pdf",
+    "metrics": {
+      "arr_usd": 11200000,
+      "mrr_usd": 933333,
+      "recurring_pct": 58.0,
+      "gross_margin_pct": 52.0,
+      "ebitda_usd": 1010000,
+      "yoy_growth_pct": 11.0
+    },
+    "citations": {
+      "arr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "mrr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "recurring_pct": {
+        "page": 2,
+        "method": "textlayer"
+      },
+      "gross_margin_pct": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "ebitda_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "yoy_growth_pct": {
+        "page": 2,
+        "method": "textlayer"
+      }
+    },
+    "metrics_recovered": "6/10",
+    "recovered_by_textlayer": 6,
+    "recovered_by_vision": 0,
+    "pages_in_document": 12,
+    "pages_read_with_vision": [],
+    "findings": [
+      {
+        "rule_id": "recurring_below_floor",
+        "severity": "blocker",
+        "headline": "Only 58% of revenue is recurring, against a 80% floor",
+        "detail": "The headline ARR is carrying services, implementation or licence revenue that will not repeat. This is the single most common way a software business looks larger than it is; the multiple should be applied to the recurring base, not the headline.",
+        "values": {
+          "recurring_pct": 58.0,
+          "floor": 80.0
+        },
+        "citation": {
+          "page": 2,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "gross_margin_below_floor",
+        "severity": "warning",
+        "headline": "Gross margin of 52% is below the 65% floor",
+        "detail": "Software margins below the floor usually mean a services-heavy delivery model or hosting costs carried in COGS. It changes what the business is.",
+        "values": {
+          "gross_margin_pct": 52.0,
+          "floor": 65.0
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "rule_of_40_below_growth_benchmark",
+        "severity": "info",
+        "headline": "Rule of 40 score is 20, below the growth-investor benchmark",
+        "detail": "Growth of 11% plus an EBITDA margin of 9% totals 20. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.",
+        "values": {
+          "growth_pct": 11.0,
+          "ebitda_margin_pct": 9.0,
+          "rule_of_40": 20.0
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "metrics_not_stated",
+        "severity": "info",
+        "headline": "1 core metric(s) not stated in the document",
+        "detail": "Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.",
+        "values": {
+          "missing": [
+            "grr_pct"
+          ]
+        },
+        "citation": null
+      }
+    ],
+    "severity_counts": {
+      "blocker": 1,
+      "warning": 1,
+      "info": 2
+    },
+    "fit": {
+      "score": 52.5,
+      "tier": "pass",
+      "tier_label": "Pass - criteria not met on this profile",
+      "blocked_by": [
+        "recurring_below_floor"
+      ],
+      "components": [
+        {
+          "key": "arr_band",
+          "label": "ARR within mandate band",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "within band"
+        },
+        {
+          "key": "recurring",
+          "label": "Recurring revenue share",
+          "weight": 20,
+          "earned": 14.5,
+          "pct": 72.5,
+          "basis": "below floor"
+        },
+        {
+          "key": "grr",
+          "label": "Gross revenue retention",
+          "weight": 20,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "nrr",
+          "label": "Net revenue retention",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "gross_margin",
+          "label": "Gross margin",
+          "weight": 10,
+          "earned": 8.0,
+          "pct": 80.0,
+          "basis": "below floor"
+        },
+        {
+          "key": "ebitda",
+          "label": "Profitability",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "profitable"
+        },
+        {
+          "key": "concentration",
+          "label": "Customer concentration",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        }
+      ]
+    }
+  },
+  {
+    "target_id": "T04",
+    "code_name": "Kestrel",
+    "source": "T04_Kestrel_CIM.pdf",
+    "metrics": {
+      "arr_usd": 9600000,
+      "mrr_usd": 800000,
+      "recurring_pct": 95.0,
+      "gross_margin_pct": 71.0,
+      "ebitda_usd": -2400000,
+      "yoy_growth_pct": 22.0
+    },
+    "citations": {
+      "arr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "mrr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "recurring_pct": {
+        "page": 2,
+        "method": "textlayer"
+      },
+      "gross_margin_pct": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "ebitda_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "yoy_growth_pct": {
+        "page": 2,
+        "method": "textlayer"
+      }
+    },
+    "metrics_recovered": "6/10",
+    "recovered_by_textlayer": 6,
+    "recovered_by_vision": 0,
+    "pages_in_document": 12,
+    "pages_read_with_vision": [],
+    "findings": [
+      {
+        "rule_id": "ebitda_negative",
+        "severity": "blocker",
+        "headline": "EBITDA of -$2.4M is negative",
+        "detail": "A permanent-capital buyer holds without an exit to underwrite the burn. Loss-making at this size is a mandate mismatch rather than a valuation argument.",
+        "values": {
+          "ebitda_usd": -2400000
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "rule_of_40_below_growth_benchmark",
+        "severity": "info",
+        "headline": "Rule of 40 score is -3, below the growth-investor benchmark",
+        "detail": "Growth of 22% plus an EBITDA margin of -25% totals -3. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.",
+        "values": {
+          "growth_pct": 22.0,
+          "ebitda_margin_pct": -25.0,
+          "rule_of_40": -3.0
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "metrics_not_stated",
+        "severity": "info",
+        "headline": "1 core metric(s) not stated in the document",
+        "detail": "Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.",
+        "values": {
+          "missing": [
+            "grr_pct"
+          ]
+        },
+        "citation": null
+      }
+    ],
+    "severity_counts": {
+      "blocker": 1,
+      "warning": 0,
+      "info": 2
+    },
+    "fit": {
+      "score": 45.0,
+      "tier": "pass",
+      "tier_label": "Pass - criteria not met on this profile",
+      "blocked_by": [
+        "ebitda_negative"
+      ],
+      "components": [
+        {
+          "key": "arr_band",
+          "label": "ARR within mandate band",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "within band"
+        },
+        {
+          "key": "recurring",
+          "label": "Recurring revenue share",
+          "weight": 20,
+          "earned": 20,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "grr",
+          "label": "Gross revenue retention",
+          "weight": 20,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "nrr",
+          "label": "Net revenue retention",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "gross_margin",
+          "label": "Gross margin",
+          "weight": 10,
+          "earned": 10,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "ebitda",
+          "label": "Profitability",
+          "weight": 15,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "loss-making"
+        },
+        {
+          "key": "concentration",
+          "label": "Customer concentration",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        }
+      ]
+    }
+  },
+  {
+    "target_id": "T05",
+    "code_name": "Ashgrove",
+    "source": "T05_Ashgrove_CIM.pdf",
+    "metrics": {
+      "arr_usd": 4300000,
+      "mrr_usd": 358333,
+      "recurring_pct": 84.0,
+      "gross_margin_pct": 69.0,
+      "ebitda_usd": 1160000,
+      "yoy_growth_pct": 2.0
+    },
+    "citations": {
+      "arr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "mrr_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "recurring_pct": {
+        "page": 2,
+        "method": "textlayer"
+      },
+      "gross_margin_pct": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "ebitda_usd": {
+        "page": 8,
+        "method": "textlayer"
+      },
+      "yoy_growth_pct": {
+        "page": 2,
+        "method": "textlayer"
+      }
+    },
+    "metrics_recovered": "6/10",
+    "recovered_by_textlayer": 6,
+    "recovered_by_vision": 0,
+    "pages_in_document": 12,
+    "pages_read_with_vision": [],
+    "findings": [
+      {
+        "rule_id": "rule_of_40_below_growth_benchmark",
+        "severity": "info",
+        "headline": "Rule of 40 score is 29, below the growth-investor benchmark",
+        "detail": "Growth of 2% plus an EBITDA margin of 27% totals 29. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.",
+        "values": {
+          "growth_pct": 2.0,
+          "ebitda_margin_pct": 27.0,
+          "rule_of_40": 29.0
+        },
+        "citation": {
+          "page": 8,
+          "method": "textlayer"
+        }
+      },
+      {
+        "rule_id": "metrics_not_stated",
+        "severity": "info",
+        "headline": "1 core metric(s) not stated in the document",
+        "detail": "Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.",
+        "values": {
+          "missing": [
+            "grr_pct"
+          ]
+        },
+        "citation": null
+      }
+    ],
+    "severity_counts": {
+      "blocker": 0,
+      "warning": 0,
+      "info": 2
+    },
+    "fit": {
+      "score": 60.0,
+      "tier": "tier_2",
+      "tier_label": "Tier 2 - diligence questions attached",
+      "blocked_by": [],
+      "components": [
+        {
+          "key": "arr_band",
+          "label": "ARR within mandate band",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "within band"
+        },
+        {
+          "key": "recurring",
+          "label": "Recurring revenue share",
+          "weight": 20,
+          "earned": 20,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "grr",
+          "label": "Gross revenue retention",
+          "weight": 20,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "nrr",
+          "label": "Net revenue retention",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        },
+        {
+          "key": "gross_margin",
+          "label": "Gross margin",
+          "weight": 10,
+          "earned": 10,
+          "pct": 100.0,
+          "basis": "meets floor"
+        },
+        {
+          "key": "ebitda",
+          "label": "Profitability",
+          "weight": 15,
+          "earned": 15,
+          "pct": 100.0,
+          "basis": "profitable"
+        },
+        {
+          "key": "concentration",
+          "label": "Customer concentration",
+          "weight": 10,
+          "earned": 0.0,
+          "pct": 0.0,
+          "basis": "not stated"
+        }
+      ]
+    }
+  }
+]
