@@ -1,0 +1,8 @@
+reportlab>=4.0
+matplotlib>=3.8
+pypdf>=4.0
+numpy>=1.26
+
+# Optional, feature-gated. Absent = that backend skips cleanly.
+# pytesseract>=0.3      # parse backend B (also needs the Tesseract binary)
+# torch, transformers   # parse backend C via ColModernVBERT (embed/ visual retrieval)
