@@ -130,18 +130,33 @@ pages, a 75% cut**, and misses no chart field.
 See [`reports/layer_r.md`](reports/layer_r.md).
 
 **The capability boundary worth knowing.** Chart fields split cleanly by whether the
-chart printed its data labels:
+chart printed its data labels — and the boundary is specific, not "bigger is better":
 
 | Backend | Charts with data labels | Charts read off the axis |
 |---|---|---|
-| text layer | 0/10 | 0/10 |
-| `minicpm-v4.6` (1B, 1.6GB) | **10/10** | 0/10 |
-| `qwen3.5:4b` | 10/10 | reads it |
+| text layer | 0% (0/10) | 0% (0/10) |
+| `minicpm-v4.6` (1B, 1.6GB) | **100% (10/10)** | 0% (0/10) |
+| tiered, escalating to `qwen3.5:4b` | 90% (9/10) | 70% (7/10) |
 
-Reading a printed label is recognition; reading a value off an axis is spatial
-reasoning, and the 1B model cannot do it at all. It does not guess badly — it returns
-no numbers, which is what makes cheap-first escalation viable
-([`deal_ready/parse/tiered.py`](deal_ready/parse/tiered.py)).
+Reading a printed label is recognition. Reading a value off an axis is spatial
+reasoning about where a point sits between gridlines. The 1B model cannot do the second
+at all — and crucially it **fails loudly**, returning no numbers rather than guessing,
+which is what makes cheap-first escalation safe.
+
+**Where that leaves the numbers you can act on.** Axis-read values reach ~70% even after
+escalation. That is useful for triage and **not acceptable for a figure that reprices a
+deal**. The consequence is not a better prompt: it is to treat axis-read values as
+flagged for human confirmation, and to ask the seller for the underlying data rather
+than inferring it from a picture.
+
+**A tiering lesson that cost real time.** The first escalation trigger escalated any
+page mentioning something "unreadable". Across the corpus that fired on **16 of 20
+pages**, including prose and table pages the 1B model had already transcribed
+perfectly — 1,183s of escalation where roughly two thirds bought nothing. Requiring
+*no numbers at all* on the page before escalating brings it to **5 of 20 — exactly the
+five unlabelled retention pages — at ~370s.** An escalation trigger is a classifier,
+and an unmeasured one quietly spends the budget the tiering was meant to save.
+([`deal_ready/parse/tiered.py`](deal_ready/parse/tiered.py))
 
 **A caveat stated plainly:** the corpus is synthetic and this repo wrote it. Ground
 truth is a by-product of generation rather than labelling after the fact, which

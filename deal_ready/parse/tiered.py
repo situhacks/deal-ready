@@ -38,16 +38,30 @@ _EXHIBIT = re.compile(r"chart|graph|figure|exhibit|plot|axis", re.I)
 def needs_escalation(text: str) -> tuple[bool, str]:
     """Did the cheap model fail in the way that a stronger one would fix?
 
-    Ground-truth free by design. We are asking what the transcription says about
-    itself, not comparing it to an answer key - the trigger has to work on documents
-    nobody has labelled.
+    Ground-truth free by design. We ask what the transcription says about itself, not
+    whether it matches an answer key - the trigger has to work on documents nobody has
+    labelled.
+
+    **Tuned after measuring it, and the first version was too loose.** The original
+    escalated any page containing the word "unreadable" anywhere. Across the corpus
+    that fired on 16 of 20 pages, including prose and table pages the 1B model had
+    already transcribed perfectly - it had simply noted one minor item as unreadable
+    and dragged the whole page up a tier. Escalation cost 1,183s against 383s for the
+    cheap pass alone, and roughly two thirds of that bought nothing.
+
+    The lesson generalises past this repo: an escalation trigger is a classifier, and
+    an unmeasured one silently spends the budget the tiering was supposed to save.
+    Now a page escalates only when it plausibly carries an exhibit AND yielded no
+    numbers at all - the signature of a chart the small model could not read.
     """
     if not text.strip():
         return True, "empty transcription"
     if _EXHIBIT.search(text) and not _NUMERIC.search(text):
         return True, "mentions an exhibit but reports no values"
-    if "unreadable" in text.lower():
-        return True, "model reported a value as unreadable"
+    # "unreadable" only counts when the page also produced nothing numeric. On its own
+    # it is far too eager - see the docstring.
+    if "unreadable" in text.lower() and not _NUMERIC.search(text):
+        return True, "reported a value unreadable and produced no numbers"
     return False, ""
 
 

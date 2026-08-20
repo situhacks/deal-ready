@@ -659,7 +659,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -672,7 +672,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -685,7 +685,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -698,9 +698,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T01",
@@ -711,9 +711,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T01",
@@ -724,7 +724,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -737,7 +737,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -750,7 +750,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -763,7 +763,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -776,7 +776,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -789,7 +789,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -802,7 +802,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -815,7 +815,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -828,7 +828,7 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": false,
       "attributed": false
     },
@@ -841,9 +841,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T02",
@@ -854,7 +854,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -867,7 +867,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -880,7 +880,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -893,7 +893,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -906,7 +906,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -919,7 +919,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -932,7 +932,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -945,7 +945,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -958,9 +958,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T03",
@@ -971,9 +971,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T03",
@@ -984,7 +984,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -997,7 +997,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1010,7 +1010,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1023,7 +1023,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1036,7 +1036,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1049,7 +1049,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1062,7 +1062,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1075,7 +1075,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1088,9 +1088,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T04",
@@ -1101,9 +1101,9 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": false,
-      "attributed": false
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": true,
+      "attributed": true
     },
     {
       "target_id": "T04",
@@ -1114,7 +1114,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1127,7 +1127,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1140,7 +1140,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1153,7 +1153,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1166,7 +1166,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1179,7 +1179,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1192,7 +1192,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1205,7 +1205,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1218,7 +1218,7 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": false,
       "attributed": false
     },
@@ -1231,7 +1231,7 @@
       "carrier": "chart",
       "labelled_in_chart": false,
       "page": 7,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": false,
       "attributed": false
     },
@@ -1244,7 +1244,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1257,7 +1257,7 @@
       "carrier": "table",
       "labelled_in_chart": null,
       "page": 8,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1270,7 +1270,7 @@
       "carrier": "prose",
       "labelled_in_chart": null,
       "page": 2,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1283,7 +1283,7 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
       "present": true,
       "attributed": true
     },
@@ -1296,9 +1296,9 @@
       "carrier": "chart",
       "labelled_in_chart": true,
       "page": 6,
-      "backend": "vision:minicpm-v4.6:latest",
-      "present": true,
-      "attributed": true
+      "backend": "tiered:minicpm-v4.6:latest->qwen3.5:4b",
+      "present": false,
+      "attributed": false
     }
   ],
   "aggregate": {
@@ -1323,37 +1323,37 @@
       "present_pct": 0.0,
       "attributed_pct": 0.0
     },
-    "vision:minicpm-v4.6:latest|table": {
+    "tiered:minicpm-v4.6:latest->qwen3.5:4b|table": {
       "n": 20,
       "present": 20,
       "attributed": 20,
       "present_pct": 100.0,
       "attributed_pct": 100.0
     },
-    "vision:minicpm-v4.6:latest|prose": {
+    "tiered:minicpm-v4.6:latest->qwen3.5:4b|prose": {
       "n": 10,
       "present": 10,
       "attributed": 10,
       "present_pct": 100.0,
       "attributed_pct": 100.0
     },
-    "vision:minicpm-v4.6:latest|chart": {
+    "tiered:minicpm-v4.6:latest->qwen3.5:4b|chart": {
       "n": 20,
-      "present": 10,
-      "attributed": 10,
-      "present_pct": 50.0,
-      "attributed_pct": 50.0
+      "present": 16,
+      "attributed": 16,
+      "present_pct": 80.0,
+      "attributed_pct": 80.0
     }
   },
   "backends": [
     "textlayer",
-    "vision:minicpm-v4.6:latest"
+    "tiered:minicpm-v4.6:latest->qwen3.5:4b"
   ],
   "runtime": {
-    "vision:minicpm-v4.6:latest": {
-      "seconds": 383.2,
-      "tokens_in": 12720,
-      "tokens_out": 18934,
+    "tiered:minicpm-v4.6:latest->qwen3.5:4b": {
+      "seconds": 1182.6,
+      "tokens_in": 25575,
+      "tokens_out": 27173,
       "dpi": 120
     }
   }

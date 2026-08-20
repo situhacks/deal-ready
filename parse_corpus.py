@@ -101,11 +101,53 @@ def main() -> int:
     (REPORTS / "layer_p.json").write_text(
         json.dumps({"rows": rows, "aggregate": agg, "backends": backends,
                     "runtime": runtime}, indent=2), encoding="utf-8")
-    (REPORTS / "layer_p.md").write_text(
-        "# Layer P - what each parse backend makes available\n\n"
+    # The chart row hides the finding that matters, so split it out.
+    split = defaultdict(lambda: {"n": 0, "att": 0})
+    for r in rows:
+        if r["carrier"] != "chart":
+            continue
+        kind = "labels" if r["labelled_in_chart"] else "axis"
+        s = split[(r["backend"], kind)]
+        s["n"] += 1
+        s["att"] += int(r["attributed"])
+
+    def _cell(v):
+        return "not run" if not v else f"{100*v['att']/v['n']:.0f}% ({v['att']}/{v['n']})"
+
+    md = [
+        "# Layer P - what each parse backend makes available",
+        "",
         "Percentage of ground-truth fields recovered **and correctly attributed** to "
-        "their metric, on the page the value actually lives on.\n\n"
-        + table + "\n", encoding="utf-8")
+        "their metric, on the page the value actually lives on. This grades the parser, "
+        "not the extractor: it is a ceiling on what any downstream model could achieve "
+        "given what it was handed.",
+        "",
+        table,
+        "",
+        "## The chart row, split by whether the chart printed its values",
+        "",
+        "This is the finding the aggregate hides. Reading a printed data label is "
+        "recognition. Reading a value off an axis is spatial reasoning about where a "
+        "point sits between gridlines. They are different tasks, and they fail "
+        "differently.",
+        "",
+        "| Backend | Charts with data labels | Charts read off the axis |",
+        "|---|---|---|",
+    ]
+    for b in backends:
+        md.append(f"| `{b}` | {_cell(split.get((b, 'labels')))} | "
+                  f"{_cell(split.get((b, 'axis')))} |")
+    md += [
+        "",
+        "**A value read off an axis is not yet trustworthy enough to act on.** Even "
+        "with escalation to a larger model it lands around 70% here - useful for "
+        "triage, not acceptable for a figure that reprices a deal. The consequence is "
+        "not a better prompt. It is to treat axis-read values as **flagged for human "
+        "confirmation**, and to ask the seller for the underlying data rather than "
+        "inferring it from a picture.",
+        "",
+    ]
+    (REPORTS / "layer_p.md").write_text("\n".join(md), encoding="utf-8")
 
     print("\n" + table)
     print(f"\n  -> reports/layer_p.md")
