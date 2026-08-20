@@ -121,8 +121,27 @@ any downstream model could possibly achieve given what it was handed.
 
 See [`reports/layer_p.md`](reports/layer_p.md) for the generated table.
 
-**Layer R — routing.** Recall@k for the page carrying each metric, and the resulting
-reduction in pages sent to the vision model.
+**Layer R — routing.** Recall@k for the page carrying each metric, and the reduction
+in pages sent to the vision model. Read the carrier breakdown rather than the
+aggregate: routing recovers **100% of chart pages at rank 1** — the only ones that need
+a vision model — while ranking prose and table pages poorly, which costs nothing
+because those were never going to the expensive step. At k=1 it selects **15 of 60
+pages, a 75% cut**, and misses no chart field.
+See [`reports/layer_r.md`](reports/layer_r.md).
+
+**The capability boundary worth knowing.** Chart fields split cleanly by whether the
+chart printed its data labels:
+
+| Backend | Charts with data labels | Charts read off the axis |
+|---|---|---|
+| text layer | 0/10 | 0/10 |
+| `minicpm-v4.6` (1B, 1.6GB) | **10/10** | 0/10 |
+| `qwen3.5:4b` | 10/10 | reads it |
+
+Reading a printed label is recognition; reading a value off an axis is spatial
+reasoning, and the 1B model cannot do it at all. It does not guess badly — it returns
+no numbers, which is what makes cheap-first escalation viable
+([`deal_ready/parse/tiered.py`](deal_ready/parse/tiered.py)).
 
 **A caveat stated plainly:** the corpus is synthetic and this repo wrote it. Ground
 truth is a by-product of generation rather than labelling after the fact, which
@@ -158,6 +177,8 @@ write.
 | [`docs/ingest.md`](docs/ingest.md) | **The design record.** Why OCR is the wrong default, why whole-document multimodal is also wrong, what embeddings do and do not do, the corpus-size ladder, what was tried and rejected, and two failures that would have published false findings |
 | [`docs/metrics.md`](docs/metrics.md) | Every VMS metric: what it is, why a buy-and-hold acquirer prices on it, how a CIM obscures it |
 | [`docs/rules.md`](docs/rules.md) | Every rule with its deal rationale |
+| [`playbook.md`](playbook.md) | The rollout half: shadow mode, who to build with, what will actually go wrong |
+| [`docs/hardware.md`](docs/hardware.md) | Local model setup, AMD/ROCm traps, and three failures that would have published false findings |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
 | [`deal_ready/scorer/rules.py`](deal_ready/scorer/rules.py) | The deterministic spine |
 

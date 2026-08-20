@@ -1,0 +1,407 @@
+{
+  "rows": [
+    {
+      "target_id": "T01",
+      "metric": "arr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T01",
+      "metric": "mrr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T01",
+      "metric": "recurring_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T01",
+      "metric": "grr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T01",
+      "metric": "nrr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T01",
+      "metric": "gross_margin_pct",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T01",
+      "metric": "ebitda_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 1
+    },
+    {
+      "target_id": "T01",
+      "metric": "yoy_growth_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T01",
+      "metric": "top1_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T01",
+      "metric": "top5_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T02",
+      "metric": "arr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T02",
+      "metric": "mrr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T02",
+      "metric": "recurring_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 8
+    },
+    {
+      "target_id": "T02",
+      "metric": "grr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T02",
+      "metric": "nrr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T02",
+      "metric": "gross_margin_pct",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T02",
+      "metric": "ebitda_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 1
+    },
+    {
+      "target_id": "T02",
+      "metric": "yoy_growth_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 6
+    },
+    {
+      "target_id": "T02",
+      "metric": "top1_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T02",
+      "metric": "top5_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T03",
+      "metric": "arr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T03",
+      "metric": "mrr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T03",
+      "metric": "recurring_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T03",
+      "metric": "grr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T03",
+      "metric": "nrr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T03",
+      "metric": "gross_margin_pct",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T03",
+      "metric": "ebitda_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 1
+    },
+    {
+      "target_id": "T03",
+      "metric": "yoy_growth_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T03",
+      "metric": "top1_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T03",
+      "metric": "top5_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T04",
+      "metric": "arr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T04",
+      "metric": "mrr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T04",
+      "metric": "recurring_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 5
+    },
+    {
+      "target_id": "T04",
+      "metric": "grr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T04",
+      "metric": "nrr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T04",
+      "metric": "gross_margin_pct",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T04",
+      "metric": "ebitda_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 1
+    },
+    {
+      "target_id": "T04",
+      "metric": "yoy_growth_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T04",
+      "metric": "top1_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T04",
+      "metric": "top5_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T05",
+      "metric": "arr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T05",
+      "metric": "mrr_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T05",
+      "metric": "recurring_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T05",
+      "metric": "grr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T05",
+      "metric": "nrr_pct",
+      "carrier": "chart",
+      "true_page": 7,
+      "rank": 1
+    },
+    {
+      "target_id": "T05",
+      "metric": "gross_margin_pct",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 2
+    },
+    {
+      "target_id": "T05",
+      "metric": "ebitda_usd",
+      "carrier": "table",
+      "true_page": 8,
+      "rank": 1
+    },
+    {
+      "target_id": "T05",
+      "metric": "yoy_growth_pct",
+      "carrier": "prose",
+      "true_page": 2,
+      "rank": 4
+    },
+    {
+      "target_id": "T05",
+      "metric": "top1_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    },
+    {
+      "target_id": "T05",
+      "metric": "top5_customer_pct",
+      "carrier": "chart",
+      "true_page": 6,
+      "rank": 1
+    }
+  ],
+  "recall": {
+    "k1": {
+      "hits": 25,
+      "total": 50,
+      "pct": 50.0
+    },
+    "k2": {
+      "hits": 40,
+      "total": 50,
+      "pct": 80.0
+    },
+    "k3": {
+      "hits": 40,
+      "total": 50,
+      "pct": 80.0
+    }
+  },
+  "by_carrier_recall_at_1": {
+    "table": {
+      "hits": 5,
+      "n": 20,
+      "pct": 25.0
+    },
+    "prose": {
+      "hits": 0,
+      "n": 10,
+      "pct": 0.0
+    },
+    "chart": {
+      "hits": 20,
+      "n": 20,
+      "pct": 100.0
+    }
+  },
+  "pages": {
+    "k1": {
+      "selected": 15,
+      "total": 60
+    },
+    "k2": {
+      "selected": 15,
+      "total": 60
+    },
+    "k3": {
+      "selected": 24,
+      "total": 60
+    }
+  },
+  "assumptions": {
+    "tokens_per_page": 1500,
+    "seconds_per_page": 19.0,
+    "vision_model": "minicpm-v4.6:latest"
+  }
+}
