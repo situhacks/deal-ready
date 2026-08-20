@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="deal-ready: CIM screening and pre-LOI deal scoring for vertical market software. Forty percent of the metrics that decide a deal live only in charts.">
+  <title>deal-ready</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#101d2e"/>
+      <stop offset="60%" stop-color="#14263c"/>
+      <stop offset="100%" stop-color="#182c46"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2a78d6"/>
+      <stop offset="55%" stop-color="#2a78d6"/>
+      <stop offset="55%" stop-color="#eb6834"/>
+      <stop offset="100%" stop-color="#eb6834"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <rect width="1200" height="4" fill="url(#rule)"/>
+
+  <text x="72" y="112" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+        font-size="46" font-weight="700" fill="#ffffff" letter-spacing="-0.5">deal-ready</text>
+  <text x="72" y="148" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="17" fill="#9fb3cc">CIM screening &amp; pre-LOI deal scoring for vertical market software</text>
+
+  <text x="72" y="206" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600" fill="#ffffff">40% of the metrics that decide a deal live only in charts.</text>
+  <text x="72" y="238" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="16.5" fill="#9fb3cc">A text-only pipeline reads every one of them correctly, and still cannot tell the companies apart.</text>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#c8d6e8">
+    <rect x="72"  y="266" width="118" height="30" rx="6" fill="#1c3049" stroke="#2a78d6" stroke-width="1.2"/>
+    <text x="131" y="285.5" text-anchor="middle">text layer</text>
+
+    <rect x="206" y="266" width="104" height="30" rx="6" fill="#1c3049" stroke="#2a78d6" stroke-width="1.2"/>
+    <text x="258" y="285.5" text-anchor="middle">route</text>
+
+    <rect x="326" y="266" width="146" height="30" rx="6" fill="#2a1f18" stroke="#eb6834" stroke-width="1.2"/>
+    <text x="399" y="285.5" text-anchor="middle">vision (1B, local)</text>
+
+    <rect x="488" y="266" width="156" height="30" rx="6" fill="#16233a" stroke="#5b7ba6" stroke-width="1.2"/>
+    <text x="566" y="285.5" text-anchor="middle">deterministic rules</text>
+
+    <rect x="660" y="266" width="132" height="30" rx="6" fill="#16233a" stroke="#5b7ba6" stroke-width="1.2"/>
+    <text x="726" y="285.5" text-anchor="middle">cited scorecard</text>
+
+    <g stroke="#5b7ba6" stroke-width="1.2" fill="none">
+      <path d="M190 281 h12"/>
+      <path d="M310 281 h12"/>
+      <path d="M472 281 h12"/>
+      <path d="M644 281 h12"/>
+    </g>
+  </g>
+
+  <text x="1128" y="285.5" text-anchor="end"
+        font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+        font-size="12.5" fill="#7590ad">no API keys · runs local · 8/8 offline checks</text>
+</svg>

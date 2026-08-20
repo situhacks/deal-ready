@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 from deal_ready.embed import router
-from deal_ready.parse import textlayer, vision
+from deal_ready.parse import textlayer, tiered
 from deal_ready.scorer import fit, rules
 from deal_ready.values import attribution_present, value_present
 
@@ -88,7 +88,9 @@ def screen_one(pdf: Path, criteria: dict, use_vision: bool = True,
             routes = router.route(page_text, metrics=missing)
             if routes:
                 routed_pages = router.pages_to_read(routes, top_k)
-                vdoc = vision.parse(pdf, pages=routed_pages)
+                # Tiered: the 1B model reads most pages; a page that comes back
+                # with no numbers (an unlabelled chart) escalates to the 4B one.
+                vdoc = tiered.parse(pdf, pages=routed_pages)
                 vtext = {p.page_number: p.text for p in vdoc.pages}
                 for m in missing:
                     for pg in routes[m].top_k(top_k):
