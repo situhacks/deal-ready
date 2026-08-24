@@ -4,7 +4,7 @@
 
 ## Verdict against the profile
 
-Fit score **94.7/100** against the "Buy-and-hold vertical market software" profile — Tier 1 - advance to management call.
+Fit score **94.7/100** against the "Buy-and-hold software" profile — Tier 1 - advance to management call.
 The score sorts an inbox; the flags below are the part worth reading.
 
 ## The numbers

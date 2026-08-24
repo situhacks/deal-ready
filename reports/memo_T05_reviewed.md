@@ -1,10 +1,10 @@
-# Screening memo — Ashgrove (T05)
+﻿# Screening memo â€” Ashgrove (T05)
 
-*Drafted by deal-ready · 8/10 metrics recovered · every figure cites its page · nothing here recommends a transaction.*
+*Drafted by deal-ready Â· 8/10 metrics recovered Â· every figure cites its page Â· nothing here recommends a transaction.*
 
 ## Verdict against the profile
 
-Fit score **70/100** against the "Buy-and-hold vertical market software" profile — Tier 2 - diligence questions attached.
+Fit score **70/100** against the "Buy-and-hold software" profile â€” Tier 2 - diligence questions attached.
 The score sorts an inbox; the flags below are the part worth reading.
 
 ## The numbers
@@ -17,8 +17,8 @@ The score sorts an inbox; the flags below are the part worth reading.
 | Gross margin | 69% | p8, textlayer |
 | EBITDA | $1.2M | p8, textlayer |
 | YoY growth | 2% | p2, textlayer |
-| Largest customer share | 11% (chart axis — confirm <!--co-T05-axis_read-001-->) | p6, vision |
-| Top-five customer share | 28% (chart axis — confirm <!--co-T05-axis_read-002-->) | p6, vision |
+| Largest customer share | 11% (chart axis â€” confirm <!--co-T05-axis_read-001-->) | p6, vision |
+| Top-five customer share | 28% (chart axis â€” confirm <!--co-T05-axis_read-002-->) | p6, vision |
 
 <details><summary>Context notes (info-grade)</summary>
 
@@ -32,7 +32,7 @@ The score sorts an inbox; the flags below are the part worth reading.
 - Gross revenue retention is never stated - likely deliberate; make it the first management-call question <!--co-T05-missing_metric-001-->
 - Correction: p7 presents "Gross and net revenue retention, FY22 to FY25" as a chart, so the figure is not simply absent - the exhibit exists and no reliable values came back from it. Reframe the ask: request the underlying retention series rather than treating it as unstated.
 
-## Judgement — read with suspicion
+## Judgement â€” read with suspicion
 
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
@@ -59,4 +59,4 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ---
 
-*No reviewer corrections have been folded back yet — first draft of the loop.*
+*No reviewer corrections have been folded back yet â€” first draft of the loop.*

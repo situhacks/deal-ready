@@ -1,6 +1,6 @@
-# Scorecard template - Buy-and-hold vertical market software
+# Scorecard template - Buy-and-hold software
 
-Models the publicly stated acquisition criteria of permanent-capital VMS acquirers. Swapping in a real scorecard is a config change, not a rewrite - which is the point of keeping this out of the code.
+Models the acquisition criteria of buy-and-hold software acquirers: durable, mission-critical products with recurring revenue. Swapping in a real scorecard is a config change, not a rewrite - which is the point of keeping this out of the code.
 
 **Posture.** Durability over growth. A permanent-capital buyer holds forever, so retention, mission-criticality and revenue quality outrank growth rate. A Pass means 'not a fit against this profile', never 'bad company'.
 

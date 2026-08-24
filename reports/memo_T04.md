@@ -4,7 +4,7 @@
 
 ## Verdict against the profile
 
-Fit score **85/100** against the "Buy-and-hold vertical market software" profile — Pass - criteria not met on this profile.
+Fit score **85/100** against the "Buy-and-hold software" profile — Pass - criteria not met on this profile.
 Blocked by: ebitda_negative.
 The score sorts an inbox; the flags below are the part worth reading.
 

@@ -1,4 +1,4 @@
-<img src="assets/banner.svg" alt="deal-ready — CIM screening and pre-LOI deal scoring for vertical market software" width="100%">
+<img src="assets/banner.svg" alt="deal-ready — CIM screening and pre-LOI deal scoring for software M&A" width="100%">
 
 A confidential information memorandum lands in an inbox: forty-odd pages of prose,
 tables and charts describing a software company that is for sale. Somewhere in there
@@ -29,9 +29,10 @@ the most interesting thing here.
 
 **What you get**
 
-- A **cited scorecard** per target: ten VMS metrics set against the buyer's rubric,
-  eleven deterministic rules, criteria fit and tier. Readable markdown, generated
-  from the config, so the rubric and the verdicts are things you can click into.
+- A **cited scorecard** per target: ten software metrics set against the buyer's
+  rubric, eleven deterministic rules, criteria fit and tier. Readable markdown,
+  generated from the config, so the rubric and the verdicts are things you can click
+  into.
 - A **drafted screening memo** where every uncertain value carries a call-out id.
 - **Chart-only values measured from pixels**, not guessed by a model, and each one
   independently re-read, with the agreement recorded in the memo.
@@ -296,7 +297,7 @@ The repository is shaped to drop into an agent:
 | File | What it is |
 |---|---|
 | [`docs/ingest.md`](docs/ingest.md) | **The design record.** Why OCR is the wrong default, why whole-document multimodal is also wrong, what embeddings do and do not do, the corpus-size ladder, what was tried and rejected, and two failures that would have published false findings |
-| [`docs/metrics.md`](docs/metrics.md) | Every VMS metric: what it is, why a buy-and-hold acquirer prices on it, how a CIM obscures it |
+| [`docs/metrics.md`](docs/metrics.md) | Every metric the screen reads: what it is, why a buy-and-hold acquirer prices on it, how a CIM obscures it |
 | [`docs/rules.md`](docs/rules.md) | Every rule with its deal rationale |
 | [`docs/callouts.md`](docs/callouts.md) | The judgement seam: call-outs, diff-based correction capture, the fold-back contract |
 | [`playbook.md`](playbook.md) | The rollout half: shadow mode, who to build with, what will actually go wrong |
