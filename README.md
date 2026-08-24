@@ -16,6 +16,8 @@ hands the judgement back.
 pip install -r requirements.txt
 python generate.py                 # build the synthetic corpus (no model, no network)
 python screen.py data/             # screen it
+python memo.py data/               # draft screening memos with call-outs
+python capture.py T05 --edited reports/memo_T05_reviewed.md   # turn a review into records
 python run_checks.py               # verify every number in this README, offline
 ```
 
@@ -23,6 +25,33 @@ Python 3.12, no API key, no account, no paid inference. The parts that need a mo
 use **local models via Ollama**; everything else is stdlib-first Python. If you have no
 models installed, `python screen.py data/ --no-vision` still runs end to end — and the
 gap between those two runs is the most interesting thing here.
+
+---
+
+## v1 → v2
+
+v1 (tag `v1.0.0`) stopped at the scorecard: extract the numbers, check the arithmetic,
+score the fit, tier the inbox. v2 adds the thing an analyst would start writing next -
+the memo - and closes a loop around it:
+
+- **Memos drafted with call-outs.** Every figure cites its page. Axis-read values ship
+  flagged at their measured ~70% ceiling. Missing metrics arrive as questions to ask,
+  and when a metric's name sits on a page the vision tier read, the question says an
+  exhibit exists and beat the parser. Narrative observations come from a local model,
+  each with its id attached so a reviewer can accept, edit or strike it (`memo.py`).
+- **Corrections captured by diff.** The reviewer edits the markdown they were handed;
+  `capture.py` turns that edit into structured records. Changes no flag prompted are
+  recorded as blind spots - the most useful lines in the file.
+- **Corrections teach.** Accepted edits become worked examples for later drafts.
+  Extraction gaps become regressions that `run_checks.py` asserts on every run. The
+  first session caught p7 of T05 presenting a retention chart while both values read as
+  unstated; that lesson is now mechanical and regression-locked.
+- **The recursion is gated.** Corrections change the *next* version, never the current
+  one, and every fold-back is checked. The system improves on a release cadence a human
+  can audit, which is the only kind of improvement an enterprise should accept from
+  tooling like this.
+
+Still nothing here recommends a transaction. That was true in v1 and it stays true.
 
 ---
 
@@ -102,9 +131,8 @@ its citation.
 Two of those rules are worth calling out, because they are where domain judgement shows
 up rather than arithmetic:
 
-- **Gross retention above 100% is reported as a definition error, not a triumph.** GRR
-  excludes expansion by construction, so a figure above 100 means net retention has
-  been labelled gross.
+- **Gross retention above 100% is a definition error.** GRR excludes expansion by
+  construction, so a figure above 100 means net retention has been labelled gross.
 - **Rule of 40 is computed and deliberately scored at zero weight.** It is a
   growth-investor test: it asks whether a company is buying growth with margin, which
   is the right question when you need a step-up at exit. A permanent-capital buyer is
@@ -242,6 +270,8 @@ write.
 ```
 generate.py            build the synthetic corpus; fails if a chart value leaks to text
 screen.py              the CLI an analyst would run
+memo.py                draft screening memos with call-outs
+capture.py             diff an edited memo into correction records
 parse_corpus.py        run every parse backend, write Layer P
 run_checks.py          reproduce every published number, offline
 
@@ -250,12 +280,14 @@ deal_ready/
   parse/               text layer · OCR (optional) · vision, behind one interface
   embed/               page routing, MaxSim in numpy, no vector database
   scorer/              deterministic rules + criteria fit
+  memo/                memo drafting, call-out derivation, the narrative pass
   models/ollama.py     the single door every model call goes through
   values.py            what counts as recovering a number
 
 criteria/              investment profiles
-data/                  generated corpus, ground truth, committed vision cache
-reports/               generated results
+data/                  generated corpus, ground truth, committed vision cache, review sessions
+eval/                  judgement examples folded back from reviewers, regressions
+reports/               generated results: findings, layer reports, memos, call-outs
 realworld/             manifest of public documents for the spot check (no PDFs committed)
 ```
 

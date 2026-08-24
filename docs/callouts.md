@@ -40,11 +40,18 @@ the model to self-report confidence.
 
 | kind | derived from | meaning |
 |---|---|---|
-| `axis_read` | `citations[m]["method"] == "vision"` | value was read off a chart axis; ~70% ceiling; confirm or replace |
-| `label_read` | `citations[m]["method"] == "vision"` on a labelled chart | recognition, not inference — low risk, shown for completeness |
-| `missing_metric` | in profile, absent from `metrics` | deliberate omission is likely; frame the management-call question |
+| `axis_read` | `citations[m]["method"] == "vision"` on an escalated page | value was read off a chart axis; ~70% ceiling; confirm or replace |
+| `label_read` | `citations[m]["method"] == "vision"`, no escalation | recognition, not inference — low risk, shown for completeness |
+| `missing_metric` | in profile, absent from `metrics` | frame the question; if the metric's name sits on a vision-read page, say an exhibit exists and defeated the parser |
 | `definition_conflict` | finding whose detail flags a definitional error (e.g. GRR > 100) | the seller mislabelled a metric; do not average it away |
 | `judgement` | a memo sentence carrying narrative interpretation | model observed, did not compute; accept / edit / reject |
+
+The `missing_metric` refinement came out of the first review session: T05 reported
+gross retention as "never stated - likely deliberate" while page 7 announced
+"Gross and net revenue retention, FY22 to FY25" as a chart the parser could not
+read. Deliberate omission was the wrong default reading whenever the metric's
+name sits on a page the vision tier actually visited. That upgrade is mechanical,
+ground-truth-free, and locked by `reg-001` in `eval/regressions.json`.
 
 ```yaml
 # reports/callouts_T03.json (one entry)
@@ -98,7 +105,15 @@ corrections:
 the reviewer caught it anyway. Blind-spot count per version is the honest quality
 metric — precision/recall on call-outs flatters whatever the flagger already knows.
 
-`reason_category` ∈ `factual_error · judgement_call · preference · new_information`.
+Attribution rule: **pure insertions are never credited to a call-out**, however near
+one they sit. An inserted line is content the system did not produce — that is what
+blind-spot means. Edits and strikes carry before-text and are attributed to the
+nearest anchor above. Triage may reassign by hand.
+
+`reason_category` ∈ `factual_error · judgement_call · preference · new_information`,
+with `needs_triage` as the initial state for anything capture cannot classify
+mechanically (insertions default there). Nothing folds back while it reads
+`needs_triage`.
 
 ## Fold-back contract
 
@@ -120,10 +135,18 @@ is a policy fork and gets escalated rather than averaged.
 ## Reproducibility
 
 Same rule as every published number: nothing is claimed unless
-[`run_checks.py`](../run_checks.py) reproduces it from committed artifacts. Override
-rate, blind-spot count and call-out precision are computed from committed
-`data/corrections/*.yaml` against committed call-outs files. A correction that never
-got committed never happened.
+[`run_checks.py`](../run_checks.py) reproduces it from committed artifacts. Three
+checks guard the loop:
+
+- **correction records are consistent** — every record triaged, every `callout_id`
+  resolves against the target's call-outs file, no blind spot carrying an id;
+- **fold-back is complete** — every accepted judgement appears in
+  `eval/judgement_examples.json`, every extraction gap is asserted by a regression;
+- **reviewer regressions hold** — each lesson learned stays visible in current
+  artifacts, so the pipeline cannot silently regress past what a reviewer taught it.
+
+A correction that never got committed never happened. A correction that changed
+nothing downstream was theatre.
 
 ## Deliberately out of scope
 
