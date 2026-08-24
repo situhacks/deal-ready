@@ -222,23 +222,23 @@ def check_reports_match_artifacts() -> None:
 def check_axis_values_remeasure() -> None:
     """The axis-read column re-measures offline, from committed pixels.
 
-    The tiered text for an unlabelled chart ends in values code measured from the
-    document's own embedded image, calibrated by tick glyphs the model read once
-    (cached). Both halves are committed, so the measurement - and with it the
-    published axis column - is verifiable by anyone, on any machine, with no GPU
-    and no model. This is the same property the arithmetic rules have always had,
-    extended to the last model-read numbers in the pipeline.
+    The pipeline's chart path is: one committed chart-model read (labels, tick
+    glyphs, estimates) plus code geometry. Both halves are committed, so the
+    measurement - and with it the published axis column - is verifiable by anyone,
+    on any machine, with no GPU and no model. The committed estimates must also
+    still agree with the re-measured values: the cross-check claim reproduces
+    alongside the numbers it cross-checks.
     """
     import re as _re
 
-    from deal_ready.parse import chart_measure, tiered, vision
+    from deal_ready.parse import chart_measure, reading, vision
     from deal_ready.values import value_present
     gt = load(DATA / "ground_truth.json")
     rows = [r for r in gt if r["carrier"] == "chart" and not r["labelled_in_chart"]]
     if not rows:
         check("axis values re-measure offline", SKIP, "no chart ground truth")
         return
-    strong = _re.sub(r"[:/]", "-", tiered.STRONG_MODEL)
+    chart = _re.sub(r"[:/]", "-", reading.CHART_MODEL)
     bad, checked, xchecked = [], 0, 0
     for r in rows:
         pdfs = list(DATA.glob(f"{r['target_id']}_*.pdf"))
@@ -247,51 +247,37 @@ def check_axis_values_remeasure() -> None:
             continue
         pdf = pdfs[0]
         stem = pdf.stem
-        crop = load(DATA / "vision_cache" / f"{stem}__p{r['page']:02d}__{strong}__crop.json")
-        tickrec = load(DATA / "vision_cache" / f"{stem}__p{r['page']:02d}__{strong}__ticks0.json")
-        if not crop or not tickrec:
-            bad.append(f"{r['target_id']} p{r['page']}: missing committed crop/ticks")
+        readrec = load(DATA / "vision_cache" /
+                       f"{stem}__p{r['page']:02d}__{chart}__read0.json")
+        if not readrec or not readrec.get("ticks"):
+            bad.append(f"{r['target_id']} p{r['page']}: missing committed chart read")
             continue
         png = vision.page_embedded_images(pdf, r["page"])[0]
-        rgb = chart_measure._rgb(png)
-        grid = chart_measure.find_gridlines(rgb)
-        ticks = sorted(tickrec["ticks"], reverse=True)
-        if len(grid) != len(ticks):
-            bad.append(f"{r['target_id']} p{r['page']}: {len(grid)} gridlines vs "
-                       f"{len(ticks)} ticks")
+        values = chart_measure.measure_chart(png, readrec["ticks"])
+        if not values:
+            bad.append(f"{r['target_id']} p{r['page']}: geometry did not resolve")
             continue
-        values = []
-        for color in chart_measure.find_series(rgb):
-            ep = chart_measure.find_endpoint(rgb, color)
-            if ep is None:
-                break
-            y = chart_measure.line_fit_y(rgb, color, ep[1], ep[0]) or ep[0]
-            values.append(round(chart_measure.interpolate(y, grid, ticks), 1))
-        block = chart_measure.measured_block(crop["text"], values)
-        if not block or not value_present(block, r["metric"], r["value"]):
-            bad.append(f"{r['target_id']}/{r['metric']}: measured {values or 'nothing'} "
+        reads = [(x["label"], x["value"]) for x in readrec["pairs"]]
+        pairs = chart_measure.join_by_proximity(reads, values)
+        if not pairs:
+            bad.append(f"{r['target_id']} p{r['page']}: labels did not join")
+            continue
+        block = chart_measure.block_from_pairs(pairs)
+        if not value_present(block, r["metric"], r["value"]):
+            bad.append(f"{r['target_id']}/{r['metric']}: measured {values} "
                        f"does not recover {r['value']}")
             continue
-        # The cross-check claim, when published: the committed independent read
-        # must still agree with the re-measured value, offline.
-        verify = _re.sub(r"[:/]", "-", tiered.VERIFY_MODEL)
-        readrec = load(DATA / "vision_cache" /
-                       f"{stem}__p{r['page']:02d}__{verify}__read0.json")
-        if readrec:
-            pairs = chart_measure.measured_pairs(crop["text"], values)
-            recs = chart_measure.crosscheck(
-                pairs, [(x["label"], x["value"]) for x in readrec["reads"]])
-            if not recs or not all(x["agree"] for x in recs):
-                bad.append(f"{r['target_id']}/{r['metric']}: cross-check read does "
-                           f"not agree offline")
-                continue
-            xchecked += 1
+        recs = chart_measure.crosscheck(pairs, reads)
+        if not recs or not all(x["agree"] for x in recs):
+            bad.append(f"{r['target_id']}/{r['metric']}: committed read does not "
+                       f"agree with the re-measured value")
+            continue
+        xchecked += 1
         checked += 1
     check("axis values re-measure offline",
           PASS if not bad else FAIL,
-          f"{checked} axis-read values re-measure from committed pixels, no GPU"
-          + (f"; {xchecked} cross-checked against committed independent reads"
-             if xchecked else "; cross-check reads not committed")
+          f"{checked} axis-read values re-measure from committed pixels, no GPU; "
+          f"{xchecked} cross-checked against the committed chart reads"
           if not bad else "; ".join(bad[:3]))
 
 

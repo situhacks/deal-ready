@@ -1,0 +1,12 @@
+{
+  "text": "Executive summary\n\nKestrel predicts maintenance events for commercial truck fleets using telematics feeds, and schedules service before a vehicle fails in transit.\n\nThe business is a commercial fleet maintenance software platform founded in 2018 and employing 73 people from its Austin, Texas headquarters. Approximately 95% of total revenue is recurring subscription revenue; revenue grew 22% year over year in FY25.\n\nModel quality improves with fleet-miles observed, and the data asset is difficult for a new entrant to assemble.",
+  "meta": {
+    "model": "qwen3.8:27b",
+    "ok": true,
+    "error": "",
+    "seconds": 114.06,
+    "tokens_in": 1493,
+    "tokens_out": 197,
+    "dpi": 120
+  }
+}

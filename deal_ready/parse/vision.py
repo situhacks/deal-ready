@@ -243,17 +243,9 @@ def read_crops(pdf_path: Path, page_no: int, model: str,
                use_cache: bool = True) -> tuple[str | None, dict | None]:
     """Transcribe a page's embedded exhibits, native resolution, `think=False`.
 
-    The escalation tier's input. Same transcription prompt and rules as the page
-    path - the model is still reading, not interpreting - but it sees the chart the
-    document actually stored rather than a resampled copy of the page it sits on.
-    Multiple images on one page are transcribed in order and joined; the cache holds
-    the joined transcription per page, so re-runs cost nothing and the committed
-    cache remains the evidence.
-
-    Returns (text, meta). (None, None) means no embedded images or no usable model -
-    callers fall back to the full-page read. A failed model call returns (None, meta)
-    and stays uncached, same rule as `parse`: an infrastructure failure must not be
-    cached as a read.
+    Retired from the runtime pipeline in v3.2 (the chart path needs one read, not
+    a transcription plus a calibration), kept because committed caches from
+    v2.1-v3.0 runs use this namespace and the bake-off may still want it.
     """
     ck = CACHE / (f"{Path(pdf_path).stem}__p{page_no:02d}__"
                   f"{model.replace(':', '-').replace('/', '-')}__crop.json")
@@ -291,44 +283,6 @@ def read_crops(pdf_path: Path, page_no: int, model: str,
     return text, meta
 
 
-# The one thing measurement needs from the model: the tick-label glyphs. Reading
-# printed characters is recognition - the task the vision tier does at 100% - and
-# it is the only model input to the measured values. Everything downstream of this
-# read is arithmetic in chart_measure.py, re-runnable offline from committed bytes.
-TICKS_PROMPT = """Read the y-axis tick labels of this chart. Output one label per
-line, topmost first, as a bare number exactly as printed (for example: 75.0).
-Output nothing else."""
-
-_TICK_RE = re.compile(r"^-?\d+(?:\.\d+)?$")
-
-
-def read_ticks(pdf_path: Path, page_no: int, image_index: int, png: bytes,
-               model: str, use_cache: bool = True) -> list[float] | None:
-    """The chart's y-axis tick values, top to bottom. Cached like every read."""
-    safe = model.replace(":", "-").replace("/", "-")
-    ck = CACHE / f"{Path(pdf_path).stem}__p{page_no:02d}__{safe}__ticks{image_index}.json"
-    if use_cache and ck.exists():
-        rec = json.loads(ck.read_text(encoding="utf-8"))
-        return rec["ticks"]
-
-    if not (ollama.available() and ollama.has_model(model)):
-        return None
-    reply = ollama.generate(model, TICKS_PROMPT, images=[png], system=SYSTEM,
-                            num_predict=400, timeout=PAGE_TIMEOUT, think=False)
-    if not reply.ok or not reply.text.strip():
-        return None  # uncached failure - a re-run retries it
-    ticks = [float(m.group(0)) for line in reply.text.splitlines()
-             if (m := _TICK_RE.match(line.strip()))]
-    if len(ticks) < 2:
-        return None
-    ck.parent.mkdir(parents=True, exist_ok=True)
-    ck.write_text(json.dumps(
-        {"ticks": ticks, "text": reply.text,
-         "meta": {"model": model, "ok": True, "seconds": round(reply.seconds, 2)}},
-        indent=2), encoding="utf-8")
-    return ticks
-
-
 READ_PROMPT = (
     "Read this line chart. It has two series. For EACH series, read the value of "
     "the FINAL data point (rightmost marker) off the y axis, interpolating between "
@@ -340,14 +294,15 @@ READ_PROMPT = (
 
 
 def read_chart_values(pdf_path: Path, page_no: int, image_index: int, png: bytes,
-                      model: str, use_cache: bool = True) -> list[tuple[str, float]] | None:
-    """An independent model's own read of the chart's endpoint values.
+                      model: str, use_cache: bool = True) -> dict | None:
+    """The chart model's one read of an exhibit: series labels, tick glyphs, and
+    its own estimated values, in a single call.
 
-    The cross-check tier's input. The measurement (chart_measure.py) is the number
-    the pipeline uses; this read exists so every measured value has an independent
-    perception path agreeing or disagreeing with it - agreement builds confidence,
-    disagreement flags a human. Cached like every read; the cached reads are what
-    makes the agreement claim verifiable offline.
+    This is the only model input the chart path needs. The labels name the series,
+    the ticks calibrate the pixel measurement (chart_measure.measure_chart), and
+    the estimates - never used as numbers - become the independent cross-check
+    against the measurement. Cached like every read; the committed cache is what
+    makes the whole path verifiable offline.
     """
     from . import chart_measure
 
@@ -355,7 +310,8 @@ def read_chart_values(pdf_path: Path, page_no: int, image_index: int, png: bytes
     ck = CACHE / f"{Path(pdf_path).stem}__p{page_no:02d}__{safe}__read{image_index}.json"
     if use_cache and ck.exists():
         rec = json.loads(ck.read_text(encoding="utf-8"))
-        return [(r["label"], r["value"]) for r in rec["reads"]]
+        return {"pairs": [(r["label"], r["value"]) for r in rec["pairs"]],
+                "ticks": rec["ticks"]}
 
     if not (ollama.available() and ollama.has_model(model)):
         return None
@@ -363,84 +319,13 @@ def read_chart_values(pdf_path: Path, page_no: int, image_index: int, png: bytes
                             num_predict=1000, timeout=PAGE_TIMEOUT, think=False)
     if not reply.ok or not reply.text or not reply.text.strip():
         return None  # uncached failure - a re-run retries it
-    reads = chart_measure.parse_model_reads(reply.text)
-    if not reads:
+    pairs, ticks = chart_measure.parse_model_reads(reply.text)
+    if not pairs or len(ticks) < 2:
         return None
     ck.parent.mkdir(parents=True, exist_ok=True)
     ck.write_text(json.dumps(
-        {"reads": [{"label": l, "value": v} for l, v in reads],
-         "text": reply.text,
+        {"pairs": [{"label": l, "value": v} for l, v in pairs],
+         "ticks": ticks, "text": reply.text,
          "meta": {"model": model, "ok": True, "seconds": round(reply.seconds, 2)}},
         indent=2), encoding="utf-8")
-    return reads
-
-
-def measure_exhibit(pdf_path: Path, page_no: int, model: str, crop_text: str,
-                    use_cache: bool = True,
-                    verify_model: str | None = None
-                    ) -> tuple[str | None, dict | None]:
-    """Measure a page's exhibits and, optionally, cross-check the measurement.
-
-    For each embedded exhibit: geometry finds the series colours and endpoint rows
-    (chart_measure.py), the cached tick read supplies the calibration, and the two
-    combine into values code computed. The model's role is bounded to reading
-    glyphs - its own estimated values stay in the transcription above, explicitly
-    superseded. Any step that does not resolve (no gridlines, tick count mismatch,
-    unparseable rows) leaves the transcription standing alone.
-
-    `verify_model` (when installed) independently reads the chart's endpoint
-    values - a second, perception-only path over the same pixels. The measurement
-    stays the number the pipeline uses; the read exists so every measured value
-    carries an agreement record: agree within tolerance builds confidence,
-    disagree flags a human. Returns (block, crosscheck) - either may be None.
-    """
-    from . import chart_measure
-
-    images = page_embedded_images(pdf_path, page_no)
-    if not images:
-        return None, None
-    blocks: list[str] = []
-    xcheck: dict | None = None
-    for i, png in enumerate(images):
-        rgb = chart_measure._rgb(png)
-        grid = chart_measure.find_gridlines(rgb)
-        series = chart_measure.find_series(rgb)
-        if len(grid) < 2 or len(series) < 1:
-            continue
-        ticks = read_ticks(pdf_path, page_no, i, png, model, use_cache=use_cache)
-        if ticks is None or len(ticks) != len(grid):
-            continue
-        # Order is taken from geometry, not from the model: gridlines run top to
-        # bottom and a y axis increases upward, so the top gridline pairs with the
-        # largest tick. (Measured reason: qwen3.5 returned one chart's ticks
-        # bottom-to-top despite the prompt, which mirrored every value.)
-        ticks = sorted(ticks, reverse=True)
-        values = []
-        for color in series:
-            ep = chart_measure.find_endpoint(rgb, color)
-            if ep is None:
-                break
-            # Prefer the line's fitted centerline over the marker's own center:
-            # a small disc rasterizes wherever its sub-pixel phase lands, the
-            # line averages that noise away (chart_measure.line_fit_y).
-            y = chart_measure.line_fit_y(rgb, color, ep[1], ep[0]) or ep[0]
-            v = chart_measure.interpolate(y, grid, ticks)
-            if v is None:
-                break
-            values.append(round(v, 1))
-        if len(values) != len(series):
-            continue
-        pairs = chart_measure.measured_pairs(crop_text, values)
-        if not pairs:
-            continue
-        blocks.append(chart_measure.block_from_pairs(pairs))
-        if verify_model is None or xcheck is not None:
-            continue  # one cross-check per page is enough; first resolved image wins
-        model_reads = read_chart_values(pdf_path, page_no, i, png, verify_model,
-                                        use_cache=use_cache)
-        if model_reads:
-            recs = chart_measure.crosscheck(pairs, model_reads)
-            if recs:
-                xcheck = {"model": verify_model, "pairs": recs,
-                          "all_agree": all(r["agree"] for r in recs)}
-    return ("\n\n".join(blocks) if blocks else None), xcheck
+    return {"pairs": pairs, "ticks": ticks}

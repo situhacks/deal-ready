@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 from deal_ready.embed import router
-from deal_ready.parse import textlayer, tiered
+from deal_ready.parse import reading, textlayer
 from deal_ready.scorer import fit, rules
 from deal_ready.values import attribution_present, value_present
 
@@ -88,9 +88,10 @@ def screen_one(pdf: Path, criteria: dict, use_vision: bool = True,
             routes = router.route(page_text, metrics=missing)
             if routes:
                 routed_pages = router.pages_to_read(routes, top_k)
-                # Tiered: the 1B model reads every page; pages carrying an exhibit
-                # are re-read at exhibit level by the strong tier (see tiered.py).
-                vdoc = tiered.parse(pdf, pages=routed_pages)
+                # The reading pipeline: a parser reads every routed page; pages
+                # that yield no values go straight to the chart specialist and
+                # pixel measurement (see deal_ready/parse/reading.py).
+                vdoc = reading.parse(pdf, pages=routed_pages)
                 vtext = {p.page_number: p.text for p in vdoc.pages}
                 vmeta = {p.page_number: p.meta for p in vdoc.pages}
                 for m in missing:

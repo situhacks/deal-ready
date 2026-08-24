@@ -1,0 +1,12 @@
+{
+  "text": "Executive summary\n\nAshgrove handles grain intake, grading, storage allocation and settlement for country elevators across the prairie provinces.\n\nThe business is a agricultural grain elevator management software platform founded in 1997 and employing 29 people from its Regina, Saskatchewan headquarters. Approximately **84%** of total revenue is recurring subscription revenue; revenue grew **2%** year over year in FY25.\n\nSettlement logic encodes two decades of provincial grading rules that customers rely on being correct at harvest.",
+  "meta": {
+    "model": "qwen3.8:27b",
+    "ok": true,
+    "error": "",
+    "seconds": 120.68,
+    "tokens_in": 1493,
+    "tokens_out": 165,
+    "dpi": 120
+  }
+}

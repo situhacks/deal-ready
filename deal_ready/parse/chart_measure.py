@@ -2,28 +2,28 @@
 
 A vision model reading a value off an axis is estimating: point sits between the 105
 and 110 gridlines, a bit below the middle, call it 108.2. The estimate lands within
-tenths of the truth and still misses it, which is exactly why axis-read values used
-to ship flagged at a measured ceiling. But a rendered chart is also just an image
-with fixed geometry - series in consistent colors, gridlines at printed tick values,
-a marker at each data point. Given the tick values, the value of an endpoint is not
-an estimation problem at all. It is a ruler.
+tenths of the truth and still misses it - even for the newest open frontier model,
+which the 2026-08-24 probe caught at three-of-five endpoint pairs exact and two
+within 0.2. But a rendered chart is also just an image with fixed geometry: series
+in consistent colors, gridlines at printed tick values, a marker at each data point.
+Given the tick values, the value of an endpoint is not an estimation problem at all.
+It is a ruler.
 
 Division of labour, the same one the rest of this repo runs:
 
-    model   reads the tick-label glyphs and names the series (recognition - the task
-            small vision models measurably do at 100%)
-    code    finds the series pixels, locates the endpoint marker, interpolates
-            against the gridlines (arithmetic - deterministic, re-runnable offline)
+    model   reads the tick-label glyphs and names the series (recognition)
+    code    finds the series pixels, locates the endpoint marker, fits the line,
+            interpolates against the gridlines (deterministic, offline-verifiable)
 
-Everything in this module is pure geometry over an RGB array. No model call, no
-network, no cache of its own: given the chart's bytes and the tick values it returns
-the same numbers forever, which is what lets `run_checks.py` re-verify every
-axis-read value from committed artifacts without a GPU.
+Everything here is pure geometry over an RGB array plus pure comparison logic. No
+model call, no cache of its own: given the chart's bytes and the tick values it
+returns the same numbers forever, which is what lets `run_checks.py` re-verify
+every axis-read value from committed artifacts without a GPU.
 
 Honest limits: this is geometry for rendered charts with gridlines and colour-coded
 series - the common case in a CIM exhibit, not a universal one. Photos, 3-D renders
-and label-less log axes are out of scope, and the callers fall back to the model's
-own transcription when the geometry does not resolve.
+and label-less log axes are out of scope, and callers fall back to asking the seller
+when the geometry does not resolve.
 """
 
 from __future__ import annotations
@@ -47,14 +47,35 @@ COLOR_BRIGHTNESS_MAX = 240
 SERIES_MIN_FRACTION = 0.003    # of all pixels; a 950x480 line chart series is ~0.8%
 COLOR_TOLERANCE = 35           # per-channel, around a series colour's mean
 
-# The FY25 marker is the rightmost blob of a series. Its center is read from the
-# right cap - the last few columns, which contain marker and no line.
-_ENDPOINT_CAP_COLS = 3
-
 # Anti-aliased text is neutral gray, which can sit inside the per-channel tolerance
 # of a dark series colour - and legend text sits right of the last marker. Requiring
 # channel spread in the mask excludes it: gray text has none, series ink does.
 MASK_SPREAD_MIN = 15
+
+# The FY25 marker is the rightmost blob of a series. Its center is read from the
+# right cap - the last few columns, which contain marker and no line.
+_ENDPOINT_CAP_COLS = 3
+
+# The line fit runs behind the marker. The marker is ~13px of ink whose rasterized
+# center depends on the sub-pixel phase of the true point - one chart's disc
+# measured a clean, symmetric 1.3px low, worth exactly the 0.1 that separated a
+# pass from a miss. The line entering it is hundreds of columns of the same ink;
+# fitting its centerline averages the phase noise out.
+_LINE_SPAN = 80          # columns of line fitted behind the marker
+_LINE_SKIP = 16          # columns skipped: marker half-width plus anti-aliasing
+_MARKER_HALF = 8         # the fit is evaluated at the marker's center, not its edge
+_LINE_RUN_TOL = 4.0      # px a column's band center may move between neighbours
+_LINE_TRIM = 0.8         # px; residuals beyond this are refit without (marker halo)
+
+# An independent model re-read counts as agreeing with the measurement when it
+# lands within this many points. The observed wobble of a frontier-class open
+# model on these charts is +/-0.2; half a small gridline gap is generous without
+# being blind.
+READ_TOLERANCE = 0.5
+
+_MODEL_READ_RE = re.compile(r"^(.+?):\s*([0-9]+(?:\.[0-9]+)?)\s*%?\s*$")
+_TICKS_RE = re.compile(r"^ticks:\s*(.*)$", re.I)
+_BARE_NUMBER_RE = re.compile(r"^-?\d+(?:\.\d+)?$")
 
 
 def _rgb(png: bytes) -> np.ndarray:
@@ -106,7 +127,6 @@ def find_series(rgb: np.ndarray) -> list[tuple[int, int, int]]:
         if counts[i] < need:
             break
         k = int(uniq[i])
-        r, g, b = (k // 100_000) * 24, ((k // 1_000) % 100) * 24, (k % 1_000) * 24
         mean = tuple(int(px[keys == k][:, c].mean()) for c in range(3))
         if any(all(abs(mean[c] - s[c]) <= COLOR_TOLERANCE for c in range(3))
                for s in series):
@@ -136,31 +156,17 @@ def find_endpoint(rgb: np.ndarray,
     return float((rows.min() + rows.max()) / 2.0), x1
 
 
-_LINE_SPAN = 80          # columns of line fitted behind the marker
-_LINE_SKIP = 16          # columns skipped: marker half-width plus anti-aliasing
-_MARKER_HALF = 8         # the fit is evaluated at the marker's center, not its edge
-_LINE_RUN_TOL = 4.0      # px a column's band center may move between neighbours
-_LINE_TRIM = 0.8         # px; residuals beyond this are refit without (marker halo)
-
-
 def line_fit_y(rgb: np.ndarray, color: tuple[int, int, int],
                x_end: int, y_hint: float) -> float | None:
     """Least-squares centerline of the series line just left of its end marker,
-    evaluated at `x_end`.
-
-    The marker is ~13px of ink, and the rasterized center of a small disc depends
-    on the sub-pixel phase of the true point - one chart's disc measured a clean,
-    symmetric 1.3px low, worth exactly the 0.1 that separated a pass from a miss.
-    The line entering it is hundreds of columns of the same ink; fitting its
-    centerline averages the phase noise out and extrapolates to the marker's x.
+    evaluated at the marker's center.
 
     The walk starts clear of the marker (its columns are flat at the marker's own
     center, and including them tilts the fit) and tracks the contiguous band nearest
     the previous column's center, so a legend swatch crossing the segment cannot
-    hijack the fit - it is a different band, farther from the tracker. The fitted
-    line is evaluated at the marker's center: at the marker's right edge the
-    extrapolation would add slope x radius, which on these charts is the difference
-    between 86.0 and 86.1.
+    hijack the fit. Evaluating at the marker's center rather than its right edge
+    avoids adding slope x radius to the result - on these charts that difference is
+    the gap between 86.0 and 86.1.
     """
     dist = np.abs(rgb - np.array(color, dtype=np.int16)).max(axis=2)
     spread = rgb.max(axis=2) - rgb.min(axis=2)
@@ -194,8 +200,7 @@ def line_fit_y(rgb: np.ndarray, color: tuple[int, int, int],
     ya = np.array(ys)
     z = np.polyfit(xa, ya, 1)
     # The first columns after the skip can still carry the marker's halo, which
-    # tilts the fit and shows up as a systematic +0.1 on rising series. One
-    # trimmed refit removes it: drop the worst residuals, refit what remains.
+    # tilts the fit. One trimmed refit removes it.
     resid = np.abs(np.polyval(z, xa) - ya)
     keep = resid <= max(_LINE_TRIM, float(np.median(resid) * 3))
     if keep.sum() >= len(xs) * 0.7 and keep.sum() >= 2:
@@ -218,35 +223,83 @@ def interpolate(y: float, grid_ys: list[float],
     return v1 + (y - y1) * (v2 - v1) / (y2 - y1)
 
 
-_ROW_RE = re.compile(r"^(.+?)\s*\|\s*(?:.+?\|\s*)*([0-9.]+)\s*%\s*\|?\s*$")
-_SEP_RE = re.compile(r"^[\s|:-]+$")
+def measure_chart(png: bytes, ticks: list[float]) -> list[float] | None:
+    """Geometry's answer for one chart: every series' endpoint value, in pixels.
 
-# An independent model re-read counts as agreeing with the measurement when it
-# lands within this many points. The observed wobble of a frontier-class open
-# model on these charts is +/-0.2; half a small gridline gap is generous without
-# being blind.
-READ_TOLERANCE = 0.5
-
-_MODEL_READ_RE = re.compile(r"^(.+?):\s*([0-9]+(?:\.[0-9]+)?)\s*%?\s*$")
-
-
-def parse_model_reads(text: str) -> list[tuple[str, float]]:
-    """(label, value) pairs from an independent model's chart read.
-
-    Expects the escalation model's answer format: one `label: value` line per
-    series (a leading `ticks:` line is ignored). Values the model read are
-    estimates and never enter the pipeline's numbers - they exist only to be
-    compared against the measurement.
+    `ticks` are the y-axis tick values top to bottom (the caller's model read them
+    once, cached). Returns one value per detected series, largest pixel count
+    first, or None when the chart does not resolve: no gridlines, tick-count
+    mismatch, or a series whose geometry would not close.
     """
-    out: list[tuple[str, float]] = []
+    rgb = _rgb(png)
+    grid = find_gridlines(rgb)
+    series = find_series(rgb)
+    if len(grid) < 2 or not series or len(grid) != len(ticks):
+        return None
+    # Order comes from geometry, not from any model: gridlines run top to bottom
+    # and a y axis increases upward, so the top gridline pairs with the largest
+    # tick. (Measured reason: a model returned one chart's ticks bottom-to-top
+    # despite the prompt, which mirrored every value.)
+    calibrated = sorted(ticks, reverse=True)
+    values = []
+    for color in series:
+        ep = find_endpoint(rgb, color)
+        if ep is None:
+            return None
+        y = line_fit_y(rgb, color, ep[1], ep[0]) or ep[0]
+        v = interpolate(y, grid, calibrated)
+        if v is None:
+            return None
+        values.append(round(v, 1))
+    return values
+
+
+def parse_model_reads(text: str) -> tuple[list[tuple[str, float]], list[float]]:
+    """(series reads, tick values) from the chart model's answer.
+
+    Expected format: one `label: value` line per series plus a `ticks:` line. The
+    model's values are estimates and never enter the pipeline's numbers - they join
+    measured values to their labels, then serve as the independent cross-check.
+    """
+    pairs: list[tuple[str, float]] = []
+    ticks: list[float] = []
     for line in text.splitlines():
-        m = _MODEL_READ_RE.match(line.strip())
+        line = line.strip()
+        t = _TICKS_RE.match(line)
+        if t:
+            ticks = [float(x) for x in t.group(1).split(",")
+                     if _BARE_NUMBER_RE.match(x.strip())]
+            continue
+        m = _MODEL_READ_RE.match(line)
         if m and m.group(1).strip().lower() != "ticks":
             try:
-                out.append((m.group(1).strip(), float(m.group(2))))
+                pairs.append((m.group(1).strip(), float(m.group(2))))
             except ValueError:
                 continue
-    return out
+    return pairs, ticks
+
+
+def join_by_proximity(rows: list[tuple[str, float]],
+                      values: list[float]) -> list[tuple[str, float]] | None:
+    """Measured values joined to series labels by the assignment that best matches
+    the rows' own (estimated) values - identity or permutation, whichever minimises
+    total distance. Returns None when the counts do not match."""
+    if not rows or len(rows) != len(values):
+        return None
+    best, best_err = None, None
+    for perm in permutations(range(len(values))):
+        err = sum(abs(rows[i][1] - values[perm[i]]) for i in range(len(rows)))
+        if best_err is None or err < best_err:
+            best, best_err = perm, err
+    return [(rows[i][0], values[best[i]]) for i in range(len(rows))]
+
+
+def block_from_pairs(pairs: list[tuple[str, float]]) -> str:
+    lines = ["[Measured from the chart's pixels - authoritative over the "
+             "estimates above]"]
+    lines += [f"{label}: {value:.1f}% (measured off the axis)"
+              for label, value in pairs]
+    return "\n".join(lines)
 
 
 def crosscheck(measured: list[tuple[str, float]],
@@ -273,57 +326,3 @@ def crosscheck(measured: list[tuple[str, float]],
                      "delta": round(abs(mval - read), 2),
                      "agree": abs(mval - read) <= READ_TOLERANCE})
     return recs
-
-
-def parse_series_rows(crop_text: str) -> list[tuple[str, float]]:
-    """(label, last percentage) per series row of a crop transcription.
-
-    The transcription's own values are the model's estimates; they are used here
-    only to join measured series to their labels - the guess sits next to the
-    measurement, and the assignment that agrees with the guesses wins.
-    """
-    rows: list[tuple[str, float]] = []
-    for line in crop_text.splitlines():
-        line = line.strip()
-        if not line or _SEP_RE.match(line):
-            continue
-        m = _ROW_RE.match(line)
-        if m:
-            try:
-                rows.append((m.group(1).strip().strip("*"), float(m.group(2))))
-            except ValueError:
-                continue
-    return rows
-
-
-def measured_pairs(crop_text: str, values: list[float]) -> list[tuple[str, float]] | None:
-    """Measured values joined to their series labels (see measured_block)."""
-    rows = parse_series_rows(crop_text)
-    if not rows or len(rows) != len(values):
-        return None
-    best, best_err = None, None
-    for perm in permutations(range(len(values))):
-        err = sum(abs(rows[i][1] - values[perm[i]]) for i in range(len(rows)))
-        if best_err is None or err < best_err:
-            best, best_err = perm, err
-    return [(rows[i][0], values[best[i]]) for i in range(len(rows))]
-
-
-def block_from_pairs(pairs: list[tuple[str, float]]) -> str:
-    lines = ["[Measured from the chart's pixels - authoritative over the "
-             "estimates above]"]
-    lines += [f"{label}: {value:.1f}% (measured off the axis)"
-              for label, value in pairs]
-    return "\n".join(lines)
-
-
-def measured_block(crop_text: str, values: list[float]) -> str | None:
-    """The text appended to a crop transcription when measurement resolved.
-
-    Joins measured series values to the transcription's row labels: with the guesses
-    beside them, the assignment (identity or permutation) that minimises total
-    distance wins. Returns None when the transcription does not parse into matching
-    rows - the transcription then stands alone, as before.
-    """
-    pairs = measured_pairs(crop_text, values)
-    return block_from_pairs(pairs) if pairs else None

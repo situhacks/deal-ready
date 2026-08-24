@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+- The escalation ladder is gone. The bake-off that measured every candidate as a
+  full-page reader settled the question the ladder existed to answer: no single
+  model wins, so the pipeline now assigns each job to its measured best, directly.
+  GLM-OCR reads every page (100% prose/table/labelled charts, 5s/page); pages that
+  yield no values go straight to the chart specialist; qwen3.5 and minicpm leave the
+  runtime path (minicpm stays as the bake-off reference).
+- The chart path collapsed from three model calls to one: qwen3.8:27b reads an
+  exhibit once - series labels, tick glyphs, and its own estimated values - code
+  measures the endpoints against those ticks, and the estimates become the
+  cross-check against the measurement in the same call. Reader runtime on this
+  corpus: 100s.
+- README restructured to article shape: what it is and the quick-start at the top,
+  the correction loop as its own diagrammed section, the version story moved to the
+  bottom. AGENTS.md added as the agent-agnostic entry point (Claude Code reads
+  SKILL.md; Codex-class agents read AGENTS.md).
+- tiered.py renamed to reading.py; the backend label is now
+  `pipeline:glm-ocr->[qwen3.8:27b+geometry]`.
+
 ## v3.1.0 — 2026-08-24
 
 - Cross-check tier: every measured axis value now carries an agreement record from

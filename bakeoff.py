@@ -11,8 +11,8 @@ is this: same pages, same 120 DPI render, same transcription prompt, same grader
 as Layer P, per-candidate caches committed like every other read.
 
 References come from reports/layer_p.json without re-running: `vision:minicpm`
-is the incumbent's single-pass equivalent (same input, same prompt), and the
-`tiered` row is the full production pipeline a candidate pipeline must beat.
+is a general-VLM single-pass reference, and the `pipeline` row is the full
+production pipeline a candidate must beat.
 
 A model that is not installed reports "not run" - an infrastructure gap must not
 dress up as a capability finding. Chart-interior values are graded nowhere here:
@@ -52,6 +52,8 @@ CANDIDATES = [
     {"model": "deepseek-ocr", "prompt": DEEPSEEK_PROMPT, "system": None,
      "cache_variant": "shortprompt",
      "note": "port rejects prompts over ~50 chars; graded on the 40-char core"},
+    {"model": "qwen3.8:27b",
+     "note": "newest open general multimodal; the just-use-the-best-reader test"},
 ]
 
 
@@ -128,13 +130,13 @@ def main() -> int:
         return "not run" if not v else f"{v['attributed_pct']:.0f}% ({v['attributed']}/{v['n']})"
 
     lines = [
-        "# Reader bake-off - candidates vs the incumbent, identical grading",
+        "# Reader bake-off - candidates vs the production pipeline, identical grading",
         "",
         f"Graded {len(rows)} field-page pairs. Single-pass candidates: full page at "
         "120 DPI, production transcription prompt, temperature 0, per-model caches "
-        "committed. References from reports/layer_p.json: `vision:minicpm` is the "
-        "incumbent's single-pass equivalent; `tiered` is the full production "
-        "pipeline (cheap page read, exhibit re-reads, measured chart geometry).",
+        "committed. References from reports/layer_p.json: `vision:minicpm` is a "
+        "general-VLM single-pass reference; `pipeline` is the full production "
+        "pipeline (parser pages, chart specialist, measured geometry).",
         "",
         "| Backend | Prose | Table | Chart (labelled) | Chart (axis) | s/page |",
         "|---|---|---|---|---|---|",
@@ -147,9 +149,9 @@ def main() -> int:
         ax = split.get((backend, "axis"), {"n": 0, "att": 0})
         lines.append(f"| `{backend}` | {cell(backend, 'prose')} | {cell(backend, 'table')} "
                      f"| {fmt_split(lab)} | {fmt_split(ax)} | {t['sec_per_page']} |")
-    for ref, label in [("vision:minicpm-v4.6:latest", "incumbent, single-pass"),
-                       ("tiered:minicpm-v4.6:latest->qwen3.5:4b",
-                        "incumbent, full pipeline")]:
+    for ref, label in [("vision:minicpm-v4.6:latest", "general VLM, single-pass"),
+                       ("pipeline:glm-ocr->[qwen3.8:27b+geometry]",
+                        "production pipeline")]:
         v = rep.get("aggregate", {})
         g = lambda c: v.get(f"{ref}|{c}", {}).get("attributed_pct")
         f = lambda c: "n/a" if g(c) is None else f"{g(c):.0f}%"

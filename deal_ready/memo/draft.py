@@ -70,7 +70,7 @@ def _axis_read_rate() -> int | None:
     n = att = 0
     for r in rep.get("rows", []):
         if (r.get("carrier") == "chart" and r.get("labelled_in_chart") is False
-                and str(r.get("backend", "")).startswith("tiered")):
+                and str(r.get("backend", "")).startswith(("tiered", "pipeline"))):
             n += 1
             att += int(r.get("attributed", 0))
     return round(100 * att / n) if n else None

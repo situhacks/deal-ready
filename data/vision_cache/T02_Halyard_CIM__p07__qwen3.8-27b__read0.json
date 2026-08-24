@@ -1,5 +1,5 @@
 {
-  "reads": [
+  "pairs": [
     {
       "label": "Gross revenue retention",
       "value": 96.2
@@ -9,10 +9,20 @@
       "value": 103.2
     }
   ],
+  "ticks": [
+    107.5,
+    105.0,
+    102.5,
+    100.0,
+    97.5,
+    95.0,
+    92.5,
+    90.0
+  ],
   "text": "ticks: 107.5, 105.0, 102.5, 100.0, 97.5, 95.0, 92.5, 90.0\nGross revenue retention: 96.2\nNet revenue retention: 103.2",
   "meta": {
     "model": "qwen3.8:27b",
     "ok": true,
-    "seconds": 9.92
+    "seconds": 29.07
   }
 }

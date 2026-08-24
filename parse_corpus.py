@@ -12,10 +12,10 @@ Vision is the expensive one, so it reads only the pages ground truth says carry 
 value. That is not a shortcut, it is the routing argument in miniature: read the pages
 that matter. `route_corpus.py` measures what that selection is worth.
 
-Two vision configurations run, both from the same cache: the cheap 1B model alone
+Two vision configurations run, both from the same cache: a general 1B VLM alone
 (the capability boundary row - what a page-level read can and cannot see), and the
-tiered pipeline the tool actually ships (cheap page read, strong exhibit re-read -
-see deal_ready/parse/tiered.py).
+reading pipeline the tool actually ships (parser pages, chart specialist + pixel
+geometry - see deal_ready/parse/reading.py).
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
-from deal_ready.parse import textlayer, tiered, vision
+from deal_ready.parse import reading, textlayer, vision
 from eval.recoverability import aggregate, load_ground_truth, render_table, score_document
 
 ROOT = Path(__file__).parent
@@ -77,10 +77,11 @@ def main() -> int:
                 secs += p.meta.get("seconds", 0) or 0
                 tin += p.meta.get("tokens_in", 0) or 0
                 tout += p.meta.get("tokens_out", 0) or 0
-            esc = [p.page_number for p in doc.pages if p.meta.get("tier") == "escalated"]
+            esc = [p.page_number for p in doc.pages
+                   if p.meta.get("chart_kind") == "unlabelled"]
             print(f"  {pdf.name:<34} pages {pages}  "
                   f"{sum(p.meta.get('seconds',0) or 0 for p in doc.pages):>6.1f}s"
-                  + (f"  escalated {esc}" if esc else ""))
+                  + (f"  chart path {esc}" if esc else ""))
         if ran_any:
             backends.append(label)
             runtime[label] = {"seconds": round(secs, 1), "tokens_in": tin,
@@ -92,8 +93,8 @@ def main() -> int:
             lambda pdf, pages, use_cache: vision.parse(
                 pdf, pages=pages, model=vision.DEFAULT_MODEL, use_cache=use_cache))
         run_vision(
-            f"tiered:{tiered.CHEAP_MODEL}->{tiered.STRONG_MODEL}",
-            lambda pdf, pages, use_cache: tiered.parse(
+            f"pipeline:{reading.READER_MODEL}->[{reading.CHART_MODEL}+geometry]",
+            lambda pdf, pages, use_cache: reading.parse(
                 pdf, pages=pages, use_cache=use_cache))
 
     # --- Layer P ------------------------------------------------------------------
@@ -145,11 +146,10 @@ def main() -> int:
         "**A value read off an axis is measured, and still flagged.** The v1 "
         "configuration landed around 70% on the axis column: the strong tier was "
         "burning its budget inside a thinking block and reading a lossy page render. "
-        "With reasoning disabled and the exhibit re-read from the PDF's native "
-        "embedded image, the tiered row reads the axis column in full on the "
-        "committed eval. Every axis-read value still ships flagged - an "
-        "interpolated value is not a printed one, and the flag is where the human "
-        "signs.",
+        "In the current pipeline the axis column comes from code-measured geometry, "
+        "and it reads in full on the committed eval. Every axis-read value still "
+        "ships flagged - a measured value is not a printed one, and the flag is "
+        "where the human signs.",
         "",
     ]
     (REPORTS / "layer_p.md").write_text("\n".join(md), encoding="utf-8")

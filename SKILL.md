@@ -32,10 +32,11 @@ questions, and a human signs.
 ## Requirements
 
 Python 3.12. Models are local through Ollama (`glm-ocr` reads every page,
-`qwen3.5:4b` re-reads exhibits and tick glyphs, `nomic-embed-text` routes;
-`minicpm-v4.6` is the general-VLM reference backend for `bakeoff.py` comparisons).
-Without them the pipeline still runs deterministically and reports which parts did
-not execute. No API keys, no network calls to model providers, ever.
+`qwen3.8:27b` reads chart pages - labels, ticks, and the independent cross-check,
+`nomic-embed-text` routes; `minicpm-v4.6` is the general-VLM reference backend for
+`bakeoff.py` comparisons). Without them the pipeline still runs deterministically
+and reports which parts did not execute. No API keys, no network calls to model
+providers, ever.
 
 ## Honest boundaries
 

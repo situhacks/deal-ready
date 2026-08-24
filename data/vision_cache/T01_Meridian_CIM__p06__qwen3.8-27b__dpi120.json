@@ -1,0 +1,12 @@
+{
+  "text": "Customer base\n\nThe customer base is contracted on written agreements with staggered renewal dates. The chart below sets out the distribution of annual recurring revenue across the customer base.\n\nTop 5 customers: 19% of ARR\n\nLargest customer: 6%\nCustomers 2-5: 13%\nAll other customers: 81%\n\nUnits: Share of ARR (%)\n\nDistribution of annual recurring revenue by customer, FY25.",
+  "meta": {
+    "model": "qwen3.8:27b",
+    "ok": true,
+    "error": "",
+    "seconds": 105.88,
+    "tokens_in": 1493,
+    "tokens_out": 210,
+    "dpi": 120
+  }
+}
