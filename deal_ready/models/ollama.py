@@ -105,11 +105,17 @@ def generate(
     temperature: float = 0.0,
     num_predict: int | None = None,
     timeout: int = DEFAULT_TIMEOUT,
+    think: bool | None = None,
 ) -> ModelReply:
     """One completion. `images` are raw PNG/JPEG bytes.
 
     temperature defaults to 0: this pipeline is measured, and a scorer whose inputs
     wander between runs cannot be measured.
+
+    `think=False` disables a thinking model's reasoning phase server-side. The
+    soft `/no_think` prompt suffix proved unreliable - with some prompts the model
+    ignored it, spent the whole num_predict inside an unterminated reasoning block,
+    and returned an empty string that looked like refusal.
     """
     payload: dict = {
         "model": model,
@@ -121,6 +127,8 @@ def generate(
         "keep_alive": "30m",
         "options": {"temperature": temperature},
     }
+    if think is not None:
+        payload["think"] = think
     if num_predict is not None:
         payload["options"]["num_predict"] = num_predict
     if system:
