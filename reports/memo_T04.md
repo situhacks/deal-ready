@@ -38,24 +38,24 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T04-judgement-001-->
-- The business relies on a single founder who writes production code for its core settlement logic, with no CTO or documented succession plan to mitigate the risk of operational paralysis if that individual departs. (p9)
+- The document relies on management's unaudited figures for FY25 without independent verification of the negative EBITDA or the rule of 40 score. (p8)
 
 <!--co-T04-judgement-002-->
-- Management highlights a difficult-to-replicate data asset but fails to disclose the specific volume of fleet-miles required to achieve model quality, leaving investors unable to verify the defensibility of their proprietary claims. (p2)
+- Management has hired two senior executives in the last eighteen months, creating a high risk that the company lacks deep institutional knowledge and faces founder dependency. (p9)
 
 <!--co-T04-judgement-003-->
-- The document presents a negative EBITDA as an 'adjusted' figure by adding back one-time transaction costs and legal expenses, obscuring the fact that the company is burning cash at a rate that contradicts its stated growth trajectory. (p8)
+- The business model depends on a proprietary data asset derived from telematics feeds, yet the document offers no evidence of how this data is secured or protected against unauthorized access. (p10)
 
 <!--co-T04-judgement-004-->
-- Retention metrics are defined to include expansion revenue, which artificially inflates the retention rate and masks potential churn risks among existing customers. (p7)
+- Retention metrics are presented as 'net' retention which includes expansion and contraction, masking potential churn risks that would be visible only in gross retention figures. (p7)
 
 <!--co-T04-judgement-005-->
-- The product description claims an API supports customer-built extensions without detailing the technical maturity of the integration surface or providing evidence that third-party developers can reliably extend the platform. (p5)
+- The document uses the term 'commercial fleet maintenance software platform' to describe a telematics-based prediction tool, potentially inflating the perceived scope of the product offering. (p2)
 
 ## Ask the seller
 
-- Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
-- Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
+- Gross revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
+- Net revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
 
 ---
 

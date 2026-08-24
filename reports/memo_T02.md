@@ -1,10 +1,10 @@
 # Screening memo — Halyard (T02)
 
-*Drafted by deal-ready · 9/10 metrics recovered · every figure cites its page · nothing here recommends a transaction.*
+*Drafted by deal-ready · 10/10 metrics recovered · every figure cites its page · nothing here recommends a transaction.*
 
 ## Verdict against the profile
 
-Fit score **74.7/100** against the "Buy-and-hold vertical market software" profile — Tier 2 - diligence questions attached.
+Fit score **94.7/100** against the "Buy-and-hold vertical market software" profile — Tier 1 - advance to management call.
 The score sorts an inbox; the flags below are the part worth reading.
 
 ## The numbers
@@ -17,7 +17,8 @@ The score sorts an inbox; the flags below are the part worth reading.
 | Gross margin | 74% | p8, textlayer |
 | EBITDA | $1.2M | p8, textlayer |
 | YoY growth | 9% | p2, textlayer |
-| Net revenue retention | 103% (chart axis — confirm <!--co-T02-axis_read-001-->) | p7, vision |
+| Gross revenue retention | 96% (chart axis — confirm <!--co-T02-axis_read-001-->) | p7, vision |
+| Net revenue retention | 103% (chart axis — confirm <!--co-T02-axis_read-002-->) | p7, vision |
 | Largest customer share | 34% (chart label <!--co-T02-label_read-001-->) | p6, vision |
 | Top-five customer share | 71% (chart label <!--co-T02-label_read-002-->) | p6, vision |
 
@@ -29,37 +30,32 @@ The score sorts an inbox; the flags below are the part worth reading.
 <details><summary>Context notes (info-grade)</summary>
 
 - Rule of 40 score is 29, below the growth-investor benchmark. Growth of 9% plus an EBITDA margin of 20% totals 29. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.
-- 1 core metric(s) not stated in the document. Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.
 
 </details>
-
-## What the document leaves out
-
-- Gross revenue retention appears as a chart on p7 but no reliable value could be read from it - request the underlying series <!--co-T02-missing_metric-001-->
 
 ## Judgement — read with suspicion
 
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T02-judgement-001-->
-- The document relies on management's own unaudited figures for FY25 without providing the underlying data or third-party verification required to validate the 9% growth and gross margin claims. (p8)
+- The business relies on two co-founders who personally manage the largest accounts, creating a critical dependency that threatens operational continuity if either departs. (p9)
 
 <!--co-T02-judgement-002-->
-- Retention metrics are presented as a composite of gross and net retention, obscuring whether expansion is driving revenue or if the base is merely being retained through contract renewals. (p7)
+- Revenue concentration is severe with the top five customers accounting for 71% of ARR and the single largest customer at 34%, leaving minimal room to out-run problems organically. (p6)
 
 <!--co-T02-judgement-003-->
-- The technology stack consists of a .NET monolith with an unsupported database version and zero automated test coverage in the settlement engine, creating generational technical risk rather than incremental upgrade challenges. (p10)
+- The core application is a .NET monolith built in 2011 with no mention of automated testing or modernization, presenting generational technical risk rather than incremental upgrade challenges. (p10)
 
 <!--co-T02-judgement-004-->
-- Succession risk is elevated as the two co-founders hold day-to-day commercial relationships with the largest accounts while no documented succession plan exists for the core technical logic. (p9)
+- Management highlights low displacement risk due to operational dependency but fails to quantify the specific cost of downtime or the financial impact of a single customer outage. (p2)
 
 <!--co-T02-judgement-005-->
-- The document uses a 'fragmented market' narrative to justify low replacement risk, yet ignores that buyers are operationally conservative and replacement cycles are measured in years rather than quarters. (p4)
+- The document defines retention metrics in ways that obscure true stickiness, offering gross retention while omitting churn data necessary to validate the claim that outages stop gate traffic. (p7)
 
 ## Ask the seller
 
-- Gross revenue retention appears as a chart on p7 but no reliable value could be read from it - request the underlying series
-- Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
+- Gross revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
+- Net revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
 
 ---
 

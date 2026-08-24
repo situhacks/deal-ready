@@ -16,7 +16,7 @@ questions, and a human signs.
    Writes `reports/findings.json`. Exit code 1 means blocker-tier findings exist.
 2. **Draft memos** - `python memo.py <pdf-or-folder>`
    Writes `reports/memo_<TARGET>.md` plus `reports/callouts_<TARGET>.json`. Every
-   figure cites its page. Call-outs mark axis-read values (~70% ceiling), missing
+   figure cites its page. Call-outs mark values measured off a chart axis, missing
    metrics, definition conflicts, and narrative judgement from a local model.
 3. **Review** - edit the memo file directly. Confirm or replace flagged values,
    tighten or strike model observations, add anything the flags missed. Additions
@@ -38,7 +38,10 @@ providers, ever.
 
 ## Honest boundaries
 
-The corpus in `data/` is synthetic. Axis-read values top out near 70% even after
-model escalation - that is why they ship flagged. Narrative observations are
-suggestions with ids attached, never findings. Corrections change the next draft,
-never the current one.
+The corpus in `data/` is synthetic. Values read off a chart axis are measured from
+the chart's own pixels - the model reads the tick-label glyphs once, code fits the
+line geometry against the gridlines - and they ship flagged anyway, because a value
+recovered from a picture is not a value the seller printed. Charts without clean
+geometry (no gridlines, uncolour-coded series) fall back to the model's
+transcription and keep the flag. Narrative observations are suggestions with ids
+attached, never findings. Corrections change the next draft, never the current one.

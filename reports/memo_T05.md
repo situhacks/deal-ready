@@ -1,10 +1,10 @@
 # Screening memo — Ashgrove (T05)
 
-*Drafted by deal-ready · 8/10 metrics recovered · every figure cites its page · nothing here recommends a transaction.*
+*Drafted by deal-ready · 10/10 metrics recovered · every figure cites its page · nothing here recommends a transaction.*
 
 ## Verdict against the profile
 
-Fit score **70/100** against the "Buy-and-hold vertical market software" profile — Tier 2 - diligence questions attached.
+Fit score **97.7/100** against the "Buy-and-hold vertical market software" profile — Tier 1 - advance to management call.
 The score sorts an inbox; the flags below are the part worth reading.
 
 ## The numbers
@@ -17,19 +17,21 @@ The score sorts an inbox; the flags below are the part worth reading.
 | Gross margin | 69% | p8, textlayer |
 | EBITDA | $1.2M | p8, textlayer |
 | YoY growth | 2% | p2, textlayer |
-| Largest customer share | 11% (chart axis — confirm <!--co-T05-axis_read-001-->) | p6, vision |
-| Top-five customer share | 28% (chart axis — confirm <!--co-T05-axis_read-002-->) | p6, vision |
+| Gross revenue retention | 81% (chart axis — confirm <!--co-T05-axis_read-001-->) | p7, vision |
+| Net revenue retention | 86% (chart axis — confirm <!--co-T05-axis_read-002-->) | p7, vision |
+| Largest customer share | 11% (chart label <!--co-T05-label_read-001-->) | p6, vision |
+| Top-five customer share | 28% (chart label <!--co-T05-label_read-002-->) | p6, vision |
+
+## What the rules flagged
+
+- **WARNING** — Gross retention of 81% is below the 85% floor (p7). Gross retention is the honest measure of whether customers stay, because it excludes expansion. Below the floor the base is leaking, and for a permanent-capital holder that compounds against you every year.
 
 <details><summary>Context notes (info-grade)</summary>
 
+- Net retention of 86% is below 100%. Below 100% the existing base shrinks without new logos. Not disqualifying for a durable niche product, but it caps organic growth.
 - Rule of 40 score is 29, below the growth-investor benchmark. Growth of 2% plus an EBITDA margin of 27% totals 29. Context rather than a flag: Rule of 40 measures fitness for a growth-and-exit thesis. A permanent-capital holder is buying durability, and a profitable niche business with modest growth will fail this test while being exactly the target it wants. Read it alongside retention, not instead of it.
-- 1 core metric(s) not stated in the document. Absence is information. A CIM that omits gross retention has usually omitted it on purpose, and it becomes the first management-call question rather than an assumption: grr_pct.
 
 </details>
-
-## What the document leaves out
-
-- Gross revenue retention appears as a chart on p7 but no reliable value could be read from it - request the underlying series <!--co-T05-missing_metric-001-->
 
 ## Judgement — read with suspicion
 
@@ -39,22 +41,21 @@ The score sorts an inbox; the flags below are the part worth reading.
 - The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency where his departure would simultaneously cripple technical continuity and key revenue streams. (p9)
 
 <!--co-T05-judgement-002-->
-- The core settlement logic runs on a Delphi application from 1998 with zero automated test coverage and an unsupported database version, representing generational technical risk rather than incremental maintenance challenges. (p10)
+- The core settlement logic relies on a Delphi application from 1998 running on an unsupported database version with zero automated test coverage, representing a generational technology risk rather than an incremental maintenance issue. (p10)
 
 <!--co-T05-judgement-003-->
-- Revenue growth of 2% is insufficient to outpace the compounding risks of aging technology and founder dependency, leaving little room for organic problem resolution before a transaction becomes untenable. (p8)
+- With revenue growth at only 2% and EBITDA positive, the company lacks the organic momentum to outpace technical obsolescence or market fragmentation without significant external capital injection. (p8)
 
 <!--co-T05-judgement-004-->
-- The document defines retention metrics in ways that obscure the true stickiness of the customer base, omitting the specific churn or expansion rate metric required to validate whether the 2% growth is driven by genuine product value or one-off factors. (p7)
+- The document highlights expansion into adjacent operator segments as a near-term initiative despite the fragmented nature of the market and conservative buyer behavior described in the overview. (p4)
 
 <!--co-T05-judgement-005-->
-- Management presents a 69% gross margin and positive EBITDA as signs of operational health, yet these figures are derived from an unsupported technical foundation that lacks any documented succession plan or CTO to ensure long-term viability. (p8)
+- Gross retention is reported at 81% while net retention includes expansion, masking potential churn risks by inflating the recurring revenue base with upsells that may not be sustainable. (p7)
 
 ## Ask the seller
 
-- Gross revenue retention appears as a chart on p7 but no reliable value could be read from it - request the underlying series
-- Largest customer share was read off a chart axis (~70% ceiling) - confirm or replace
-- Top-five customer share was read off a chart axis (~70% ceiling) - confirm or replace
+- Gross revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
+- Net revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
 
 ---
 

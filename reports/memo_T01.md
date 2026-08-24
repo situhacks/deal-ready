@@ -33,24 +33,24 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T01-judgement-001-->
-- The document claims the founder stepped back in 2021 and lists a professional CEO, yet provides no evidence of technical succession planning or knowledge transfer for the core settlement logic. (p9)
+- The document claims the platform was re-architected between 2019 and 2022, yet provides no evidence of legacy technical debt or specific architectural risks, creating a narrative gap that masks potential generational obsolescence. (p10)
 
 <!--co-T01-judgement-002-->
-- Revenue growth is described as 14% year over year, but the Rule of 40 score of 36 indicates this growth rate is insufficient to offset the company's valuation multiple without significant profitability improvements. (p8)
+- Retention metrics are presented as 'net' figures which include expansion and contraction, obscuring the true stickiness of the base and making it impossible to distinguish between organic loyalty and revenue engineering. (p8)
 
 <!--co-T01-judgement-003-->
-- The financial summary states EBITDA is positive after add-backs for one-time transaction preparation costs and non-recurring legal expenses, obscuring whether organic operations are truly profitable. (p8)
+- The management team is described as having a professional CEO since 2018 with a CTO and VP Revenue joining before 2018, but the document fails to specify their individual tenures or identify any single point of failure regarding operational continuity. (p9)
 
 <!--co-T01-judgement-004-->
-- Retention metrics are presented as a chart without specific numerical values or definitions of the churn components, making it impossible to verify if retention is genuinely strong. (p7)
+- Growth initiatives include extending into adjacent operator segments served 'informally today,' which contradicts the stated high switching costs and suggests a reliance on uncontracted, potentially fragile relationships. (p11)
 
 <!--co-T01-judgement-005-->
-- The document asserts high switching costs due to data migration and payer re-credentialing but fails to quantify the time or cost required for these migrations. (p2)
+- The document highlights that practices must re-credential payer connections when migrating away, yet offers no data on the volume of these connections or the specific friction points involved in the re-credentialing process. (p2)
 
 ## Ask the seller
 
-- Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
-- Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
+- Gross revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
+- Net revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
 
 ---
 

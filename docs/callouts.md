@@ -24,9 +24,10 @@ which is how the system improves on a release cadence instead of by silent drift
 
 Three facts from the published numbers force them:
 
-1. **Axis-read values top out near 70%** even after escalation. The README already
-   states the consequence — treat them as flagged for human confirmation. A call-out
-   is that statement made mechanical.
+1. **An axis-read value is interpolated, not printed.** The v1 configuration read
+   them at ~70%; the exhibit-level re-read measures 100% on the committed eval —
+   and they ship flagged anyway, because a value recovered from chart geometry is
+   not a value the seller stated. A call-out is that statement made mechanical.
 2. **A missing metric is a finding, not a zero**, because its absence is usually
    deliberate. In a memo it must surface as a question to ask, not a blank in a table.
 3. **The narrative risk class has no detector yet.** Until a calibrated judge exists,
@@ -40,8 +41,8 @@ the model to self-report confidence.
 
 | kind | derived from | meaning |
 |---|---|---|
-| `axis_read` | `citations[m]["method"] == "vision"` on an escalated page | value was read off a chart axis; ~70% ceiling; confirm or replace |
-| `label_read` | `citations[m]["method"] == "vision"`, no escalation | recognition, not inference — low risk, shown for completeness |
+| `axis_read` | `citations[m]["read"] == "axis"` (cheap pass saw an exhibit and no values) | value was interpolated from chart geometry; carries the rate measured on the committed eval; confirm or replace |
+| `label_read` | `citations[m]["read"] == "label"` | recognition, not inference — low risk, shown for completeness |
 | `missing_metric` | in profile, absent from `metrics` | frame the question; if the metric's name sits on a vision-read page, say an exhibit exists and defeated the parser |
 | `definition_conflict` | finding whose detail flags a definitional error (e.g. GRR > 100) | the seller mislabelled a metric; do not average it away |
 | `judgement` | a memo sentence carrying narrative interpretation | model observed, did not compute; accept / edit / reject |
@@ -59,8 +60,9 @@ id: co-T03-judgement-004
 kind: judgement
 anchor: memo:T03#risk-2          # stable span reference into the drafted memo
 metric: null                     # or e.g. top1_customer_pct for value-backed kinds
-confidence_pct: null             # axis_read carries the measured ceiling (70);
-                                 # judgement carries none - honesty about honesty
+confidence_pct: null             # axis_read carries the eval-measured rate, quoted
+                                 # live from reports/layer_p.json; judgement carries
+                                 # none - honesty about honesty
 evidence_page: 11
 question: "Founder-written settlement engine with no succession plan - confirm key-person dependency"
 ```

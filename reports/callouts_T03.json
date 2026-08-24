@@ -8,17 +8,17 @@
       "id": "co-T03-axis_read-001",
       "kind": "axis_read",
       "metric": "grr_pct",
-      "confidence_pct": 70,
+      "confidence_pct": 100,
       "evidence_page": 7,
-      "question": "Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+      "question": "Gross revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace"
     },
     {
       "id": "co-T03-axis_read-002",
       "kind": "axis_read",
       "metric": "nrr_pct",
-      "confidence_pct": 70,
+      "confidence_pct": 100,
       "evidence_page": 7,
-      "question": "Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+      "question": "Net revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace"
     },
     {
       "id": "co-T03-label_read-001",
@@ -41,40 +41,40 @@
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 8,
-      "question": "The document relies on management's unaudited figures for FY25 without independent verification of the underlying revenue recognition or cost structures."
+      "evidence_page": 5,
+      "question": "The document claims the platform is hosted and supports customer-built extensions via API, yet admits configuration is performed exclusively by the internal services team rather than customers, suggesting a rigid architecture that may limit future extensibility."
     },
     {
       "id": "co-T03-judgement-002",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 7,
-      "question": "Retention metrics are presented as a composite net figure that masks contraction within the base, leaving the true stickiness of the five-year contracts unverified."
+      "evidence_page": 9,
+      "question": "Management describes a 'long-tenured leadership team' but provides no specific names or tenure details, creating ambiguity about whether founder dependency remains a structural risk despite the stated history."
     },
     {
       "id": "co-T03-judgement-003",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 9,
-      "question": "The services team responsible for configuration and delivery is described only by headcount and tenure, with no mention of key individuals or succession planning."
+      "evidence_page": 8,
+      "question": "The financial summary presents an adjusted EBITDA of $1.0M based on add-backs for one-time transaction preparation costs and legal expenses, obscuring the operational profitability required to sustain growth without external capital."
     },
     {
       "id": "co-T03-judgement-004",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 11,
-      "question": "Growth initiatives are listed as abstract categories like 'expanding the integration catalogue' without specific technical roadmaps or resource allocation details."
+      "evidence_page": 9,
+      "question": "While the document states that implementation is delivered by the company's own team, it does not quantify the size of this delivery organization relative to the total headcount, leaving the depth of internal capability unverified."
     },
     {
       "id": "co-T03-judgement-005",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 8,
-      "question": "The document defines gross margin as excluding amortisation while simultaneously adding back non-recurring legal expenses to EBITDA, creating an inconsistent view of operating efficiency."
+      "evidence_page": 4,
+      "question": "The text asserts that public-sector procurement cycles are long and incumbents rarely displaced mid-term, yet offers no evidence regarding how many municipalities have actually renewed or expanded their contracts in recent years."
     }
   ]
 }

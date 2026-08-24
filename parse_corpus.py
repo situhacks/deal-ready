@@ -12,9 +12,10 @@ Vision is the expensive one, so it reads only the pages ground truth says carry 
 value. That is not a shortcut, it is the routing argument in miniature: read the pages
 that matter. `route_corpus.py` measures what that selection is worth.
 
-`--tiered` runs the cheap 1B model first and escalates to a 4B one only on pages where
-the small model failed loudly - see deal_ready/parse/tiered.py for why that boundary
-sits where it does.
+Two vision configurations run, both from the same cache: the cheap 1B model alone
+(the capability boundary row - what a page-level read can and cannot see), and the
+tiered pipeline the tool actually ships (cheap page read, strong exhibit re-read -
+see deal_ready/parse/tiered.py).
 """
 
 from __future__ import annotations
@@ -37,8 +38,6 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fresh", action="store_true", help="ignore the vision cache")
     ap.add_argument("--skip-vision", action="store_true")
-    ap.add_argument("--tiered", action="store_true",
-                    help="cheap vision model first, escalate only on loud failure")
     args = ap.parse_args()
 
     gt = load_ground_truth()
@@ -59,22 +58,16 @@ def main() -> int:
         print(f"  {pdf.name:<34} {doc.char_count():>6} chars over {len(doc.pages)} pages")
     backends.append("textlayer")
 
-    # --- Backend C: local vision model -------------------------------------------
-    if not args.skip_vision:
-        model = vision.DEFAULT_MODEL
-        label = (f"tiered:{tiered.CHEAP_MODEL}->{tiered.STRONG_MODEL}"
-                 if args.tiered else f"vision:{model}")
+    # --- Backend C: local vision, two configurations ------------------------------
+    def run_vision(label: str, parse_doc) -> None:
+        nonlocal rows, backends, runtime
         print(f"\n{label}:  (only pages carrying a ground-truth value)")
         secs = tin = tout = 0
         ran_any = False
         for pdf in pdfs:
             recs = by_target[pdf.name.split("_")[0]]
             pages = sorted({r["page"] for r in recs})
-            if args.tiered:
-                doc = tiered.parse(pdf, pages=pages, use_cache=not args.fresh)
-            else:
-                doc = vision.parse(pdf, pages=pages, model=model,
-                                   use_cache=not args.fresh)
+            doc = parse_doc(pdf, pages, use_cache=not args.fresh)
             if not doc.pages:
                 print(f"  {pdf.name:<34} not run - {doc.notes}")
                 continue
@@ -92,6 +85,16 @@ def main() -> int:
             backends.append(label)
             runtime[label] = {"seconds": round(secs, 1), "tokens_in": tin,
                               "tokens_out": tout, "dpi": vision.RENDER_DPI}
+
+    if not args.skip_vision:
+        run_vision(
+            f"vision:{vision.DEFAULT_MODEL}",
+            lambda pdf, pages, use_cache: vision.parse(
+                pdf, pages=pages, model=vision.DEFAULT_MODEL, use_cache=use_cache))
+        run_vision(
+            f"tiered:{tiered.CHEAP_MODEL}->{tiered.STRONG_MODEL}",
+            lambda pdf, pages, use_cache: tiered.parse(
+                pdf, pages=pages, use_cache=use_cache))
 
     # --- Layer P ------------------------------------------------------------------
     agg = aggregate(rows)
@@ -139,12 +142,14 @@ def main() -> int:
                   f"{_cell(split.get((b, 'axis')))} |")
     md += [
         "",
-        "**A value read off an axis is not yet trustworthy enough to act on.** Even "
-        "with escalation to a larger model it lands around 70% here - useful for "
-        "triage, not acceptable for a figure that reprices a deal. The consequence is "
-        "not a better prompt. It is to treat axis-read values as **flagged for human "
-        "confirmation**, and to ask the seller for the underlying data rather than "
-        "inferring it from a picture.",
+        "**A value read off an axis is measured, and still flagged.** The v1 "
+        "configuration landed around 70% on the axis column: the strong tier was "
+        "burning its budget inside a thinking block and reading a lossy page render. "
+        "With reasoning disabled and the exhibit re-read from the PDF's native "
+        "embedded image, the tiered row reads the axis column in full on the "
+        "committed eval. Every axis-read value still ships flagged - an "
+        "interpolated value is not a printed one, and the flag is where the human "
+        "signs.",
         "",
     ]
     (REPORTS / "layer_p.md").write_text("\n".join(md), encoding="utf-8")

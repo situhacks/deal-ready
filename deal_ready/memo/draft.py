@@ -34,11 +34,6 @@ from ..scorer.rules import BLOCKER, WARNING
 
 JUDGE_MODEL = "qwen3.5:4b"
 
-# The published ceiling for values read off a chart axis after escalation.
-# reports/layer_r.md: ~70% even with the strong model. Flagging carries the number;
-# inventing a different one per-value would be confidence theatre.
-AXIS_READ_CEILING = 70
-
 METRIC_LABELS = {
     "arr_usd": "ARR",
     "mrr_usd": "MRR",
@@ -53,8 +48,32 @@ METRIC_LABELS = {
 }
 
 ROOT = Path(__file__).resolve().parents[2]
-CACHE_DIR = ROOT / "data" / "vision_cache"
 EXAMPLES_PATH = ROOT / "eval" / "judgement_examples.json"
+
+
+def _axis_read_rate() -> int | None:
+    """The measured recovery rate for axis-read values, from the committed Layer P.
+
+    The flag quotes the measurement instead of a hardcoded ceiling: whatever the
+    committed eval says the strong tier achieves on unlabelled charts is the number
+    the call-out carries, so the flag cannot drift from the evidence. None (report
+    absent) degrades to an unnumbered flag - the confirmation request survives, the
+    false precision does not.
+    """
+    p = ROOT / "reports" / "layer_p.json"
+    if not p.exists():
+        return None
+    try:
+        rep = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    n = att = 0
+    for r in rep.get("rows", []):
+        if (r.get("carrier") == "chart" and r.get("labelled_in_chart") is False
+                and str(r.get("backend", "")).startswith("tiered")):
+            n += 1
+            att += int(r.get("attributed", 0))
+    return round(100 * att / n) if n else None
 
 
 def _money(v) -> str:
@@ -71,19 +90,6 @@ def fmt_metric(metric: str, v) -> str:
     if metric.endswith("_usd"):
         return _money(v)
     return str(v)
-
-
-def _page_escalated(target_id: str, page: int | None) -> bool:
-    """Was this page read by the escalation tier? Ground-truth-free: the committed
-    vision cache records which model read which page, and only unlabelled charts
-    escalate. Missing cache entries (live runs, pruned caches) count as escalated -
-    flagging conservatively costs one confirmation; under-flagging costs a repriced
-    deal."""
-    if page is None:
-        return True
-    return any(f.name.startswith(f"{target_id}_") and f"__p{page:02d}__" in f.name
-               and "qwen" in f.name
-               for f in CACHE_DIR.iterdir())
 
 
 # Where a missing metric's name appears in the document near a page the vision
@@ -131,15 +137,23 @@ def derive_callouts(result: dict, page_texts: dict[int, str] | None = None) -> l
         out.append({"id": cid, "kind": kind, **kw})
         return cid
 
-    # Vision-read values: axis_read if the page needed the strong model.
+    # Vision-read values: axis_read when the value was interpolated from chart
+    # geometry, label_read when it came off a printed label. The signal is the
+    # screen's own citation record, not cache sniffing - which also fixes the old
+    # heuristic's habit of flagging labelled charts on pages that happened to
+    # escalate for another reason.
+    rate = _axis_read_rate()
     for m, cite in result["citations"].items():
         if cite.get("method") != "vision":
             continue
-        if _page_escalated(tid, cite.get("page")):
-            add("axis_read", metric=m, confidence_pct=AXIS_READ_CEILING,
+        if cite.get("read") == "axis":
+            measured = (f" (reader measured {rate}% on the committed eval)"
+                        if rate is not None else "")
+            add("axis_read", metric=m, confidence_pct=rate,
                 evidence_page=cite.get("page"),
-                question=f"{METRIC_LABELS.get(m, m)} was read off a chart axis "
-                         f"(~{AXIS_READ_CEILING}% ceiling) - confirm or replace")
+                question=f"{METRIC_LABELS.get(m, m)} was interpolated from chart "
+                         f"geometry, not printed on the page{measured} - confirm "
+                         f"or replace")
         else:
             add("label_read", metric=m, confidence_pct=None,
                 evidence_page=cite.get("page"),

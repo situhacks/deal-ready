@@ -26,6 +26,7 @@ demand - see `run_checks.py`.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from ..models import ollama
@@ -52,6 +53,20 @@ RENDER_DPI = 120
 #
 # That reliability difference is the real finding. A reader cloning this repo needs a
 # 1.6GB pull rather than 6.1GB, which is the difference between trying it and not.
+#
+# Re-measured 2026-08-24, two variables changed: `think=False` at the API door (the
+# `think` parameter in models/ollama.py did not exist during the first bake-off), and
+# the model shown the chart's native embedded image instead of a 120 DPI page render.
+# On the two chart pages the tiered pipeline had been failing (T02/T05 p7, true
+# values 96/103 and 81/86):
+#
+#   qwen3.5:4b  think=False, native crop    5.7-16.5s   all four values exact
+#   qwen3-vl:8b think=False, native crop  140.7s / EMPTY           one exact, one empty
+#
+# The "capability boundary" of the first bake-off was mostly the thinking budget and
+# the lossy re-render. qwen3-vl stays rejected: still erratic with thinking disabled,
+# still 10-30x slower. The strong tier remains qwen3.5:4b - it just gets to see the
+# exhibit properly now.
 #
 # Also tried and rejected: gemma4:latest advertises `vision` in `ollama show` and then
 # answers "please provide the page you would like me to transcribe" for an image sent
@@ -125,6 +140,7 @@ def parse(
     pages: list[int] | None = None,
     model: str = DEFAULT_MODEL,
     use_cache: bool = True,
+    think: bool | None = None,
 ) -> ParsedDocument:
     """Read `pages` with a local vision model.
 
@@ -169,7 +185,7 @@ def parse(
         for page_no, png in page_images(pdf_path, to_read):
             reply = ollama.generate(model, PROMPT, images=[png], system=SYSTEM,
                                     num_predict=NUM_PREDICT,
-                                    timeout=PAGE_TIMEOUT)
+                                    timeout=PAGE_TIMEOUT, think=think)
             meta = {
                 "model": model, "ok": reply.ok, "error": reply.error,
                 "seconds": round(reply.seconds, 2),
@@ -192,3 +208,168 @@ def parse(
     return ParsedDocument(
         source=Path(pdf_path), pages=parsed, backend=f"vision:{model}",
         notes=f"Local VLM via Ollama at {RENDER_DPI} DPI, temperature 0, cached.")
+
+
+def page_embedded_images(pdf_path: Path, page_no: int) -> list[bytes]:
+    """A page's embedded raster images at native resolution, in document order.
+
+    Charts in a born-digital PDF are embedded pictures; re-rendering the whole page
+    at 120 DPI resamples them. Extracting the stored bytes is lossless and needs no
+    rendering step at all. Vector-drawn exhibits have no embedded image - callers
+    fall back to the page render for those.
+    """
+    import pymupdf
+
+    doc = pymupdf.open(str(pdf_path))
+    try:
+        page = doc.load_page(page_no - 1)
+        out = []
+        for im in page.get_images(full=True):
+            info = doc.extract_image(im[0])
+            if info.get("image"):
+                out.append(info["image"])
+        return out
+    finally:
+        doc.close()
+
+
+def read_crops(pdf_path: Path, page_no: int, model: str,
+               use_cache: bool = True) -> tuple[str | None, dict | None]:
+    """Transcribe a page's embedded exhibits, native resolution, `think=False`.
+
+    The escalation tier's input. Same transcription prompt and rules as the page
+    path - the model is still reading, not interpreting - but it sees the chart the
+    document actually stored rather than a resampled copy of the page it sits on.
+    Multiple images on one page are transcribed in order and joined; the cache holds
+    the joined transcription per page, so re-runs cost nothing and the committed
+    cache remains the evidence.
+
+    Returns (text, meta). (None, None) means no embedded images or no usable model -
+    callers fall back to the full-page read. A failed model call returns (None, meta)
+    and stays uncached, same rule as `parse`: an infrastructure failure must not be
+    cached as a read.
+    """
+    ck = CACHE / (f"{Path(pdf_path).stem}__p{page_no:02d}__"
+                  f"{model.replace(':', '-').replace('/', '-')}__crop.json")
+    if use_cache and ck.exists():
+        rec = json.loads(ck.read_text(encoding="utf-8"))
+        return rec["text"], rec["meta"]
+
+    images = page_embedded_images(pdf_path, page_no)
+    if not images:
+        return None, None
+    if not (ollama.available() and ollama.has_model(model)):
+        return None, None
+
+    ck.parent.mkdir(parents=True, exist_ok=True)
+    texts: list[str] = []
+    secs = tin = tout = 0.0
+    for png in images:
+        reply = ollama.generate(model, PROMPT, images=[png], system=SYSTEM,
+                                num_predict=NUM_PREDICT, timeout=PAGE_TIMEOUT,
+                                think=False)
+        secs += reply.seconds
+        tin += reply.tokens_in
+        tout += reply.tokens_out
+        if not reply.ok or not reply.text.strip():
+            return None, {"model": model, "ok": reply.ok, "error": reply.error,
+                          "seconds": round(secs, 2), "source": "embedded-native"}
+        texts.append(reply.text.strip())
+
+    text = "\n\n".join(texts)
+    meta = {"model": model, "ok": True, "error": "", "seconds": round(secs, 2),
+            "tokens_in": int(tin), "tokens_out": int(tout), "dpi": None,
+            "source": "embedded-native"}
+    ck.write_text(json.dumps({"text": text, "meta": meta}, indent=2),
+                  encoding="utf-8")
+    return text, meta
+
+
+# The one thing measurement needs from the model: the tick-label glyphs. Reading
+# printed characters is recognition - the task the vision tier does at 100% - and
+# it is the only model input to the measured values. Everything downstream of this
+# read is arithmetic in chart_measure.py, re-runnable offline from committed bytes.
+TICKS_PROMPT = """Read the y-axis tick labels of this chart. Output one label per
+line, topmost first, as a bare number exactly as printed (for example: 75.0).
+Output nothing else."""
+
+_TICK_RE = re.compile(r"^-?\d+(?:\.\d+)?$")
+
+
+def read_ticks(pdf_path: Path, page_no: int, image_index: int, png: bytes,
+               model: str, use_cache: bool = True) -> list[float] | None:
+    """The chart's y-axis tick values, top to bottom. Cached like every read."""
+    safe = model.replace(":", "-").replace("/", "-")
+    ck = CACHE / f"{Path(pdf_path).stem}__p{page_no:02d}__{safe}__ticks{image_index}.json"
+    if use_cache and ck.exists():
+        rec = json.loads(ck.read_text(encoding="utf-8"))
+        return rec["ticks"]
+
+    if not (ollama.available() and ollama.has_model(model)):
+        return None
+    reply = ollama.generate(model, TICKS_PROMPT, images=[png], system=SYSTEM,
+                            num_predict=400, timeout=PAGE_TIMEOUT, think=False)
+    if not reply.ok or not reply.text.strip():
+        return None  # uncached failure - a re-run retries it
+    ticks = [float(m.group(0)) for line in reply.text.splitlines()
+             if (m := _TICK_RE.match(line.strip()))]
+    if len(ticks) < 2:
+        return None
+    ck.parent.mkdir(parents=True, exist_ok=True)
+    ck.write_text(json.dumps(
+        {"ticks": ticks, "text": reply.text,
+         "meta": {"model": model, "ok": True, "seconds": round(reply.seconds, 2)}},
+        indent=2), encoding="utf-8")
+    return ticks
+
+
+def measure_exhibit(pdf_path: Path, page_no: int, model: str, crop_text: str,
+                    use_cache: bool = True) -> str | None:
+    """Append measured values to a crop transcription, or return None untouched.
+
+    For each embedded exhibit: geometry finds the series colours and endpoint rows
+    (chart_measure.py), the cached tick read supplies the calibration, and the two
+    combine into values code computed. The model's role is bounded to reading
+    glyphs - its own estimated values stay in the transcription above, explicitly
+    superseded. Any step that does not resolve (no gridlines, tick count mismatch,
+    unparseable rows) leaves the transcription standing alone.
+    """
+    from . import chart_measure
+
+    images = page_embedded_images(pdf_path, page_no)
+    if not images:
+        return None
+    blocks: list[str] = []
+    for i, png in enumerate(images):
+        rgb = chart_measure._rgb(png)
+        grid = chart_measure.find_gridlines(rgb)
+        series = chart_measure.find_series(rgb)
+        if len(grid) < 2 or len(series) < 1:
+            continue
+        ticks = read_ticks(pdf_path, page_no, i, png, model, use_cache=use_cache)
+        if ticks is None or len(ticks) != len(grid):
+            continue
+        # Order is taken from geometry, not from the model: gridlines run top to
+        # bottom and a y axis increases upward, so the top gridline pairs with the
+        # largest tick. (Measured reason: qwen3.5 returned one chart's ticks
+        # bottom-to-top despite the prompt, which mirrored every value.)
+        ticks = sorted(ticks, reverse=True)
+        values = []
+        for color in series:
+            ep = chart_measure.find_endpoint(rgb, color)
+            if ep is None:
+                break
+            # Prefer the line's fitted centerline over the marker's own center:
+            # a small disc rasterizes wherever its sub-pixel phase lands, the
+            # line averages that noise away (chart_measure.line_fit_y).
+            y = chart_measure.line_fit_y(rgb, color, ep[1], ep[0]) or ep[0]
+            v = chart_measure.interpolate(y, grid, ticks)
+            if v is None:
+                break
+            values.append(round(v, 1))
+        if len(values) != len(series):
+            continue
+        block = chart_measure.measured_block(crop_text, values)
+        if block:
+            blocks.append(block)
+    return "\n\n".join(blocks) if blocks else None

@@ -40,24 +40,24 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T03-judgement-001-->
-- The document relies on management's unaudited figures for FY25 without independent verification of the underlying revenue recognition or cost structures. (p8)
+- The document claims the platform is hosted and supports customer-built extensions via API, yet admits configuration is performed exclusively by the internal services team rather than customers, suggesting a rigid architecture that may limit future extensibility. (p5)
 
 <!--co-T03-judgement-002-->
-- Retention metrics are presented as a composite net figure that masks contraction within the base, leaving the true stickiness of the five-year contracts unverified. (p7)
+- Management describes a 'long-tenured leadership team' but provides no specific names or tenure details, creating ambiguity about whether founder dependency remains a structural risk despite the stated history. (p9)
 
 <!--co-T03-judgement-003-->
-- The services team responsible for configuration and delivery is described only by headcount and tenure, with no mention of key individuals or succession planning. (p9)
+- The financial summary presents an adjusted EBITDA of $1.0M based on add-backs for one-time transaction preparation costs and legal expenses, obscuring the operational profitability required to sustain growth without external capital. (p8)
 
 <!--co-T03-judgement-004-->
-- Growth initiatives are listed as abstract categories like 'expanding the integration catalogue' without specific technical roadmaps or resource allocation details. (p11)
+- While the document states that implementation is delivered by the company's own team, it does not quantify the size of this delivery organization relative to the total headcount, leaving the depth of internal capability unverified. (p9)
 
 <!--co-T03-judgement-005-->
-- The document defines gross margin as excluding amortisation while simultaneously adding back non-recurring legal expenses to EBITDA, creating an inconsistent view of operating efficiency. (p8)
+- The text asserts that public-sector procurement cycles are long and incumbents rarely displaced mid-term, yet offers no evidence regarding how many municipalities have actually renewed or expanded their contracts in recent years. (p4)
 
 ## Ask the seller
 
-- Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
-- Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace
+- Gross revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
+- Net revenue retention was interpolated from chart geometry, not printed on the page (reader measured 100% on the committed eval) - confirm or replace
 
 ---
 

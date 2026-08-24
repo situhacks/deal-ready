@@ -34,18 +34,21 @@ v1 (tag `v1.0.0`) stopped at the scorecard: extract the numbers, check the arith
 score the fit, tier the inbox. v2 adds the thing an analyst would start writing next -
 the memo - and closes a loop around it:
 
-- **Memos drafted with call-outs.** Every figure cites its page. Axis-read values ship
-  flagged at their measured ~70% ceiling. Missing metrics arrive as questions to ask,
-  and when a metric's name sits on a page the vision tier read, the question says an
-  exhibit exists and beat the parser. Narrative observations come from a local model,
-  each with its id attached so a reviewer can accept, edit or strike it (`memo.py`).
+- **Memos drafted with call-outs.** Every figure cites its page. Values measured off
+  a chart axis ship flagged even though the reader now aces the committed eval,
+  because a value recovered from a picture is not a value the seller printed.
+  Missing metrics arrive as questions to ask, and when a metric's name sits on a
+  page the vision tier read, the question says an exhibit exists and beat the
+  parser. Narrative observations come from a local model, each with its id attached
+  so a reviewer can accept, edit or strike it (`memo.py`).
 - **Corrections captured by diff.** The reviewer edits the markdown they were handed;
   `capture.py` turns that edit into structured records. Changes no flag prompted are
   recorded as blind spots - the most useful lines in the file.
 - **Corrections teach.** Accepted edits become worked examples for later drafts.
   Extraction gaps become regressions that `run_checks.py` asserts on every run. The
-  first session caught p7 of T05 presenting a retention chart while both values read as
-  unstated; that lesson is now mechanical and regression-locked.
+  first session caught p7 of T05 presenting a retention chart while both values read
+  as unstated; the loop then fixed it - those values are now measured off the chart's
+  own pixels - and the regression asserts they stay recovered.
 - **The recursion is gated.** Corrections change the *next* version, never the current
   one, and every fold-back is checked. The system improves on a release cadence a human
   can audit, which is the only kind of improvement an enterprise should accept from
@@ -66,12 +69,12 @@ concentration and top-five concentration: **every metric that decides whether to
 the company.** Revenue, margin and EBITDA — which a text layer reads perfectly — only
 tell you how big it is.
 
-![Recovery by field type: the text layer gets 100% of prose and table fields and 0% of chart-carried ones; adding a routed local vision model lifts charts to 80%](assets/layer-p.png)
+![Recovery by field type: the text layer gets 100% of prose and table fields and 0% of chart-carried ones; adding a routed local vision model lifts charts to 100%](assets/layer-p.png)
 
 Here is what that costs where it matters — the same five companies, the same rules,
 the only difference being whether the pipeline could read a chart:
 
-![Criteria fit scores by target: under a text-only read the clean company, the concentrated one and the leaking one all score 60; the full pipeline separates them to 100, 75 and 70](assets/discrimination.png)
+![Criteria fit scores by target: under a text-only read the clean company, the concentrated one and the leaking one all score 60; the full pipeline separates them to 100, 95 and 98](assets/discrimination.png)
 
 Three companies with materially different risk, one identical score. A text-only
 pipeline does not degrade gracefully — it goes blind exactly where the decision lives,
@@ -89,7 +92,7 @@ flowchart LR
     TL -->|"recovered<br/>30 of 50"| RULES
     TL -->|"still missing"| RT["2 · route<br/><i>text embeddings<br/>rank the pages</i>"]
     RT --> V["3 · vision<br/><i>1B local model<br/>3 pages, not 12</i>"]
-    V -->|"escalate only on<br/>a loud failure"| V2["3b · larger model<br/><i>charts with no<br/>data labels</i>"]
+    V -->|"re-read every exhibit<br/>losslessly"| V2["3b · exhibit tier<br/><i>native image · ticks read<br/>· pixels measured</i>"]
     V --> RULES
     V2 --> RULES
     RULES["4 · deterministic rules<br/><i>arithmetic · no model<br/>reproducible forever</i>"] --> FIT["5 · fit score + tier<br/><i>config-driven<br/>every component shown</i>"]
@@ -200,19 +203,44 @@ chart printed its data labels — and the boundary is specific, not "bigger is b
 | Backend | Charts with data labels | Charts read off the axis |
 |---|---|---|
 | text layer | 0% (0/10) | 0% (0/10) |
-| `minicpm-v4.6` (1B, 1.6GB) | **100% (10/10)** | 0% (0/10) |
-| tiered, escalating to `qwen3.5:4b` | 90% (9/10) | 70% (7/10) |
+| `minicpm-v4.6` (1B, page render) | 100% (10/10) | 0% (0/10) |
+| tiered, escalating to `qwen3.5:4b` | **100% (10/10)** | **100% (10/10)** |
 
 Reading a printed label is recognition. Reading a value off an axis is spatial
 reasoning about where a point sits between gridlines. The 1B model cannot do the second
 at all — and crucially it **fails loudly**, returning no numbers rather than guessing,
 which is what makes cheap-first escalation safe.
 
-**Where that leaves the numbers you can act on.** Axis-read values reach ~70% even after
-escalation. That is useful for triage and **not acceptable for a figure that reprices a
-deal**. The consequence is not a better prompt: it is to treat axis-read values as
-flagged for human confirmation, and to ask the seller for the underlying data rather
-than inferring it from a picture.
+**How the axis column closed.** Not with a bigger model. v1 asked the strong tier to
+*estimate* each endpoint off a lossy page render, which it did to within a few tenths —
+and a few tenths is a miss when the grader, the deal, or the arithmetic needs the
+number. v2.1 changed what reads what:
+
+- the model reads the **tick-label glyphs** — recognition, the thing the vision tier
+  already does at 100%;
+- code finds each series by colour, fits the **centreline of the line entering the
+  end marker** (a 13-pixel marker rasterises wherever its sub-pixel phase lands; a
+  200-pixel line averages that noise away), and **interpolates against the
+  gridlines**.
+
+That is arithmetic, not inference. It re-runs offline from the committed images —
+`run_checks.py` asserts all ten axis-read values re-measure exactly, on any machine,
+with no GPU and no model. Nothing here is tuned to this corpus: any rendered chart
+with gridlines and colour-coded series measures the same way, and a chart that does
+not fit that shape falls back to the model's transcription and its flag. The same two
+changes — reasoning off, exhibit read from the PDF's own embedded image instead of a
+re-rendered page — also recovered chart-internal callout boxes the cheap pass had
+been silently dropping.
+
+**Why every exhibit page escalates now, when v1 gated on loud failure.** The gate
+existed because escalation cost ~150s a page. At 6-17s an exhibit-level re-read is
+cheaper than the misses it prevents — the cheap pass had been dropping annotations
+*inside* chart rasters on pages full of numbers, which no ground-truth-free trigger
+can see. The axis-versus-label classification that decides flagging is unchanged and
+still needs no answer key.
+
+Every axis-read value ships flagged regardless. A value measured off a picture is
+still not a value the seller printed, and the flag is where the human signs.
 
 **A tiering lesson that cost real time.** The first escalation trigger escalated any
 page mentioning something "unreadable". Across the corpus that fired on **16 of 20
@@ -221,6 +249,10 @@ perfectly — 1,183s of escalation where roughly two thirds bought nothing. Requ
 *no numbers at all* on the page before escalating brings it to **5 of 20 — exactly the
 five unlabelled retention pages — at ~370s.** An escalation trigger is a classifier,
 and an unmeasured one quietly spends the budget the tiering was meant to save.
+v2.1 then re-measured the tradeoff from the other side: with the escalated step at
+6-17s an exhibit, the gate cost more in silent misses than it saved in seconds, and
+the trigger loosened to every exhibit page. The lesson cuts both ways — measure the
+trigger whenever either side of the tradeoff moves.
 ([`deal_ready/parse/tiered.py`](deal_ready/parse/tiered.py))
 
 **A caveat stated plainly:** the corpus is synthetic and this repo wrote it. Ground

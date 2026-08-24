@@ -1,0 +1,13 @@
+{
+  "text": "Top 5 customers: 28% of ARR\n\nLargest customer: 11%\nCustomers 2-5: 17%\nAll other customers: 72%",
+  "meta": {
+    "model": "qwen3.5:4b",
+    "ok": true,
+    "error": "",
+    "seconds": 1.39,
+    "tokens_in": 647,
+    "tokens_out": 41,
+    "dpi": null,
+    "source": "embedded-native"
+  }
+}

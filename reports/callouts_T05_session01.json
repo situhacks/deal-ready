@@ -1,0 +1,72 @@
+{
+  "target_id": "T05",
+  "draft_version": "v2",
+  "judge_status": "ok",
+  "examples_folded": 3,
+  "callouts": [
+    {
+      "id": "co-T05-axis_read-001",
+      "kind": "axis_read",
+      "metric": "top1_customer_pct",
+      "confidence_pct": 70,
+      "evidence_page": 6,
+      "question": "Largest customer share was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T05-axis_read-002",
+      "kind": "axis_read",
+      "metric": "top5_customer_pct",
+      "confidence_pct": 70,
+      "evidence_page": 6,
+      "question": "Top-five customer share was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T05-missing_metric-001",
+      "kind": "missing_metric",
+      "metric": "grr_pct",
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Gross revenue retention appears as a chart on p7 but no reliable value could be read from it - request the underlying series"
+    },
+    {
+      "id": "co-T05-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency where his departure would simultaneously cripple technical continuity and key revenue streams."
+    },
+    {
+      "id": "co-T05-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 10,
+      "question": "The core settlement logic runs on a Delphi application from 1998 with zero automated test coverage and an unsupported database version, representing generational technical risk rather than incremental maintenance challenges."
+    },
+    {
+      "id": "co-T05-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "Revenue growth of 2% is insufficient to outpace the compounding risks of aging technology and founder dependency, leaving little room for organic problem resolution before a transaction becomes untenable."
+    },
+    {
+      "id": "co-T05-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "The document defines retention metrics in ways that obscure the true stickiness of the customer base, omitting the specific churn or expansion rate metric required to validate whether the 2% growth is driven by genuine product value or one-off factors."
+    },
+    {
+      "id": "co-T05-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "Management presents a 69% gross margin and positive EBITDA as signs of operational health, yet these figures are derived from an unsupported technical foundation that lacks any documented succession plan or CTO to ensure long-term viability."
+    }
+  ]
+}

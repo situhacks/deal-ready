@@ -219,6 +219,66 @@ def check_reports_match_artifacts() -> None:
           f"{len(rep['rows'])} scored fields recompute to the published aggregate")
 
 
+def check_axis_values_remeasure() -> None:
+    """The axis-read column re-measures offline, from committed pixels.
+
+    The tiered text for an unlabelled chart ends in values code measured from the
+    document's own embedded image, calibrated by tick glyphs the model read once
+    (cached). Both halves are committed, so the measurement - and with it the
+    published axis column - is verifiable by anyone, on any machine, with no GPU
+    and no model. This is the same property the arithmetic rules have always had,
+    extended to the last model-read numbers in the pipeline.
+    """
+    import re as _re
+
+    from deal_ready.parse import chart_measure, tiered, vision
+    from deal_ready.values import value_present
+    gt = load(DATA / "ground_truth.json")
+    rows = [r for r in gt if r["carrier"] == "chart" and not r["labelled_in_chart"]]
+    if not rows:
+        check("axis values re-measure offline", SKIP, "no chart ground truth")
+        return
+    strong = _re.sub(r"[:/]", "-", tiered.STRONG_MODEL)
+    bad, checked = [], 0
+    for r in rows:
+        pdfs = list(DATA.glob(f"{r['target_id']}_*.pdf"))
+        if not pdfs:
+            bad.append(f"{r['target_id']}: no PDF")
+            continue
+        pdf = pdfs[0]
+        stem = pdf.stem
+        crop = load(DATA / "vision_cache" / f"{stem}__p{r['page']:02d}__{strong}__crop.json")
+        tickrec = load(DATA / "vision_cache" / f"{stem}__p{r['page']:02d}__{strong}__ticks0.json")
+        if not crop or not tickrec:
+            bad.append(f"{r['target_id']} p{r['page']}: missing committed crop/ticks")
+            continue
+        png = vision.page_embedded_images(pdf, r["page"])[0]
+        rgb = chart_measure._rgb(png)
+        grid = chart_measure.find_gridlines(rgb)
+        ticks = sorted(tickrec["ticks"], reverse=True)
+        if len(grid) != len(ticks):
+            bad.append(f"{r['target_id']} p{r['page']}: {len(grid)} gridlines vs "
+                       f"{len(ticks)} ticks")
+            continue
+        values = []
+        for color in chart_measure.find_series(rgb):
+            ep = chart_measure.find_endpoint(rgb, color)
+            if ep is None:
+                break
+            y = chart_measure.line_fit_y(rgb, color, ep[1], ep[0]) or ep[0]
+            values.append(round(chart_measure.interpolate(y, grid, ticks), 1))
+        block = chart_measure.measured_block(crop["text"], values)
+        if not block or not value_present(block, r["metric"], r["value"]):
+            bad.append(f"{r['target_id']}/{r['metric']}: measured {values or 'nothing'} "
+                       f"does not recover {r['value']}")
+            continue
+        checked += 1
+    check("axis values re-measure offline",
+          PASS if not bad else FAIL,
+          f"{checked} axis-read values re-measure from committed pixels, no GPU"
+          if not bad else "; ".join(bad[:3]))
+
+
 def check_deterministic_path_needs_no_model() -> None:
     """screen.py --no-vision must complete with nothing installed."""
     proc = subprocess.run(
@@ -237,6 +297,11 @@ def check_correction_records() -> None:
     An untriaged correction teaches nothing reliably, and a correction pointing at
     a call-out that does not exist means the diff attribution drifted. Both break
     the loop silently if nobody checks.
+
+    Session anchors resolve against the call-outs *of the draft that was reviewed*.
+    When a later version regenerates a target's call-outs, the reviewed set is
+    frozen to `callouts_<target>_session<N>.json` - history is not rewritten to
+    match the present, and the present is not forbidden from improving.
     """
     files = sorted((DATA / "corrections").glob("*_session*.json")) \
         if (DATA / "corrections").exists() else []
@@ -247,9 +312,10 @@ def check_correction_records() -> None:
     problems = []
     for f in files:
         rec = load(f)
-        callouts = {c["id"] for c in
-                    (load(REPORTS / f"callouts_{rec['target_id']}.json")
-                     or {}).get("callouts", [])}
+        frozen = REPORTS / f"callouts_{f.stem}.json"
+        src = frozen if frozen.exists() \
+            else REPORTS / f"callouts_{rec['target_id']}.json"
+        callouts = {c["id"] for c in (load(src) or {}).get("callouts", [])}
         for c in rec["corrections"]:
             if c["reason_category"] == "needs_triage":
                 problems.append(f"{f.name}: untriaged correction")
@@ -319,6 +385,8 @@ def check_regressions_hold() -> None:
             failures.append(f"{r['id']}: no callouts for {r['target_id']}")
             continue
         hit = any(c.get("kind") == r["callout_kind"]
+                  and (r.get("evidence_page") is None
+                       or c.get("evidence_page") == r["evidence_page"])
                   and all(s in json.dumps(c) for s in r["must_contain"])
                   for c in data["callouts"])
         if not hit:
@@ -338,6 +406,7 @@ def main() -> int:
     check_clean_baseline_silent()
     check_vision_cache_is_successes_only()
     check_reports_match_artifacts()
+    check_axis_values_remeasure()
     check_deterministic_path_needs_no_model()
     check_correction_records()
     check_fold_back_complete()

@@ -88,17 +88,23 @@ def screen_one(pdf: Path, criteria: dict, use_vision: bool = True,
             routes = router.route(page_text, metrics=missing)
             if routes:
                 routed_pages = router.pages_to_read(routes, top_k)
-                # Tiered: the 1B model reads most pages; a page that comes back
-                # with no numbers (an unlabelled chart) escalates to the 4B one.
+                # Tiered: the 1B model reads every page; pages carrying an exhibit
+                # are re-read at exhibit level by the strong tier (see tiered.py).
                 vdoc = tiered.parse(pdf, pages=routed_pages)
                 vtext = {p.page_number: p.text for p in vdoc.pages}
+                vmeta = {p.page_number: p.meta for p in vdoc.pages}
                 for m in missing:
                     for pg in routes[m].top_k(top_k):
                         t = vtext.get(pg, "")
                         val, ok = _extract_from_text(t, m, [candidates[m]])
                         if ok:
                             metrics[m] = val
-                            citations[m] = {"page": pg, "method": "vision"}
+                            # How the value was read decides whether it ships
+                            # flagged: an axis interpolation is not a printed label.
+                            read = ("axis" if vmeta.get(pg, {}).get("chart_kind")
+                                    == "unlabelled" else "label")
+                            citations[m] = {"page": pg, "method": "vision",
+                                            "read": read}
                             break
 
     # 4 + 5 - arithmetic, then the tier.

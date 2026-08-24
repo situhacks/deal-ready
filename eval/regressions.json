@@ -3,8 +3,18 @@
     "id": "reg-001",
     "from": "T05_session01 corrections[0] - reviewer blind spot: p7 presents a gross/net retention chart while both values were reported as never stated",
     "target_id": "T05",
-    "callout_kind": "missing_metric",
-    "must_contain": ["p7", "chart"],
-    "why": "A missing metric whose name sits on a vision-read page is an unreadable exhibit, not an omission. The memo question must say so."
+    "callout_kind": "axis_read",
+    "evidence_page": 7,
+    "must_contain": ["grr_pct"],
+    "why": "The session taught the pipeline that p7's retention chart was going unread. The exhibit-level re-read now recovers both values, so the lesson has evolved: the regression asserts gross retention stays recovered from p7 and ships flagged as an axis read. If this fails, the chart went dark again."
+  },
+  {
+    "id": "reg-002",
+    "from": "T05_session01 corrections[0] - same blind spot, second value on the same chart",
+    "target_id": "T05",
+    "callout_kind": "axis_read",
+    "evidence_page": 7,
+    "must_contain": ["nrr_pct"],
+    "why": "Net retention is the expansion story and the more decision-relevant of the pair. Same guard as reg-001: present, p7, flagged."
   }
 ]

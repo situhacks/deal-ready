@@ -1,0 +1,13 @@
+{
+  "text": "Percent | FY22 | FY23 | FY24 | FY25\n--- | --- | --- | --- | ---\nGross revenue retention | 84.7% | 86.0% | 86.7% | 87.1%\nNet revenue retention | 107.2% | 109.5% | 111.0% | 112.3%",
+  "meta": {
+    "model": "qwen3.5:4b",
+    "ok": true,
+    "error": "",
+    "seconds": 5.47,
+    "tokens_in": 618,
+    "tokens_out": 97,
+    "dpi": null,
+    "source": "embedded-native"
+  }
+}
