@@ -1,0 +1,80 @@
+{
+  "target_id": "T04",
+  "draft_version": "v2",
+  "judge_status": "ok",
+  "examples_folded": 3,
+  "callouts": [
+    {
+      "id": "co-T04-axis_read-001",
+      "kind": "axis_read",
+      "metric": "grr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T04-axis_read-002",
+      "kind": "axis_read",
+      "metric": "nrr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T04-label_read-001",
+      "kind": "label_read",
+      "metric": "top1_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Largest customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T04-label_read-002",
+      "kind": "label_read",
+      "metric": "top5_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T04-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The business relies on a single founder who writes production code for its core settlement logic, with no CTO or documented succession plan to mitigate the risk of operational paralysis if that individual departs."
+    },
+    {
+      "id": "co-T04-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 2,
+      "question": "Management highlights a difficult-to-replicate data asset but fails to disclose the specific volume of fleet-miles required to achieve model quality, leaving investors unable to verify the defensibility of their proprietary claims."
+    },
+    {
+      "id": "co-T04-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The document presents a negative EBITDA as an 'adjusted' figure by adding back one-time transaction costs and legal expenses, obscuring the fact that the company is burning cash at a rate that contradicts its stated growth trajectory."
+    },
+    {
+      "id": "co-T04-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Retention metrics are defined to include expansion revenue, which artificially inflates the retention rate and masks potential churn risks among existing customers."
+    },
+    {
+      "id": "co-T04-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 5,
+      "question": "The product description claims an API supports customer-built extensions without detailing the technical maturity of the integration surface or providing evidence that third-party developers can reliably extend the platform."
+    }
+  ]
+}

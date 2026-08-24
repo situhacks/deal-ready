@@ -12,7 +12,8 @@
       "kind": null,
       "before": null,
       "after": "- Correction: p7 presents \"Gross and net revenue retention, FY22 to FY25\" as a chart, so the figure is not simply absent - the exhibit exists and no reliable values came back from it. Reframe the ask: request the underlying retention series rather than treating it as unstated.",
-      "reason_category": "new_information"
+      "reason_category": "factual_error",
+      "note": "extraction gap: p7 announces a gross/net retention exhibit; neither value was recovered. The old missing-metric question read this as deliberate omission."
     },
     {
       "callout_id": "co-T05-judgement-002",
@@ -41,5 +42,6 @@
       "after": "- Growth of 2% leaves little room to out-run problems organically. With EBITDA positive the hold thesis can work - but only if retention is genuinely strong, and the one metric that would show it is the one the document does not provide. Treat retention as the deciding diligence item. (p8)",
       "reason_category": "judgement_call"
     }
-  ]
+  ],
+  "triaged": true
 }

@@ -1,0 +1,80 @@
+{
+  "target_id": "T01",
+  "draft_version": "v2",
+  "judge_status": "ok",
+  "examples_folded": 3,
+  "callouts": [
+    {
+      "id": "co-T01-axis_read-001",
+      "kind": "axis_read",
+      "metric": "grr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T01-axis_read-002",
+      "kind": "axis_read",
+      "metric": "nrr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T01-label_read-001",
+      "kind": "label_read",
+      "metric": "top1_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Largest customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T01-label_read-002",
+      "kind": "label_read",
+      "metric": "top5_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T01-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The document claims the founder stepped back in 2021 and lists a professional CEO, yet provides no evidence of technical succession planning or knowledge transfer for the core settlement logic."
+    },
+    {
+      "id": "co-T01-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "Revenue growth is described as 14% year over year, but the Rule of 40 score of 36 indicates this growth rate is insufficient to offset the company's valuation multiple without significant profitability improvements."
+    },
+    {
+      "id": "co-T01-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The financial summary states EBITDA is positive after add-backs for one-time transaction preparation costs and non-recurring legal expenses, obscuring whether organic operations are truly profitable."
+    },
+    {
+      "id": "co-T01-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Retention metrics are presented as a chart without specific numerical values or definitions of the churn components, making it impossible to verify if retention is genuinely strong."
+    },
+    {
+      "id": "co-T01-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 2,
+      "question": "The document asserts high switching costs due to data migration and payer re-credentialing but fails to quantify the time or cost required for these migrations."
+    }
+  ]
+}

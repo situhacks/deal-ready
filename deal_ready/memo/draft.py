@@ -86,7 +86,35 @@ def _page_escalated(target_id: str, page: int | None) -> bool:
                for f in CACHE_DIR.iterdir())
 
 
-def derive_callouts(result: dict) -> list[dict]:
+# Where a missing metric's name appears in the document near a page the vision
+# tier actually read, "deliberately omitted" is the wrong default reading - the
+# exhibit probably exists and defeated the parser. First taught by review session
+# T05_session01: p7 announces "Gross and net revenue retention, FY22 to FY25" while
+# both values came back unrecovered. Ground-truth-free: page text plus the cache.
+MISSING_EXHIBIT_HINTS = {
+    "grr_pct": [r"gross\s+revenue\s+retention", r"gross\s+retention"],
+    "nrr_pct": [r"net\s+revenue\s+retention", r"net\s+retention"],
+    "top1_customer_pct": [r"largest\s+customer", r"top\s+customer"],
+    "top5_customer_pct": [r"top\s+(five|5)\s+customers"],
+}
+
+
+def _exhibit_page_for(metric: str, page_texts: dict[int, str] | None,
+                      read_pages: set[int]) -> int | None:
+    import re as _re
+    if not page_texts:
+        return None
+    hints = MISSING_EXHIBIT_HINTS.get(metric, [])
+    for pg in sorted(page_texts):
+        if not any(_re.search(h, page_texts[pg], _re.I) for h in hints):
+            continue
+        if pg in read_pages or _re.search(r"chart|graph|figure|exhibit|axis",
+                                          page_texts[pg], _re.I):
+            return pg
+    return None
+
+
+def derive_callouts(result: dict, page_texts: dict[int, str] | None = None) -> list[dict]:
     """Value-level call-outs, derived mechanically. No model self-reporting.
 
     Kinds follow docs/callouts.md. Everything here is computable from the screen
@@ -125,14 +153,26 @@ def derive_callouts(result: dict) -> list[dict]:
                 question="Reported gross retention exceeds 100% - net retention has "
                          "been labelled gross; reconcile before it reaches the model")
 
-    # Missing core metrics: absence is information, frame the question.
+    # Missing core metrics: absence is information, frame the question. When the
+    # metric's name sits on a page the vision tier read, say what actually happened:
+    # an exhibit exists and no reliable value came back from it.
+    vision_pages = set(result.get("pages_read_with_vision") or [])
+    vision_pages |= {c.get("page") for c in result["citations"].values()
+                     if c.get("method") == "vision"}
     for f in result["findings"]:
-        if f["rule_id"] == "metrics_not_stated":
-            for m in f["values"]["missing"]:
-                add("missing_metric", metric=m, confidence_pct=None,
-                    evidence_page=None,
-                    question=f"{METRIC_LABELS.get(m, m)} is never stated - likely "
-                             f"deliberate; make it the first management-call question")
+        if f["rule_id"] != "metrics_not_stated":
+            continue
+        for m in f["values"]["missing"]:
+            ex_pg = _exhibit_page_for(m, page_texts, vision_pages)
+            if ex_pg is not None:
+                q = (f"{METRIC_LABELS.get(m, m)} appears as a chart on p{ex_pg} but "
+                     f"no reliable value could be read from it - request the "
+                     f"underlying series")
+            else:
+                q = (f"{METRIC_LABELS.get(m, m)} is never stated - likely "
+                     f"deliberate; make it the first management-call question")
+            add("missing_metric", metric=m, confidence_pct=None,
+                evidence_page=ex_pg, question=q)
     return out
 
 
@@ -331,9 +371,9 @@ def render_memo(result: dict, criteria: dict, callouts: list[dict],
 
 
 def draft(result: dict, criteria: dict, doc_text: str | None = None,
-          use_model: bool = True) -> dict:
+          use_model: bool = True, page_texts: dict[int, str] | None = None) -> dict:
     """Full memo stage for one screened target. Returns artifacts dict."""
-    callouts = derive_callouts(result)
+    callouts = derive_callouts(result, page_texts)
     observations, status = [], "narrative pass disabled (--no-model)"
     if use_model and doc_text:
         observations, status = judge(doc_text, [f["headline"] for f in result["findings"]])

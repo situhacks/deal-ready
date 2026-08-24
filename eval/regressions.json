@@ -1,0 +1,10 @@
+[
+  {
+    "id": "reg-001",
+    "from": "T05_session01 corrections[0] - reviewer blind spot: p7 presents a gross/net retention chart while both values were reported as never stated",
+    "target_id": "T05",
+    "callout_kind": "missing_metric",
+    "must_contain": ["p7", "chart"],
+    "why": "A missing metric whose name sits on a vision-read page is an unreadable exhibit, not an omission. The memo question must say so."
+  }
+]

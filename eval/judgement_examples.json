@@ -1,0 +1,23 @@
+[
+  {
+    "source": "data/corrections/T05_session01.json#corrections[2]",
+    "callout_id": "co-T05-judgement-003",
+    "observation": "The core is a Delphi application first shipped in 1998 with a web layer bolted on in 2013; the settlement engine has zero automated test coverage and runs on an unsupported database version. Technical risk is generational, not incremental.",
+    "evidence_page": 10,
+    "why_accepted": "Reviewer kept the model's two verified facts and added the generational framing the model missed; every claim traces to p10."
+  },
+  {
+    "source": "data/corrections/T05_session01.json#corrections[3]",
+    "callout_id": "co-T05-judgement-004",
+    "observation": "Growth of 2% leaves little room to out-run problems organically. With EBITDA positive the hold thesis can work - but only if retention is genuinely strong, and the one metric that would show it is the one the document does not provide. Treat retention as the deciding diligence item.",
+    "evidence_page": 8,
+    "why_accepted": "Original applied a venture-exit lens to a permanent-capital profile and restated computed figures. Reviewer rewrote it to connect growth thinness to the missing retention data - the actual decision-relevant chain."
+  },
+  {
+    "source": "data/corrections/T05_session01.json#corrections[1]",
+    "callout_id": "co-T05-judgement-002",
+    "observation": "There is no CTO and no documented succession plan behind the one person who writes production code for the settlement logic.",
+    "evidence_page": 9,
+    "why_accepted": "Same facts as the draft, tightened: the original's 'succession plan for its only employee' garbled who the plan was missing for."
+  }
+]

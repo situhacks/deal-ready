@@ -1,0 +1,80 @@
+{
+  "target_id": "T03",
+  "draft_version": "v2",
+  "judge_status": "ok",
+  "examples_folded": 3,
+  "callouts": [
+    {
+      "id": "co-T03-axis_read-001",
+      "kind": "axis_read",
+      "metric": "grr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Gross revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T03-axis_read-002",
+      "kind": "axis_read",
+      "metric": "nrr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T03-label_read-001",
+      "kind": "label_read",
+      "metric": "top1_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Largest customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T03-label_read-002",
+      "kind": "label_read",
+      "metric": "top5_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T03-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The document relies on management's unaudited figures for FY25 without independent verification of the underlying revenue recognition or cost structures."
+    },
+    {
+      "id": "co-T03-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Retention metrics are presented as a composite net figure that masks contraction within the base, leaving the true stickiness of the five-year contracts unverified."
+    },
+    {
+      "id": "co-T03-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The services team responsible for configuration and delivery is described only by headcount and tenure, with no mention of key individuals or succession planning."
+    },
+    {
+      "id": "co-T03-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 11,
+      "question": "Growth initiatives are listed as abstract categories like 'expanding the integration catalogue' without specific technical roadmaps or resource allocation details."
+    },
+    {
+      "id": "co-T03-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The document defines gross margin as excluding amortisation while simultaneously adding back non-recurring legal expenses to EBITDA, creating an inconsistent view of operating efficiency."
+    }
+  ]
+}

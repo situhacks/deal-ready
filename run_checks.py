@@ -231,6 +231,103 @@ def check_deterministic_path_needs_no_model() -> None:
           "screen.py --no-vision completed" if ok else proc.stderr.strip()[-160:])
 
 
+def check_correction_records() -> None:
+    """Correction records must be well-formed and fully triaged.
+
+    An untriaged correction teaches nothing reliably, and a correction pointing at
+    a call-out that does not exist means the diff attribution drifted. Both break
+    the loop silently if nobody checks.
+    """
+    files = sorted((DATA / "corrections").glob("*_session*.json")) \
+        if (DATA / "corrections").exists() else []
+    if not files:
+        check("correction records are consistent", SKIP,
+              "no committed review sessions")
+        return
+    problems = []
+    for f in files:
+        rec = load(f)
+        callouts = {c["id"] for c in
+                    (load(REPORTS / f"callouts_{rec['target_id']}.json")
+                     or {}).get("callouts", [])}
+        for c in rec["corrections"]:
+            if c["reason_category"] == "needs_triage":
+                problems.append(f"{f.name}: untriaged correction")
+            if not c["blind_spot"]:
+                if c["callout_id"] not in callouts:
+                    problems.append(f"{f.name}: {c['callout_id']} not in callouts")
+            elif c["callout_id"] is not None:
+                problems.append(f"{f.name}: blind spot with an id")
+    check("correction records are consistent",
+          PASS if not problems else FAIL,
+          f"{len(files)} session(s), all triaged, all anchors resolve"
+          if not problems else "; ".join(problems[:3]))
+
+
+def check_fold_back_complete() -> None:
+    """Accepted corrections must appear as examples; extraction gaps need a regression.
+
+    This is the recursion's honesty check. A review session that changes nothing
+    downstream was theatre - the corrections were received, but they did not teach.
+    """
+    sessions = sorted((DATA / "corrections").glob("*_session*.json")) \
+        if (DATA / "corrections").exists() else []
+    examples = load(ROOT / "eval" / "judgement_examples.json") or []
+    regressions = load(ROOT / "eval" / "regressions.json") or []
+    if not sessions:
+        check("fold-back is complete", SKIP, "no committed review sessions")
+        return
+    import re as _re
+    ex_keys = set()
+    for e in examples:
+        m = _re.match(r".*?([\w]+_session\d+\.json)#corrections\[(\d+)\]",
+                      e.get("source", ""))
+        if m:
+            ex_keys.add((m.group(1), int(m.group(2))))
+    problems = []
+    for f in sessions:
+        rec = load(f)
+        for i, c in enumerate(rec["corrections"]):
+            if (c["reason_category"] == "judgement_call"
+                    and (f.name, i) not in ex_keys):
+                problems.append(f"{f.name}[{i}]: accepted judgement never became an example")
+            if (c["reason_category"] == "factual_error"
+                    and not any(r.get("from", "").startswith(f"{rec['target_id']}_session")
+                                for r in regressions)):
+                problems.append(f"{f.name}[{i}]: factual error locked by no regression")
+    check("fold-back is complete",
+          PASS if not problems else FAIL,
+          "every accepted correction teaches; every extraction gap is asserted"
+          if not problems else "; ".join(problems[:3]))
+
+
+def check_regressions_hold() -> None:
+    """Each lesson learned from a reviewer must still be visible in current artifacts.
+
+    These are assertions written after a human caught something the system missed.
+    If one starts failing, the pipeline regressed past what a reviewer taught it -
+    exactly the drift the changelog exists to prevent.
+    """
+    regs = load(ROOT / "eval" / "regressions.json") or []
+    if not regs:
+        check("reviewer regressions hold", SKIP, "no regressions recorded")
+        return
+    failures = []
+    for r in regs:
+        data = load(REPORTS / f"callouts_{r['target_id']}.json")
+        if not data:
+            failures.append(f"{r['id']}: no callouts for {r['target_id']}")
+            continue
+        hit = any(c.get("kind") == r["callout_kind"]
+                  and all(s in json.dumps(c) for s in r["must_contain"])
+                  for c in data["callouts"])
+        if not hit:
+            failures.append(f"{r['id']}: {r['must_contain']} not found")
+    check("reviewer regressions hold",
+          PASS if not failures else FAIL,
+          f"{len(regs)} lesson(s) still visible" if not failures else "; ".join(failures))
+
+
 # --------------------------------------------------------------------------------
 def main() -> int:
     print("\ndeal-ready checks - offline, no model, no network\n")
@@ -242,6 +339,9 @@ def main() -> int:
     check_vision_cache_is_successes_only()
     check_reports_match_artifacts()
     check_deterministic_path_needs_no_model()
+    check_correction_records()
+    check_fold_back_complete()
+    check_regressions_hold()
 
     n_pass = sum(1 for _, s, _ in results if s == PASS)
     n_fail = sum(1 for _, s, _ in results if s == FAIL)

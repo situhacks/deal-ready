@@ -1,0 +1,80 @@
+{
+  "target_id": "T02",
+  "draft_version": "v2",
+  "judge_status": "ok",
+  "examples_folded": 3,
+  "callouts": [
+    {
+      "id": "co-T02-axis_read-001",
+      "kind": "axis_read",
+      "metric": "nrr_pct",
+      "confidence_pct": 70,
+      "evidence_page": 7,
+      "question": "Net revenue retention was read off a chart axis (~70% ceiling) - confirm or replace"
+    },
+    {
+      "id": "co-T02-label_read-001",
+      "kind": "label_read",
+      "metric": "top1_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Largest customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T02-label_read-002",
+      "kind": "label_read",
+      "metric": "top5_customer_pct",
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T02-missing_metric-001",
+      "kind": "missing_metric",
+      "metric": "grr_pct",
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Gross revenue retention appears as a chart on p7 but no reliable value could be read from it - request the underlying series"
+    },
+    {
+      "id": "co-T02-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The document relies on management's own unaudited figures for FY25 without providing the underlying data or third-party verification required to validate the 9% growth and gross margin claims."
+    },
+    {
+      "id": "co-T02-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Retention metrics are presented as a composite of gross and net retention, obscuring whether expansion is driving revenue or if the base is merely being retained through contract renewals."
+    },
+    {
+      "id": "co-T02-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 10,
+      "question": "The technology stack consists of a .NET monolith with an unsupported database version and zero automated test coverage in the settlement engine, creating generational technical risk rather than incremental upgrade challenges."
+    },
+    {
+      "id": "co-T02-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "Succession risk is elevated as the two co-founders hold day-to-day commercial relationships with the largest accounts while no documented succession plan exists for the core technical logic."
+    },
+    {
+      "id": "co-T02-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 4,
+      "question": "The document uses a 'fragmented market' narrative to justify low replacement risk, yet ignores that buyers are operationally conservative and replacement cycles are measured in years rather than quarters."
+    }
+  ]
+}

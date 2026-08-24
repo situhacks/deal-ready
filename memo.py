@@ -25,17 +25,19 @@ from deal_ready.scorer import rules
 from screen import REPORTS, screen_one
 
 
-def page_marked(pdf: Path) -> str:
+def parse_pages(pdf: Path) -> tuple[str, dict[int, str]]:
     doc = textlayer.parse(pdf)
-    return "\n".join(f"--- p{p.page_number} ---\n{p.text}" for p in doc.pages)
+    marked = "\n".join(f"--- p{p.page_number} ---\n{p.text}" for p in doc.pages)
+    return marked, {p.page_number: p.text for p in doc.pages}
 
 
 def memo_one(pdf: Path, criteria: dict, use_model: bool) -> dict:
     result = screen_one(pdf, criteria, use_vision=True, verbose=False)
     tid = result["target_id"]
+    marked, pages = parse_pages(pdf)
     artifacts = draft_memo(result, criteria,
-                           doc_text=page_marked(pdf) if use_model else None,
-                           use_model=use_model)
+                           doc_text=marked if use_model else None,
+                           use_model=use_model, page_texts=pages)
     (REPORTS / f"memo_{tid}.md").write_text(artifacts["markdown"], encoding="utf-8")
     (REPORTS / f"callouts_{tid}.json").write_text(
         json.dumps({"target_id": tid, "draft_version": "v2",
