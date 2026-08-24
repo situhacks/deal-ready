@@ -229,6 +229,7 @@ write.
 | [`docs/ingest.md`](docs/ingest.md) | **The design record.** Why OCR is the wrong default, why whole-document multimodal is also wrong, what embeddings do and do not do, the corpus-size ladder, what was tried and rejected, and two failures that would have published false findings |
 | [`docs/metrics.md`](docs/metrics.md) | Every VMS metric: what it is, why a buy-and-hold acquirer prices on it, how a CIM obscures it |
 | [`docs/rules.md`](docs/rules.md) | Every rule with its deal rationale |
+| [`docs/callouts.md`](docs/callouts.md) | The judgement seam: call-outs on axis-read values and narrative risk, diff-based correction capture, the fold-back contract |
 | [`playbook.md`](playbook.md) | The rollout half: shadow mode, who to build with, what will actually go wrong |
 | [`docs/hardware.md`](docs/hardware.md) | Local model setup, AMD/ROCm traps, and three failures that would have published false findings |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
