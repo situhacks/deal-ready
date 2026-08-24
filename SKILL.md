@@ -13,7 +13,9 @@ questions, and a human signs.
 ## Walk-through
 
 1. **Screen** - `python screen.py <pdf-or-folder>`
-   Writes `reports/findings.json`. Exit code 1 means blocker-tier findings exist.
+   Writes `reports/findings.json` plus readable scorecards: the rubric
+   (`scorecard_template.md`) and each target's numbers set against it
+   (`scorecard_<TARGET>.md`). Exit code 1 means blocker-tier findings exist.
 2. **Draft memos** - `python memo.py <pdf-or-folder>`
    Writes `reports/memo_<TARGET>.md` plus `reports/callouts_<TARGET>.json`. Every
    figure cites its page. Call-outs mark values measured off a chart axis, missing

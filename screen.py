@@ -30,6 +30,7 @@ from pathlib import Path
 from deal_ready.embed import router
 from deal_ready.parse import reading, textlayer
 from deal_ready.scorer import fit, rules
+from deal_ready.scorecard import write_all
 from deal_ready.values import attribution_present, value_present
 
 ROOT = Path(__file__).parent
@@ -170,6 +171,8 @@ def main() -> int:
 
     REPORTS.mkdir(parents=True, exist_ok=True)
     (REPORTS / "findings.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+    written = write_all(results, criteria, REPORTS)
+    print(f"\n  scorecards: {', '.join(written)}")
 
     print(f"\n{'target':<12} {'score':>6}  {'tier':<8} {'metrics':>8}  {'vision pages':>12}")
     for r in results:

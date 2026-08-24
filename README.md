@@ -1,56 +1,62 @@
 <img src="assets/banner.svg" alt="deal-ready — CIM screening and pre-LOI deal scoring for vertical market software" width="100%">
 
-A confidential information memorandum lands in an inbox: 40-odd pages of prose, tables
-and charts describing a software company that is for sale. An analyst spends two to
-four hours pulling ten numbers out of it into a spreadsheet, checking them against an
-investment profile, and writing a one-page recommendation. Around nine in ten of those
-memoranda end in "pass".
+A confidential information memorandum lands in an inbox: forty-odd pages of prose,
+tables and charts describing a software company that is for sale. Somewhere in there
+are ten numbers an analyst needs. Finding them means two to four hours of reading, a
+spreadsheet, and a one-page recommendation, and about nine in ten of those memoranda
+end in "pass" anyway.
 
-This is a first pass at that work. Point it at a CIM, get back a cited scorecard: the
-metrics, the arithmetic checked, the criteria fit scored, the risks flagged, and a
-tier. It does not recommend a transaction. It produces the artifact the analyst was
-going to assemble by hand, with every figure traceable to the page it came from, and
-hands the judgement back.
+This is a first pass at that work, built to run locally. Point it at a CIM and you
+get the artifact the analyst was going to assemble by hand: the metrics, the
+arithmetic checked against the buyer's rubric, a criteria fit and a tier, and a
+drafted memo where every uncertain value carries a call-out. Every figure traces to
+the page it came from. Nothing here recommends a transaction; the tool sorts an inbox
+and asks questions, and a human signs.
 
 ```bash
 pip install -r requirements.txt
 python generate.py                 # build the synthetic corpus (no model, no network)
-python screen.py data/             # screen it
+python screen.py data/             # screen it: scorecards + findings
 python memo.py data/               # draft screening memos with call-outs
 python capture.py T05 --edited reports/memo_T05_reviewed.md   # turn a review into records
 python run_checks.py               # verify every number in this README, offline
 ```
 
 Python 3.12, no API key, no account, no paid inference. The parts that need a model
-use **local models via Ollama**; everything else is stdlib-first Python. If you have no
-models installed, `python screen.py data/ --no-vision` still runs end to end — and the
-gap between those two runs is the most interesting thing here.
+use local models through Ollama. With no models installed, `python screen.py data/
+--no-vision` still runs end to end, and the gap between that run and the full one is
+the most interesting thing here.
 
 **What you get**
 
-- A **cited scorecard** per target: ten VMS metrics, eleven deterministic rules,
-  criteria fit and tier - every figure traceable to its page.
+- A **cited scorecard** per target: ten VMS metrics set against the buyer's rubric,
+  eleven deterministic rules, criteria fit and tier. Readable markdown, generated
+  from the config, so the rubric and the verdicts are things you can click into.
 - A **drafted screening memo** where every uncertain value carries a call-out id.
-- **Chart-only values measured from pixels**, not guessed by a model - and each one
-  independently cross-read, with the agreement recorded in the memo.
+- **Chart-only values measured from pixels**, not guessed by a model, and each one
+  independently re-read, with the agreement recorded in the memo.
 - A **correction loop**: review the memo, run one command, and your edits become
-  regression cases and worked examples that the checks assert on every future run.
+  regression cases and worked examples that automated checks assert on every future
+  run.
 
-**Review a real run, end to end** - every artifact below is committed, no re-run
-required. One target (Ashgrove, the corpus's most dangerous company), the full loop:
+**Review a real run, end to end.** Every artifact below is committed. No re-run
+needed. One target (Ashgrove, the most dangerous company in the corpus), the whole
+loop:
 
 | Step | Artifact |
 |---|---|
 | the input | [`data/T05_Ashgrove_CIM.pdf`](data/T05_Ashgrove_CIM.pdf) |
-| the scorecard | [`reports/findings.json`](reports/findings.json) - 97.7, tier 1, gross retention flagged below its floor at p7 |
-| the drafted memo | [`reports/memo_T05.md`](reports/memo_T05.md) - call-out ids on every uncertain value, measured chart values with the independent re-read's agreement, "ask the seller" questions |
+| the rubric it is judged against | [`reports/scorecard_template.md`](reports/scorecard_template.md) |
+| the scorecard | [`reports/scorecard_T05.md`](reports/scorecard_T05.md) - 97.7, tier 1, and one red-letter breach: gross retention 81% against an 85% floor |
+| the same scorecard, machine-readable | [`reports/findings.json`](reports/findings.json) |
+| the drafted memo | [`reports/memo_T05.md`](reports/memo_T05.md) - call-out ids on every uncertain value, the chart values and their independent re-read, the questions for the seller |
 | the call-outs, machine-readable | [`reports/callouts_T05.json`](reports/callouts_T05.json) |
-| a human review of that memo | [`reports/memo_T05_reviewed.md`](reports/memo_T05_reviewed.md) - the marked-up copy, and [`data/corrections/T05_session01.json`](data/corrections/T05_session01.json) - the diff-captured session that caught a blind spot |
-| what the review taught | [`eval/regressions.json`](eval/regressions.json) and [`eval/judgement_examples.json`](eval/judgement_examples.json) - asserted by `run_checks.py` on every run |
+| a human's review of that memo | [`reports/memo_T05_reviewed.md`](reports/memo_T05_reviewed.md), and the diff-captured session it produced: [`data/corrections/T05_session01.json`](data/corrections/T05_session01.json) |
+| what that review taught | [`eval/regressions.json`](eval/regressions.json) and [`eval/judgement_examples.json`](eval/judgement_examples.json) - asserted by `run_checks.py` on every run |
 
 The other four targets live beside these: [`reports/memo_T01.md`](reports/memo_T01.md)
-through [`memo_T04.md`](reports/memo_T04.md), their call-outs, and the reader
-comparison in [`reports/bakeoff.md`](reports/bakeoff.md).
+through [`memo_T04.md`](reports/memo_T04.md), their scorecards and call-outs, and the
+reader comparison in [`reports/bakeoff.md`](reports/bakeoff.md).
 
 **Contents**: [How it works](#how-it-works) · [The loop](#the-loop) ·
 [The finding](#the-finding) · [The numbers](#the-numbers) ·
@@ -86,35 +92,35 @@ flowchart LR
 Steps 1–3 exist to make step 4 possible. Blue is free, orange is the step that costs
 something, grey decides nothing on its own.
 
-**The model reads. Code decides. A human signs.** Every number the business acts on is
-computed in Python from values a parser extracted, never generated by a model. That is
-not caution for its own sake — it is what lets a deal lead re-run a screen from a year
-ago and get the same answer, and it is why most of the work costs nothing.
+**The model reads. Code decides. A human signs.** No number the business acts on is
+computed by a model. That discipline is what lets a deal lead re-run a screen from a
+year ago and get the same answer, and it is why most of the work costs nothing.
 
-**The best reader for each job, assigned directly.** A bake-off
-([`reports/bakeoff.md`](reports/bakeoff.md)) measured every candidate as a full-page
-reader, and no single model won: a 0.9B parser reads prose, tables and labelled
-charts perfectly at 5 seconds a page but drops unlabelled chart interiors entirely;
-the newest open frontier model reads 80% of chart values single-pass but paraphrases
-away prose at 30x the latency. So the pipeline assigns each job to its measured best
-and never runs a cheap pass hoping it suffices. A routed page that yields values is
-done; a page that yields none goes straight to the chart specialist, whose one call
-supplies the series labels, the tick glyphs, and - never as numbers - its own
-estimated reads. Code measures the endpoints against those ticks. The estimates then
-serve as the independent cross-check: agreement within half a gridline gap builds
-confidence in the memo, disagreement prints "resolve before use".
+**We asked whether the strongest model should just read everything.** It is the
+obvious question, and the bake-off answered it by measuring every candidate as a
+full-page reader on the same pages ([`reports/bakeoff.md`](reports/bakeoff.md)). The
+newest open frontier model read 80% of prose fields (it paraphrases), 80% of chart
+values, at 148 seconds a page. A 0.9B specialized parser read 100% of prose, tables
+and labelled charts in 5 seconds, and dropped unlabelled chart interiors entirely.
+There was no single winner. There was a best reader for each job, so the pipeline
+assigns each job directly: the parser reads every routed page, and a page that yields
+no values goes straight to the frontier model, whose one call supplies the series
+labels, the tick glyphs, and its own estimated values. Code then measures the
+endpoints from the pixels against those ticks. The estimates are never used as
+numbers. They exist to be compared with the measurement, and the memo reports whether
+the two paths agree.
 
 **Nothing recommends a transaction.** The tier sorts an inbox. A `Pass` means "not a
-fit against this profile", never "bad company" — the profile in `criteria/default.json`
-is config, and swapping in a real scorecard is a config change rather than a rewrite.
+fit against this profile", and never "bad company". The profile in
+`criteria/default.json` is config, so swapping in a real buyer's scorecard is a
+config change rather than a rewrite.
 
 ---
 
 ## The loop
 
-The pipeline is the straight line; the loop is what makes the tool improve. Review a
-drafted memo, run one command, and the corrections become permanent, asserted
-infrastructure:
+The pipeline is a straight line. The loop is what makes the tool improve, and it
+starts with a human:
 
 ```mermaid
 flowchart LR
@@ -134,71 +140,66 @@ flowchart LR
     class C,T,REG,EX,OVL,NEXT code
 ```
 
-Three properties make it a loop rather than a suggestion box:
+Reviewer corrections are the real eval set. Three properties make this a loop rather
+than a suggestion box:
 
-- **Blind spots are the headline metric.** Corrections no flag prompted are recorded
-  as such - the reviewer caught what the system did not even flag - and they are the
-  most useful lines in the file.
-- **Every accepted correction must teach.** `run_checks.py` fails if an accepted
-  judgement never became a worked example, or an extraction gap was never locked by a
-  regression.
+- **Blind spots are the headline metric.** When a reviewer corrects something no flag
+  prompted, the record says so. Those are the most valuable lines in the file, because
+  they measure what the system did not even know to flag.
+- **Every accepted correction must teach.** If an accepted judgement never became a
+  worked example, or an extraction gap was never locked by a regression,
+  `run_checks.py` fails.
 - **Corrections change the next version, never the current one.** The recursion runs
-  on a release cadence a human can audit - the changelog names who taught what.
+  on a release cadence a person can audit, and the changelog names who taught what.
 
-The first session proved the whole loop in miniature: a reviewer caught page 7 of one
-target announcing a retention chart while both values came back unread. That blind
-spot became a mechanical upgrade, the upgrade became a fix, and the fix is now
-asserted by two regressions that fail if the values ever go dark again.
+The first review session proved the whole loop in miniature. A reviewer caught page 7
+of one target announcing a retention chart while both values came back unread. That
+blind spot became a mechanical upgrade, the upgrade became a fix, and two regressions
+now fail if those values ever go dark again.
 
 ---
 
 ## The finding
 
-A CIM is a deck, and its numbers do not all live in sentences. In this corpus
-**20 of 50 metrics — 40% — exist only inside rasterised charts**, verified absent from
-the text layer by a leak check that fails the build if one escapes.
+A CIM is a deck, and its numbers do not all live in sentences. In this corpus **20 of
+50 metrics exist only inside rasterised charts**, and a leak check fails the build if
+one of them escapes into the text layer.
 
 It is not a random 40%. It is gross retention, net retention, largest-customer
-concentration and top-five concentration: **every metric that decides whether to buy
-the company.** Revenue, margin and EBITDA — which a text layer reads perfectly — only
-tell you how big it is.
+concentration and top-five concentration: the metrics that decide whether to buy the
+company. Revenue, margin and EBITDA, which a text layer reads perfectly, only tell
+you how big it is.
 
 ![Recovery by field type: the text layer gets 100% of prose and table fields and 0% of chart-carried ones; the full pipeline lifts charts to 100%](assets/layer-p.png)
 
-Here is what that costs where it matters — the same five companies, the same rules,
-the only difference being whether the pipeline could read a chart:
+The same five companies, the same rules, the only difference being whether the
+pipeline could read a chart:
 
 ![Criteria fit scores by target: under a text-only read the clean company, the concentrated one and the leaking one all score 60; the full pipeline separates them to 100, 95 and 98](assets/discrimination.png)
 
 Three companies with materially different risk, one identical score. A text-only
-pipeline does not degrade gracefully — it goes blind exactly where the decision lives,
-and it does so *silently*, because every field it did read, it read correctly.
-
-That is the argument for a heavier parser. Not "vision models are better at tables."
+pipeline does not degrade gracefully. It goes blind exactly where the decision lives,
+and it does so silently, because every field it did read, it read correctly.
 
 ---
 
 ## The numbers
 
-Reproduce all of them with `python run_checks.py` — offline, from committed artifacts.
+Reproduce all of them with `python run_checks.py`, offline, from committed artifacts.
 
-**Layer P — what each parse backend makes available.** Percentage of ground-truth
-fields recovered *and correctly attributed to their metric*, on the page the value
+**Layer P — what each parse backend makes available.** The percentage of ground-truth
+fields recovered and correctly attributed to their metric, on the page the value
 actually lives on. This grades the parser, not the extractor: it is a ceiling on what
-any downstream model could possibly achieve given what it was handed.
+anything downstream could achieve. See
+[`reports/layer_p.md`](reports/layer_p.md).
 
-See [`reports/layer_p.md`](reports/layer_p.md) for the generated table.
+**Layer R — routing.** Recall@k for the page carrying each metric, and how many pages
+the vision step has to read. Routing recovers 100% of chart pages at rank 1, so at
+k=1 it selects 15 of 60 pages, a 75% cut, and misses no chart field. See
+[`reports/layer_r.md`](reports/layer_r.md).
 
-**Layer R — routing.** Recall@k for the page carrying each metric, and the reduction
-in pages sent to the vision model. Read the carrier breakdown rather than the
-aggregate: routing recovers **100% of chart pages at rank 1** — the only ones that need
-a model — while ranking prose and table pages poorly, which costs nothing
-because those were never going to the expensive step. At k=1 it selects **15 of 60
-pages, a 75% cut**, and misses no chart field.
-See [`reports/layer_r.md`](reports/layer_r.md).
-
-**The capability boundary worth knowing.** Chart fields split cleanly by whether the
-chart printed its data labels — and the boundary is specific, not "bigger is better":
+**The capability boundary.** Chart fields split cleanly by whether the chart printed
+its data labels, and the boundary is specific:
 
 | Backend | Charts with data labels | Charts read off the axis |
 |---|---|---|
@@ -209,84 +210,68 @@ chart printed its data labels — and the boundary is specific, not "bigger is b
 | production pipeline (parser + chart specialist + geometry) | **100% (10/10)** | **100% (10/10)** |
 
 Reading a printed label is recognition. Reading a value off an axis is spatial
-reasoning about where a point sits between gridlines. The generalists estimate it -
-the frontier model lands three-of-five endpoint pairs exact and two within 0.2 - and
-an estimate is a miss when the arithmetic needs the number. So the pipeline measures:
-the chart model reads the tick glyphs once, code fits the centreline of the line
-entering the end marker (a 13-pixel marker rasterises wherever its sub-pixel phase
-lands; a 200-pixel line averages that noise away), and interpolates against the
-gridlines. That is arithmetic, not inference, and it re-runs offline from the
-committed images - `run_checks.py` asserts all ten axis-read values re-measure
-exactly, on any machine, with no GPU and no model.
-
-**Why not just use the strongest model everywhere?** Because the bake-off measured
-that too, and it is worse: 80% of prose fields (it paraphrases), 80% of axis values,
-at thirty times the latency. The strongest model is the best chart specialist and a
-mediocre page reader; the 0.9B parser is the best page reader and cannot read a chart
-at all. The pipeline is not a ladder of fallbacks - it is the measured-best reader
-for each job, assigned directly.
+reasoning, and every model that tries it estimates: the frontier model landed three
+of five endpoint pairs exact and two within 0.2, which sounds fine until the
+arithmetic needs the number. So the pipeline measures instead. The chart model reads
+the tick glyphs once. Code finds each series by colour, fits the centreline of the
+line entering the end marker (a 13-pixel marker rasterises wherever its sub-pixel
+phase lands; a 200-pixel line averages that noise away), and interpolates against
+the gridlines. That is arithmetic, and `run_checks.py` re-runs it from the committed
+images on any machine, with no GPU and no model.
 
 **A caveat stated plainly:** the corpus is synthetic and this repo wrote it. Ground
 truth is a by-product of generation rather than labelling after the fact, which
-removes one class of error but not the deeper one — a generator and a scorer authored
-in the same session are favourable to each other by construction. The
-`realworld/` manifest exists to test against public documents this pipeline did not
-write.
+removes one class of error and leaves another: a generator and a scorer authored in
+the same session are favourable to each other by construction. The `realworld/`
+manifest exists to test against public documents this pipeline did not write.
 
 ---
 
 ## The story: v1 → v3
 
-**v1 — a thought, made runnable.** Could the screening work be reproduced at all,
-locally, with nothing but a PDF and a consumer GPU? v1 answered with the text layer,
-the embedding router, and the finding that the decisive 40% of metrics live only in
-charts - then tiered local vision to reach them, deterministic rules to score them,
-and committed caches so every number could be verified without a GPU.
+**v1 asked whether the work could be done at all, locally.** The text layer, the
+embedding router, tiered local vision, deterministic rules, and the finding that the
+decisive 40% of metrics live only in charts. Every model output was committed, so
+every number could be re-verified without a GPU.
 
-**v2 — deeper into the specifics.** The scorecard stopped at arithmetic; an analyst
-would start writing next. v2 added the memo, with call-outs derived mechanically
-(axis reads flagged, missing metrics framed as questions, narrative observations
-carrying ids), diff-based correction capture, and the fold-back contract: accepted
-edits become worked examples, extraction gaps become regressions, and three new
-checks assert the loop actually teaches. Its first review session caught a real blind
-spot - a retention chart both values unread - which became a mechanical upgrade and
-the regression that still guards it.
+**v2 asked what the analyst would write next.** The memo, with call-outs derived
+mechanically; diff-based correction capture; and the fold-back contract. Its first
+review session caught a real blind spot, and that lesson became the regression that
+still guards it.
 
-**v2.1 — the measurement.** The axis column sat at 70% because the strong tier was
-estimating: reasoning on, lossy page renders. Three changes closed it to 20/20 -
-reasoning off at the model door, exhibit re-reads from the PDF's own embedded image,
-and pixel measurement in code - and the last of those made the axis values verifiable
-offline like everything else.
+**v2.1 asked why the axis column sat at 70%.** The strong tier was estimating:
+reasoning on, lossy page renders. Reasoning off, exhibit re-reads from the PDF's own
+embedded image, and pixel measurement in code closed it to 20/20, and the last
+change made the axis values verifiable offline like everything else.
 
-**v3 — take from the greatest, then re-measure.** Before building anything, a
-research wave read the 2026 document-parsing field: specialized parsers beat frontier
-general models at transcription (a 0.9B model leads OmniDocBench at 96.34 vs GPT-5.2's
-86.59), no benchmark scores chart interiors at all, and top-of-leaderboard deltas are
-smaller than one model's run-to-run spread - so the swap decision could only be made
-on this repo's own pages. The bake-off swapped the page reader to GLM-OCR (identical
-quality, ~4x the speed, 44% faster end-to-end) and v3.1 turned the frontier model's
-confirmed estimation habit into a control: the cross-check.
+**v3 asked whether any of this was the right way, or just our way.** A research wave
+read the 2026 document-parsing field and found specialized parsers beating frontier
+models at transcription, no benchmark scoring chart interiors at all, and
+leaderboard gaps smaller than run-to-run noise. So the swap was decided the only way
+that could be trusted: a bake-off on these pages. The reader changed; the guarantees
+did not. Then the frontier model's confirmed estimation habit became a control
+instead of a risk.
 
-**What v3 deliberately did not do:** chase a leaderboard past the evidence, adopt
-weights whose license would not survive a commercial read, or replace working stages
-because a benchmark implied it.
+**What v3 did not do:** chase a leaderboard past the evidence, adopt weights whose
+license would not survive a commercial read, or replace working stages because a
+benchmark implied it.
 
 ---
 
 ## Honest boundaries
 
-- **Synthetic corpus.** These are generated CIMs modelled on publicly described
-  conventions. No real memorandum, no real company, no proprietary deal flow.
+- **The corpus is synthetic**, modelled on publicly described conventions. No real
+  memorandum, no real company, no proprietary deal flow.
 - **Extraction is deterministic here, not model-driven.** The end-to-end run tests
-  *stated* values against parsed text, which is what keeps it reproducible offline. A
-  production build puts a structured-output model call at that seam; the interface and
-  the eval harness would not change, which is why the seam exists.
-- **The narrative judgement layer is a flagged suggestion, not a detector.** Founder
-  risk, succession gaps, unsupported technology - none of that is visible to
-  arithmetic, and the memo ships model observations with ids attached so a reviewer
-  can accept, edit or strike them. A calibrated judge against a held-out labelled set
-  is future work, stated as such.
-- **Not a data-room tool.** The parse answer here would change at 10–50K pages; see
+  stated values against parsed text, which is what keeps it reproducible offline. A
+  production build puts a structured-output model call at that seam; the interface
+  and the eval harness would not change, which is why the seam exists.
+- **The narrative judgement layer ships as flagged suggestions, not a detector.**
+  Founder risk, succession gaps, unsupported technology: none of that is visible to
+  arithmetic. The memo carries model observations with ids attached so a reviewer can
+  accept, edit or strike them. A calibrated judge against a held-out labelled set is
+  future work, stated as such.
+- **This is not a data-room tool.** The parse answer changes at 10–50K pages; see
   [`docs/ingest.md`](docs/ingest.md) §8.
 
 ---
@@ -295,14 +280,14 @@ because a benchmark implied it.
 
 The repository is shaped to drop into an agent:
 
-- **Claude Code**: copy or clone the repo as a skill folder - [`SKILL.md`](SKILL.md)
+- **Claude Code**: copy or clone the repo as a skill folder. [`SKILL.md`](SKILL.md)
   at the root carries the name, the trigger description, and the five-command
   walk-through.
 - **Any AGENTS.md-reading agent** (Codex-class CLIs, ChatGPT desktop workspace):
-  [`AGENTS.md`](AGENTS.md) at the root is the agent-agnostic entry point, with the
-  hard rules and pointers.
+  [`AGENTS.md`](AGENTS.md) at the root is the agent-agnostic entry, with the hard
+  rules and the pointers.
 - **Requirements**: Ollama with `glm-ocr`, `qwen3.8:27b` and `nomic-embed-text`
-  pulled; everything degrades visibly without them, never silently.
+  pulled. Everything degrades visibly without them, never silently.
 
 ---
 
@@ -317,7 +302,7 @@ The repository is shaped to drop into an agent:
 | [`playbook.md`](playbook.md) | The rollout half: shadow mode, who to build with, what will actually go wrong |
 | [`docs/hardware.md`](docs/hardware.md) | Local model setup, AMD/ROCm traps, and three failures that would have published false findings |
 | [`reports/bakeoff.md`](reports/bakeoff.md) | The reader comparison that chose the current stack, with committed per-model caches |
-| [`reports/memo_T05.md`](reports/memo_T05.md) | A finished memo, as the reviewer receives it - its reviewed twin and the correction session sit beside it |
+| [`reports/scorecard_T05.md`](reports/scorecard_T05.md) | A finished scorecard, as the reviewer reads it; the template it is judged against sits beside it |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version by version, with what taught what |
 
@@ -327,7 +312,7 @@ The repository is shaped to drop into an agent:
 
 ```
 generate.py            build the synthetic corpus; fails if a chart value leaks to text
-screen.py              the CLI an analyst would run
+screen.py              the CLI an analyst would run: findings + readable scorecards
 memo.py                draft screening memos with call-outs
 capture.py             diff an edited memo into correction records
 bakeoff.py             compare page-reader candidates, identical grading
@@ -339,6 +324,7 @@ deal_ready/
   parse/               text layer · reading pipeline · chart geometry, one interface
   embed/               page routing, MaxSim in numpy, no vector database
   scorer/              deterministic rules + criteria fit
+  scorecard.py         renders the rubric and per-target scorecards as markdown
   memo/                memo drafting, call-out derivation, the narrative pass
   models/ollama.py     the single door every model call goes through
   values.py            what counts as recovering a number
@@ -346,7 +332,7 @@ deal_ready/
 criteria/              investment profiles
 data/                  generated corpus, ground truth, committed model caches, review sessions
 eval/                  judgement examples folded back from reviewers, regressions
-reports/               generated results: findings, layer reports, memos, call-outs, bake-off
+reports/               generated results: findings, scorecards, memos, call-outs, bake-off
 realworld/             manifest of public documents for the spot check (no PDFs committed)
 ```
 

@@ -219,6 +219,41 @@ def check_reports_match_artifacts() -> None:
           f"{len(rep['rows'])} scored fields recompute to the published aggregate")
 
 
+def check_scorecards_match() -> None:
+    """The readable scorecards must regenerate byte-for-byte from the artifacts.
+
+    The markdown rubric and per-target scorecards exist so a human can review a
+    screen without reading JSON. Generated documents that drift from the JSON they
+    describe would be worse than no documents - so they are never hand-edited, and
+    this check regenerates them from `findings.json` + `criteria/` and compares.
+    """
+    from deal_ready import scorecard
+    findings = load(REPORTS / "findings.json")
+    if not findings:
+        check("scorecards match their artifacts", SKIP, "run screen.py first")
+        return
+    criteria = __import__("deal_ready.scorer.rules", fromlist=["rules"]).load_criteria()
+    problems = []
+    if (REPORTS / "scorecard_template.md").exists():
+        want = scorecard.render_template(criteria)
+        got = (REPORTS / "scorecard_template.md").read_text(encoding="utf-8")
+        if got != want:
+            problems.append("scorecard_template.md drifted from criteria")
+    else:
+        problems.append("scorecard_template.md missing")
+    for r in findings:
+        p = REPORTS / f"scorecard_{r['target_id']}.md"
+        if not p.exists():
+            problems.append(f"scorecard_{r['target_id']}.md missing")
+            continue
+        if p.read_text(encoding="utf-8") != scorecard.render_target(r, criteria):
+            problems.append(f"scorecard_{r['target_id']}.md drifted from findings")
+    check("scorecards match their artifacts",
+          PASS if not problems else FAIL,
+          f"{1 + len(findings)} readable scorecards regenerate byte-for-byte"
+          if not problems else "; ".join(problems[:3]))
+
+
 def check_axis_values_remeasure() -> None:
     """The axis-read column re-measures offline, from committed pixels.
 
@@ -408,6 +443,7 @@ def main() -> int:
     check_clean_baseline_silent()
     check_vision_cache_is_successes_only()
     check_reports_match_artifacts()
+    check_scorecards_match()
     check_axis_values_remeasure()
     check_deterministic_path_needs_no_model()
     check_correction_records()

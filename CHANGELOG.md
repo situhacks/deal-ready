@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v3.2.0 — 2026-08-24
 
 - The escalation ladder is gone. The bake-off that measured every candidate as a
   full-page reader settled the question the ladder existed to answer: no single
@@ -13,9 +13,14 @@
   measures the endpoints against those ticks, and the estimates become the
   cross-check against the measurement in the same call. Reader runtime on this
   corpus: 100s.
-- README restructured to article shape: what it is and the quick-start at the top,
-  the correction loop as its own diagrammed section, the version story moved to the
-  bottom. AGENTS.md added as the agent-agnostic entry point (Claude Code reads
+- Readable scorecards: `screen.py` now renders the investment rubric
+  (`scorecard_template.md`) and each target's numbers set against it
+  (`scorecard_<TARGET>.md`) as markdown, generated from the config so they cannot
+  drift; `run_checks.py` regenerates and byte-compares them (13 checks total).
+- README rewritten: article shape (takeaway and quick-start at the top, the
+  correction loop as its own diagrammed section, the version story at the bottom),
+  worked-example links to every committed artifact in the loop, and a plainer voice
+  throughout. AGENTS.md added as the agent-agnostic entry point (Claude Code reads
   SKILL.md; Codex-class agents read AGENTS.md).
 - tiered.py renamed to reading.py; the backend label is now
   `pipeline:glm-ocr->[qwen3.8:27b+geometry]`.
