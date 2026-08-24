@@ -1,0 +1,45 @@
+{
+  "target_id": "T05",
+  "session": 1,
+  "draft_version": "v2",
+  "reviewer": "author dry-run",
+  "minutes_spent": 12,
+  "corrections": [
+    {
+      "callout_id": null,
+      "blind_spot": true,
+      "field": null,
+      "kind": null,
+      "before": null,
+      "after": "- Correction: p7 presents \"Gross and net revenue retention, FY22 to FY25\" as a chart, so the figure is not simply absent - the exhibit exists and no reliable values came back from it. Reframe the ask: request the underlying retention series rather than treating it as unstated.",
+      "reason_category": "new_information"
+    },
+    {
+      "callout_id": "co-T05-judgement-002",
+      "blind_spot": false,
+      "field": null,
+      "kind": "judgement",
+      "before": "- The company lacks a CTO and has no documented succession plan for its only employee who wrote production code for the settlement logic. (p9)",
+      "after": "- There is no CTO and no documented succession plan behind the one person who writes production code for the settlement logic. (p9)",
+      "reason_category": "judgement_call"
+    },
+    {
+      "callout_id": "co-T05-judgement-003",
+      "blind_spot": false,
+      "field": null,
+      "kind": "judgement",
+      "before": "- The core settlement engine runs on an unsupported database version and has zero automated test coverage, exposing significant technical risk. (p10)",
+      "after": "- The core is a Delphi application first shipped in 1998 with a web layer bolted on in 2013; the settlement engine has zero automated test coverage and runs on an unsupported database version. Technical risk is generational, not incremental. (p10)",
+      "reason_category": "judgement_call"
+    },
+    {
+      "callout_id": "co-T05-judgement-004",
+      "blind_spot": false,
+      "field": null,
+      "kind": "judgement",
+      "before": "- Revenue growth of 2% year over year combined with a Rule of 40 score of 29 indicates the business is financially mature but lacks the growth trajectory required for typical venture capital returns. (p8)",
+      "after": "- Growth of 2% leaves little room to out-run problems organically. With EBITDA positive the hold thesis can work - but only if retention is genuinely strong, and the one metric that would show it is the one the document does not provide. Treat retention as the deciding diligence item. (p8)",
+      "reason_category": "judgement_call"
+    }
+  ]
+}
