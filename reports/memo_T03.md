@@ -40,19 +40,19 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T03-judgement-001-->
-- The document claims the platform is hosted and supports customer-built extensions via API, yet admits configuration is performed exclusively by the internal services team rather than customers, suggesting a rigid architecture that may limit future extensibility. (p5)
+- The document claims the platform is hosted and configurable but provides no evidence of the underlying technology stack, raising concerns about legacy code dependencies or unsupported infrastructure. (p5)
 
 <!--co-T03-judgement-002-->
-- Management describes a 'long-tenured leadership team' but provides no specific names or tenure details, creating ambiguity about whether founder dependency remains a structural risk despite the stated history. (p9)
+- Management attributes all implementation delivery to its own services team without identifying specific individuals or a dedicated technical lead, creating significant founder dependency risk for complex configuration work. (p9)
 
 <!--co-T03-judgement-003-->
-- The financial summary presents an adjusted EBITDA of $1.0M based on add-backs for one-time transaction preparation costs and legal expenses, obscuring the operational profitability required to sustain growth without external capital. (p8)
+- The absence of any mention of the core application's age, language, or database version in the technology section suggests a lack of transparency regarding generational technical risks. (p10)
 
 <!--co-T03-judgement-004-->
-- While the document states that implementation is delivered by the company's own team, it does not quantify the size of this delivery organization relative to the total headcount, leaving the depth of internal capability unverified. (p9)
+- While the document states that ongoing support is included in subscriptions, it fails to quantify the cost of this service relative to revenue, obscuring the true economics of the bundled implementation and support model. (p3)
 
 <!--co-T03-judgement-005-->
-- The text asserts that public-sector procurement cycles are long and incumbents rarely displaced mid-term, yet offers no evidence regarding how many municipalities have actually renewed or expanded their contracts in recent years. (p4)
+- The definition of recurring revenue as 'contracted, annualised' rather than actual cash collected masks the reality that a significant portion of revenue may be tied up in unbilled or uncollected amounts. (p8)
 
 ## Ask the seller
 

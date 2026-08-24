@@ -42,7 +42,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 9,
-      "question": "The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency where his departure would simultaneously cripple technical continuity and key revenue streams."
+      "question": "The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency on his continued involvement."
     },
     {
       "id": "co-T05-judgement-002",
@@ -50,7 +50,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 10,
-      "question": "The core settlement logic relies on a Delphi application from 1998 running on an unsupported database version with zero automated test coverage, representing a generational technology risk rather than an incremental maintenance issue."
+      "question": "The core application relies on a Delphi platform from 1998 running on an unsupported database version with zero automated test coverage, representing generational technical obsolescence rather than incremental risk."
     },
     {
       "id": "co-T05-judgement-003",
@@ -58,7 +58,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 8,
-      "question": "With revenue growth at only 2% and EBITDA positive, the company lacks the organic momentum to outpace technical obsolescence or market fragmentation without significant external capital injection."
+      "question": "With revenue growth at only 2% and EBITDA positive, the company lacks the organic momentum to outpace its inherent technological and operational risks without significant external intervention."
     },
     {
       "id": "co-T05-judgement-004",
@@ -66,7 +66,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 4,
-      "question": "The document highlights expansion into adjacent operator segments as a near-term initiative despite the fragmented nature of the market and conservative buyer behavior described in the overview."
+      "question": "The document highlights expansion into adjacent operator segments as a near-term initiative despite the market being fragmented with buyers who are operationally conservative and resistant to replacement cycles."
     },
     {
       "id": "co-T05-judgement-005",
@@ -74,7 +74,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 7,
-      "question": "Gross retention is reported at 81% while net retention includes expansion, masking potential churn risks by inflating the recurring revenue base with upsells that may not be sustainable."
+      "question": "Gross retention of 81% falls below the 85% floor, suggesting that while the core product is valued, the business model lacks sufficient stickiness or expansion leverage to sustain growth independently."
     }
   ]
 }

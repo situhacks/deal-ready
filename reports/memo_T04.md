@@ -38,19 +38,19 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T04-judgement-001-->
-- The document relies on management's unaudited figures for FY25 without independent verification of the negative EBITDA or the rule of 40 score. (p8)
+- The business relies on a single founder who writes production code for its core settlement logic, with no CTO or documented succession plan to mitigate the risk of operational paralysis if that individual departs. (p9)
 
 <!--co-T04-judgement-002-->
-- Management has hired two senior executives in the last eighteen months, creating a high risk that the company lacks deep institutional knowledge and faces founder dependency. (p9)
+- Management highlights a difficult-to-replicate data asset but fails to disclose whether the proprietary predictive models are proprietary algorithms or simply trained on historical telematics data, creating ambiguity about the true source of competitive advantage. (p2)
 
 <!--co-T04-judgement-003-->
-- The business model depends on a proprietary data asset derived from telematics feeds, yet the document offers no evidence of how this data is secured or protected against unauthorized access. (p10)
+- The document presents EBITDA as negative while simultaneously adding back one-time transaction and legal costs to justify the valuation, obscuring the operational reality that the company is burning cash at a rate that contradicts its growth metrics. (p8)
 
 <!--co-T04-judgement-004-->
-- Retention metrics are presented as 'net' retention which includes expansion and contraction, masking potential churn risks that would be visible only in gross retention figures. (p7)
+- Retention is reported only as a net figure including expansion and contraction, which masks the possibility that new customers are being acquired solely through aggressive discounts or churned accounts to maintain the recurring revenue total. (p7)
 
 <!--co-T04-judgement-005-->
-- The document uses the term 'commercial fleet maintenance software platform' to describe a telematics-based prediction tool, potentially inflating the perceived scope of the product offering. (p2)
+- The integration surface is described as supporting customer-built extensions via API, yet no evidence is provided regarding the stability of these integrations or whether they rely on third-party vendors that could introduce supply chain risk. (p5)
 
 ## Ask the seller
 

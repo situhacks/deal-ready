@@ -38,19 +38,19 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T02-judgement-001-->
-- The business relies on two co-founders who personally manage the largest accounts, creating a critical dependency that threatens operational continuity if either departs. (p9)
+- The business relies on two co-founders who personally manage the largest commercial relationships, creating significant operational risk if either departs. (p9)
 
 <!--co-T02-judgement-002-->
-- Revenue concentration is severe with the top five customers accounting for 71% of ARR and the single largest customer at 34%, leaving minimal room to out-run problems organically. (p6)
+- Revenue concentration is severe with the top five customers accounting for 71% of ARR and a single customer representing 34%, leaving little room for organic growth to offset potential churn. (p6)
 
 <!--co-T02-judgement-003-->
-- The core application is a .NET monolith built in 2011 with no mention of automated testing or modernization, presenting generational technical risk rather than incremental upgrade challenges. (p10)
+- The core platform is a .NET monolith built in 2020 that runs on a single region with warm standby, lacking the architectural depth or geographic redundancy required for enterprise-grade port operations software. (p10)
 
 <!--co-T02-judgement-004-->
-- Management highlights low displacement risk due to operational dependency but fails to quantify the specific cost of downtime or the financial impact of a single customer outage. (p2)
+- Management defines gross margin as excluding amortisation and EBITDA via add-backs for transaction costs, which obscures the true profitability impact of heavy implementation and integration expenses. (p8)
 
 <!--co-T02-judgement-005-->
-- The document defines retention metrics in ways that obscure true stickiness, offering gross retention while omitting churn data necessary to validate the claim that outages stop gate traffic. (p7)
+- Retention metrics are presented only as net retention including expansion, masking whether the core product is actually driving stickiness or if growth is purely driven by upselling existing clients. (p7)
 
 ## Ask the seller
 

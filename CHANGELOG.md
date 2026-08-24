@@ -1,5 +1,27 @@
 # Changelog
 
+## v3.0.0 — 2026-08-24
+
+- The cheap tier is now a specialized parser: GLM-OCR (0.9B, MIT) reads every page,
+  replacing the general 1B VLM. Bake-off evidence (bakeoff.py, reports/bakeoff.md):
+  identical graded fidelity on prose, tables and labelled charts - including the
+  chart-internal callout box v2.1 was built around - at ~5s/page vs ~19s. End-to-end
+  latency fell ~44% (526s -> 297s on this corpus) with under half the token spend.
+- The escalation trigger learned the parser signature: a specialized reader drops
+  unlabelled chart interiors AND the exhibit vocabulary, so "no numeric values at
+  all" now escalates on its own, whatever the page mentions. Pages with numbers and
+  an exhibit mention still escalate (annotation-drop insurance).
+- bakeoff.py: candidate readers graded identically on the ground-truth pages, same
+  prompt, per-model committed caches, "not installed" recorded as not run. Round-1
+  findings include a disqualifying quirk the model card does not mention:
+  deepseek-ocr's Ollama port instant-stops on any prompt over ~50 characters
+  (bisected), so it cannot hold the never-invent transcription contract.
+- vision.parse accepts per-call prompt/system and a cache variant, so candidates
+  with different instruction contracts grade under their own cache namespaces.
+- Everything measured in v2.1 holds: 20/20 chart values, axis column from committed
+  pixel geometry, 12/12 offline checks. The swap changed who reads pages; it did not
+  change what the pipeline can prove.
+
 ## v2.1.0 — 2026-08-24
 
 - The axis column is closed: chart-only values 20/20 on the committed eval, up from

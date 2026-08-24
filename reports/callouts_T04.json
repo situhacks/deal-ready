@@ -41,24 +41,24 @@
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 8,
-      "question": "The document relies on management's unaudited figures for FY25 without independent verification of the negative EBITDA or the rule of 40 score."
+      "evidence_page": 9,
+      "question": "The business relies on a single founder who writes production code for its core settlement logic, with no CTO or documented succession plan to mitigate the risk of operational paralysis if that individual departs."
     },
     {
       "id": "co-T04-judgement-002",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 9,
-      "question": "Management has hired two senior executives in the last eighteen months, creating a high risk that the company lacks deep institutional knowledge and faces founder dependency."
+      "evidence_page": 2,
+      "question": "Management highlights a difficult-to-replicate data asset but fails to disclose whether the proprietary predictive models are proprietary algorithms or simply trained on historical telematics data, creating ambiguity about the true source of competitive advantage."
     },
     {
       "id": "co-T04-judgement-003",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 10,
-      "question": "The business model depends on a proprietary data asset derived from telematics feeds, yet the document offers no evidence of how this data is secured or protected against unauthorized access."
+      "evidence_page": 8,
+      "question": "The document presents EBITDA as negative while simultaneously adding back one-time transaction and legal costs to justify the valuation, obscuring the operational reality that the company is burning cash at a rate that contradicts its growth metrics."
     },
     {
       "id": "co-T04-judgement-004",
@@ -66,15 +66,15 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 7,
-      "question": "Retention metrics are presented as 'net' retention which includes expansion and contraction, masking potential churn risks that would be visible only in gross retention figures."
+      "question": "Retention is reported only as a net figure including expansion and contraction, which masks the possibility that new customers are being acquired solely through aggressive discounts or churned accounts to maintain the recurring revenue total."
     },
     {
       "id": "co-T04-judgement-005",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 2,
-      "question": "The document uses the term 'commercial fleet maintenance software platform' to describe a telematics-based prediction tool, potentially inflating the perceived scope of the product offering."
+      "evidence_page": 5,
+      "question": "The integration surface is described as supporting customer-built extensions via API, yet no evidence is provided regarding the stability of these integrations or whether they rely on third-party vendors that could introduce supply chain risk."
     }
   ]
 }

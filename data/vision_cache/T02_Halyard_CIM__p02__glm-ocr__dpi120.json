@@ -1,0 +1,12 @@
+{
+  "text": "Executive summary\n\nHalyard schedules berth allocation, yard moves and gate throughput for container terminals. The product is embedded in daily terminal operations and integrated with customs filing.\n\nThe business is a port and terminal operations software platform founded in 2011 and employing 44 people from its Halifax, Nova Scotia headquarters. Approximately 88% of total revenue is recurring subscription revenue; revenue grew 9% year over year in FY25.\n\nTerminal operators run Halyard as the operational spine; an outage stops gate traffic, which makes displacement risk low once installed.",
+  "meta": {
+    "model": "glm-ocr",
+    "ok": true,
+    "error": "",
+    "seconds": 5.09,
+    "tokens_in": 0,
+    "tokens_out": 0,
+    "dpi": 120
+  }
+}

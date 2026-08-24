@@ -1,39 +1,34 @@
-"""Cheap model reads the page; the strong model re-reads the exhibit.
+"""A parsing model reads every page; the strong tier re-reads what it drops.
 
-The capability boundary between a 1B and a 4B vision model, measured on this corpus,
-is not "bigger is better". It is specific:
+v3 swapped the cheap tier from a general 1B VLM (minicpm-v4.6) to GLM-OCR, a 0.9B
+specialized document parser, on bake-off evidence (reports/bakeoff.md): identical
+graded fidelity on prose, tables and labelled charts - including chart-internal
+callout boxes the generalist dropped - at roughly a quarter of the latency
+(~5s/page vs ~19s). The 2026 research wave predicted exactly this: parsers win
+faithful transcription by decomposition, and no benchmark scores chart interiors,
+which is why the axis column does not come from any single model at all.
 
-    minicpm-v4.6 (1B)   labelled charts  9-10/10   unlabelled charts  0/10   ~19s/page
-    qwen3.5:4b  (4B)    labelled charts  10/10     unlabelled charts  reads  ~150s/page
+The tier shape is unchanged:
 
-Reading a printed data label is recognition. Reading a value off an axis is spatial
-reasoning about where a point sits between gridlines - a different task, and the small
-model cannot do it at all. It does not guess badly; it returns no numbers.
+    glm-ocr (0.9B parser)   every page, ~5s   prose/tables/labelled charts 100%
+    qwen3.5:4b (think=False) exhibit crops    native-image re-reads + tick glyphs
+    chart_measure.py        code             axis values measured from pixels
 
-**Why every exhibit page escalates now, when this file used to gate on loud failure.**
-The v1 trigger escalated a page only when its transcription mentioned a chart AND
-contained no numbers, because escalation cost 119-171s per page (thinking model, full
-page render) and an unmeasured trigger spends the budget the tiering was meant to
-save - the first version fired on 16 of 20 pages and two thirds of that bought
-nothing. That gate had a blind spot it took a reviewer to find: a page can carry
-numbers and still be misread, because the cheap model silently drops annotations
-inside the chart raster (T05 p6: three bar labels transcribed, the "Top 5 customers:
-28% of ARR" callout box omitted). No ground-truth-free trigger can see a missing
-value on a page full of them.
+Two measured behaviors of the parser shape the trigger. GLM-OCR reads labelled
+charts perfectly but DROPS unlabelled chart interiors entirely - and its output on
+such a page contains no exhibit vocabulary at all (no "chart", no "figure"; just
+prose, the axis title, and year labels). The old trigger required an exhibit word,
+so a parser-class reader would sail past the very pages that need escalation. The
+rule is now symmetric and simpler: **a routed page whose transcription yields no
+numeric values escalates, whatever it mentions** - a page that produced no numbers
+is a page whose exhibit beat the reader. Pages that mention an exhibit AND produced
+numbers still escalate (annotation-drop insurance, ~6-17s).
 
-The gate made sense while escalation was expensive. Then two fixes landed - the
-`think` parameter at the model door, and exhibit-level reads of the PDF's native
-embedded images instead of a 120 DPI page render - and the escalated step fell from
-~150s to 6-17s per exhibit. A gate that costs exactness to save seconds that no
-longer need saving is the wrong shape, so the trigger loosened: every page whose
-transcription mentions an exhibit is re-read at exhibit level. The cheap page text is
-kept and the exhibit transcription is appended - prose from the cheap pass, exact
-chart values from the strong one.
-
-What did NOT change: the axis/label classification stays ground-truth-free, derived
-from the cheap transcription (exhibit mentioned but no values = unlabelled chart).
-That signal rides out as `chart_kind` in the page meta, and the memo layer uses it to
-decide which values ship flagged.
+`chart_kind` stays ground-truth-free: no values in the cheap transcription means
+"unlabelled" (axis-read signature; values ship flagged), numbers present means
+"labelled". The parser's own y-axis tick numbers cannot be used for calibration -
+it drops those too - so tick glyphs remain the strong tier's job, read once and
+cached, with geometry doing the rest offline.
 """
 
 from __future__ import annotations
@@ -44,7 +39,7 @@ from pathlib import Path
 from . import vision
 from .base import ParsedDocument, ParsedPage
 
-CHEAP_MODEL = "minicpm-v4.6:latest"
+CHEAP_MODEL = "glm-ocr"
 STRONG_MODEL = "qwen3.5:4b"
 
 _NUMERIC = re.compile(r"\d+(?:\.\d+)?\s?%|\$\s?\d")
@@ -54,35 +49,37 @@ _CROP_MARKER = "[Exhibit re-read at native resolution]"
 
 
 def needs_escalation(text: str) -> tuple[bool, str, str]:
-    """Should the strong model re-read this page's exhibits?
+    """Should the strong tier re-read this page's exhibits?
 
-    Returns (escalate, why, chart_kind). Ground-truth free by design: we ask what the
-    transcription says about itself, not whether it matches an answer key. The
-    history of this trigger is a measurement story - see the module docstring. The
-    first version fired on any page containing the word "unreadable" (16 of 20 pages,
-    two thirds buying nothing); the second required "no numbers at all", which was
-    quiet about charts the cheap model half-read. This version re-reads every exhibit
-    page because the re-read got cheap.
+    Returns (escalate, why, chart_kind). Ground-truth free by design: we ask what
+    the transcription says about itself, not whether it matches an answer key.
+    Measurement history of this trigger: v1 fired on any page containing
+    "unreadable" (16 of 20 pages, two thirds buying nothing); v2 required an
+    exhibit word plus no numbers, which was quiet about charts the reader
+    half-read, then loosened to every exhibit page once escalation got cheap; v3
+    adds the parser-class signature - a specialized reader drops unlabelled chart
+    interiors AND the exhibit vocabulary, so *no numbers at all* is itself the
+    escalation signal.
 
-    `chart_kind` is the part downstream consumers care about: "unlabelled" means the
-    cheap pass saw an exhibit and no values - the axis-read signature - and values
-    recovered from such a page ship flagged. "labelled" means numbers were present;
-    the re-read is for completeness, and its values are label reads.
+    `chart_kind`: "unlabelled" means the cheap transcription carried no values -
+    the axis-read signature; values recovered from such a page ship flagged.
+    "labelled" means numbers were present; the re-read is annotation-drop
+    insurance, and its values are label reads.
     """
     if not text.strip():
         return True, "empty transcription", "unlabelled"
     has_exhibit = bool(_EXHIBIT.search(text))
     has_numbers = bool(_NUMERIC.search(text))
-    if has_exhibit:
-        if has_numbers:
+    if has_numbers:
+        if has_exhibit:
             return (True, "mentions an exhibit - re-reading it at exhibit level",
                     "labelled")
+        return False, "", ""
+    if has_exhibit:
         return (True, "mentions an exhibit but reported no values - unlabelled chart",
                 "unlabelled")
-    if "unreadable" in text.lower() and not has_numbers:
-        return (True, "reported a value unreadable and produced no numbers",
-                "unlabelled")
-    return False, "", ""
+    return (True, "reported no values at all - the reader dropped whatever "
+                  "carried them", "unlabelled")
 
 
 def parse(pdf_path: Path, pages: list[int] | None = None,

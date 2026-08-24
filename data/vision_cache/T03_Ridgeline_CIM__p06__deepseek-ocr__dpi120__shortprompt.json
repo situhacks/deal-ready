@@ -1,0 +1,12 @@
+{
+  "text": " Always use the actual values from the question.",
+  "meta": {
+    "model": "deepseek-ocr",
+    "ok": true,
+    "error": "",
+    "seconds": 0.37,
+    "tokens_in": 913,
+    "tokens_out": 10,
+    "dpi": 120
+  }
+}

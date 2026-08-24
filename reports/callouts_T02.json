@@ -42,7 +42,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 9,
-      "question": "The business relies on two co-founders who personally manage the largest accounts, creating a critical dependency that threatens operational continuity if either departs."
+      "question": "The business relies on two co-founders who personally manage the largest commercial relationships, creating significant operational risk if either departs."
     },
     {
       "id": "co-T02-judgement-002",
@@ -50,7 +50,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 6,
-      "question": "Revenue concentration is severe with the top five customers accounting for 71% of ARR and the single largest customer at 34%, leaving minimal room to out-run problems organically."
+      "question": "Revenue concentration is severe with the top five customers accounting for 71% of ARR and a single customer representing 34%, leaving little room for organic growth to offset potential churn."
     },
     {
       "id": "co-T02-judgement-003",
@@ -58,15 +58,15 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 10,
-      "question": "The core application is a .NET monolith built in 2011 with no mention of automated testing or modernization, presenting generational technical risk rather than incremental upgrade challenges."
+      "question": "The core platform is a .NET monolith built in 2020 that runs on a single region with warm standby, lacking the architectural depth or geographic redundancy required for enterprise-grade port operations software."
     },
     {
       "id": "co-T02-judgement-004",
       "kind": "judgement",
       "metric": null,
       "confidence_pct": null,
-      "evidence_page": 2,
-      "question": "Management highlights low displacement risk due to operational dependency but fails to quantify the specific cost of downtime or the financial impact of a single customer outage."
+      "evidence_page": 8,
+      "question": "Management defines gross margin as excluding amortisation and EBITDA via add-backs for transaction costs, which obscures the true profitability impact of heavy implementation and integration expenses."
     },
     {
       "id": "co-T02-judgement-005",
@@ -74,7 +74,7 @@
       "metric": null,
       "confidence_pct": null,
       "evidence_page": 7,
-      "question": "The document defines retention metrics in ways that obscure true stickiness, offering gross retention while omitting churn data necessary to validate the claim that outages stop gate traffic."
+      "question": "Retention metrics are presented only as net retention including expansion, masking whether the core product is actually driving stickiness or if growth is purely driven by upselling existing clients."
     }
   ]
 }

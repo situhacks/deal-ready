@@ -1,0 +1,12 @@
+{
+  "text": "Executive summary\n\nMeridian is the system of record for mid-market dental groups, running scheduling, clinical charting, claims submission and patient billing in a single workflow. Practices sign multi-year agreements and renew on auto-renewal terms.\n\nThe business is a dental practice management software platform founded in 2009 and employing 61 people from its Columbus, Ohio headquarters. Approximately 91% of total revenue is recurring subscription revenue; revenue grew 14% year over year in FY25.\n\nSwitching costs are high: a practice migrating away must move eleven years of clinical records and re-credential every payer connection.",
+  "meta": {
+    "model": "glm-ocr",
+    "ok": true,
+    "error": "",
+    "seconds": 8.13,
+    "tokens_in": 0,
+    "tokens_out": 0,
+    "dpi": 120
+  }
+}

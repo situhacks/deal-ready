@@ -129,10 +129,12 @@ def page_images(pdf_path: Path, pages: list[int] | None = None, dpi: int = RENDE
 CACHE = Path(__file__).resolve().parents[2] / "data" / "vision_cache"
 
 
-def _cache_key(pdf_path: Path, page_no: int, model: str, dpi: int) -> Path:
+def _cache_key(pdf_path: Path, page_no: int, model: str, dpi: int,
+               variant: str | None = None) -> Path:
     stem = Path(pdf_path).stem
     safe = model.replace(":", "-").replace("/", "-")
-    return CACHE / f"{stem}__p{page_no:02d}__{safe}__dpi{dpi}.json"
+    suffix = "" if not variant else f"__{variant}"
+    return CACHE / f"{stem}__p{page_no:02d}__{safe}__dpi{dpi}{suffix}.json"
 
 
 def parse(
@@ -141,6 +143,9 @@ def parse(
     model: str = DEFAULT_MODEL,
     use_cache: bool = True,
     think: bool | None = None,
+    prompt: str = PROMPT,
+    system: str | None = SYSTEM,
+    cache_variant: str | None = None,
 ) -> ParsedDocument:
     """Read `pages` with a local vision model.
 
@@ -172,7 +177,7 @@ def parse(
     all_pages = list(range(1, doc.page_count + 1))
     doc.close()
     for n in (wanted if wanted is not None else all_pages):
-        ck = _cache_key(pdf_path, n, model, RENDER_DPI)
+        ck = _cache_key(pdf_path, n, model, RENDER_DPI, cache_variant)
         if use_cache and ck.exists():
             rec = json.loads(ck.read_text(encoding="utf-8"))
             parsed.append(ParsedPage(page_number=n, text=rec["text"],
@@ -183,7 +188,7 @@ def parse(
     if to_read:
         CACHE.mkdir(parents=True, exist_ok=True)
         for page_no, png in page_images(pdf_path, to_read):
-            reply = ollama.generate(model, PROMPT, images=[png], system=SYSTEM,
+            reply = ollama.generate(model, prompt, images=[png], system=system,
                                     num_predict=NUM_PREDICT,
                                     timeout=PAGE_TIMEOUT, think=think)
             meta = {
@@ -199,7 +204,8 @@ def parse(
             # the build: a 300s timeout under GPU contention wrote an empty result
             # that scored as a miss. Failures stay uncached so a re-run retries them.
             if reply.ok and text.strip():
-                _cache_key(pdf_path, page_no, model, RENDER_DPI).write_text(
+                _cache_key(pdf_path, page_no, model, RENDER_DPI,
+                           cache_variant).write_text(
                     json.dumps({"text": text, "meta": meta}, indent=2), encoding="utf-8")
             parsed.append(ParsedPage(page_number=page_no, text=text,
                                      method="vision", meta=meta))

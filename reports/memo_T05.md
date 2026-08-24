@@ -38,19 +38,19 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
 
 <!--co-T05-judgement-001-->
-- The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency where his departure would simultaneously cripple technical continuity and key revenue streams. (p9)
+- The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency on his continued involvement. (p9)
 
 <!--co-T05-judgement-002-->
-- The core settlement logic relies on a Delphi application from 1998 running on an unsupported database version with zero automated test coverage, representing a generational technology risk rather than an incremental maintenance issue. (p10)
+- The core application relies on a Delphi platform from 1998 running on an unsupported database version with zero automated test coverage, representing generational technical obsolescence rather than incremental risk. (p10)
 
 <!--co-T05-judgement-003-->
-- With revenue growth at only 2% and EBITDA positive, the company lacks the organic momentum to outpace technical obsolescence or market fragmentation without significant external capital injection. (p8)
+- With revenue growth at only 2% and EBITDA positive, the company lacks the organic momentum to outpace its inherent technological and operational risks without significant external intervention. (p8)
 
 <!--co-T05-judgement-004-->
-- The document highlights expansion into adjacent operator segments as a near-term initiative despite the fragmented nature of the market and conservative buyer behavior described in the overview. (p4)
+- The document highlights expansion into adjacent operator segments as a near-term initiative despite the market being fragmented with buyers who are operationally conservative and resistant to replacement cycles. (p4)
 
 <!--co-T05-judgement-005-->
-- Gross retention is reported at 81% while net retention includes expansion, masking potential churn risks by inflating the recurring revenue base with upsells that may not be sustainable. (p7)
+- Gross retention of 81% falls below the 85% floor, suggesting that while the core product is valued, the business model lacks sufficient stickiness or expansion leverage to sustain growth independently. (p7)
 
 ## Ask the seller
 
