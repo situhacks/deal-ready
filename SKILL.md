@@ -42,7 +42,10 @@ not execute. No API keys, no network calls to model providers, ever.
 The corpus in `data/` is synthetic. Values read off a chart axis are measured from
 the chart's own pixels - the model reads the tick-label glyphs once, code fits the
 line geometry against the gridlines - and they ship flagged anyway, because a value
-recovered from a picture is not a value the seller printed. Charts without clean
-geometry (no gridlines, uncolour-coded series) fall back to the model's
-transcription and keep the flag. Narrative observations are suggestions with ids
-attached, never findings. Corrections change the next draft, never the current one.
+recovered from a picture is not a value the seller printed. When `qwen3.8:27b` is
+installed, every measured value is also re-read independently and the memo reports
+whether the two paths agree; without it the check skips and no agreement is
+claimed. Charts without clean geometry (no gridlines, uncolour-coded series) fall
+back to the model's transcription and keep the flag. Narrative observations are
+suggestions with ids attached, never findings. Corrections change the next draft,
+never the current one.

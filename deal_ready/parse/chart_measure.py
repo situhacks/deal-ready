@@ -221,6 +221,59 @@ def interpolate(y: float, grid_ys: list[float],
 _ROW_RE = re.compile(r"^(.+?)\s*\|\s*(?:.+?\|\s*)*([0-9.]+)\s*%\s*\|?\s*$")
 _SEP_RE = re.compile(r"^[\s|:-]+$")
 
+# An independent model re-read counts as agreeing with the measurement when it
+# lands within this many points. The observed wobble of a frontier-class open
+# model on these charts is +/-0.2; half a small gridline gap is generous without
+# being blind.
+READ_TOLERANCE = 0.5
+
+_MODEL_READ_RE = re.compile(r"^(.+?):\s*([0-9]+(?:\.[0-9]+)?)\s*%?\s*$")
+
+
+def parse_model_reads(text: str) -> list[tuple[str, float]]:
+    """(label, value) pairs from an independent model's chart read.
+
+    Expects the escalation model's answer format: one `label: value` line per
+    series (a leading `ticks:` line is ignored). Values the model read are
+    estimates and never enter the pipeline's numbers - they exist only to be
+    compared against the measurement.
+    """
+    out: list[tuple[str, float]] = []
+    for line in text.splitlines():
+        m = _MODEL_READ_RE.match(line.strip())
+        if m and m.group(1).strip().lower() != "ticks":
+            try:
+                out.append((m.group(1).strip(), float(m.group(2))))
+            except ValueError:
+                continue
+    return out
+
+
+def crosscheck(measured: list[tuple[str, float]],
+               model_reads: list[tuple[str, float]]) -> list[dict] | None:
+    """Compare measured values against an independent model's reads, by label.
+
+    Label matching is exact first, then containment - the escalation model and
+    the transcription may format a series name slightly differently. Returns one
+    record per measured series; None when the two lists do not cover the same
+    series, which means the cross-check is inconclusive rather than agreeing.
+    """
+    if not measured or not model_reads:
+        return None
+    recs = []
+    for label, mval in measured:
+        read = next((v for l, v in model_reads if l == label), None)
+        if read is None:
+            read = next((v for l, v in model_reads
+                         if label.lower() in l.lower() or l.lower() in label.lower()),
+                        None)
+        if read is None:
+            return None
+        recs.append({"label": label, "measured": mval, "read": read,
+                     "delta": round(abs(mval - read), 2),
+                     "agree": abs(mval - read) <= READ_TOLERANCE})
+    return recs
+
 
 def parse_series_rows(crop_text: str) -> list[tuple[str, float]]:
     """(label, last percentage) per series row of a crop transcription.
@@ -243,14 +296,8 @@ def parse_series_rows(crop_text: str) -> list[tuple[str, float]]:
     return rows
 
 
-def measured_block(crop_text: str, values: list[float]) -> str | None:
-    """The text appended to a crop transcription when measurement resolved.
-
-    Joins measured series values to the transcription's row labels: with the guesses
-    beside them, the assignment (identity or permutation) that minimises total
-    distance wins. Returns None when the transcription does not parse into matching
-    rows - the transcription then stands alone, as before.
-    """
+def measured_pairs(crop_text: str, values: list[float]) -> list[tuple[str, float]] | None:
+    """Measured values joined to their series labels (see measured_block)."""
     rows = parse_series_rows(crop_text)
     if not rows or len(rows) != len(values):
         return None
@@ -259,8 +306,24 @@ def measured_block(crop_text: str, values: list[float]) -> str | None:
         err = sum(abs(rows[i][1] - values[perm[i]]) for i in range(len(rows)))
         if best_err is None or err < best_err:
             best, best_err = perm, err
+    return [(rows[i][0], values[best[i]]) for i in range(len(rows))]
+
+
+def block_from_pairs(pairs: list[tuple[str, float]]) -> str:
     lines = ["[Measured from the chart's pixels - authoritative over the "
              "estimates above]"]
-    for i, (label, _guess) in enumerate(rows):
-        lines.append(f"{label}: {values[best[i]]:.1f}% (measured off the axis)")
+    lines += [f"{label}: {value:.1f}% (measured off the axis)"
+              for label, value in pairs]
     return "\n".join(lines)
+
+
+def measured_block(crop_text: str, values: list[float]) -> str | None:
+    """The text appended to a crop transcription when measurement resolved.
+
+    Joins measured series values to the transcription's row labels: with the guesses
+    beside them, the assignment (identity or permutation) that minimises total
+    distance wins. Returns None when the transcription does not parse into matching
+    rows - the transcription then stands alone, as before.
+    """
+    pairs = measured_pairs(crop_text, values)
+    return block_from_pairs(pairs) if pairs else None

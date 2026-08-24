@@ -1,5 +1,21 @@
 # Changelog
 
+## v3.1.0 — 2026-08-24
+
+- Cross-check tier: every measured axis value now carries an agreement record from
+  an independent perception path. Qwen3.8-27B (newest open general multimodal)
+  re-reads each measured chart; agreement within half a gridline gap builds
+  confidence in the memo call-out, disagreement prints "resolve before use". The
+  measurement stays the number the pipeline uses - the read is a second opinion,
+  never a source.
+- Probe evidence (committed reads): three of five endpoint pairs read exact, two
+  within 0.2, tick labels digit-identical to the strong tier's - the research's
+  prediction that a frontier-class model still estimates rather than measures,
+  confirmed on this corpus and turned into a control instead of a risk.
+- Optional by design: without the model installed the cross-check skips and no
+  agreement is claimed. `run_checks.py` verifies the committed reads still agree
+  offline, alongside the existing pixel re-measurement.
+
 ## v3.0.0 — 2026-08-24
 
 - The cheap tier is now a specialized parser: GLM-OCR (0.9B, MIT) reads every page,

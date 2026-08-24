@@ -1,0 +1,18 @@
+{
+  "reads": [
+    {
+      "label": "Gross revenue retention",
+      "value": 87.0
+    },
+    {
+      "label": "Net revenue retention",
+      "value": 112.0
+    }
+  ],
+  "text": "ticks: 115, 110, 105, 100, 95, 90, 85, 80\nGross revenue retention: 87\nNet revenue retention: 112",
+  "meta": {
+    "model": "qwen3.8:27b",
+    "ok": true,
+    "seconds": 7.8
+  }
+}

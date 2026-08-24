@@ -329,9 +329,57 @@ def read_ticks(pdf_path: Path, page_no: int, image_index: int, png: bytes,
     return ticks
 
 
+READ_PROMPT = (
+    "Read this line chart. It has two series. For EACH series, read the value of "
+    "the FINAL data point (rightmost marker) off the y axis, interpolating between "
+    "gridlines. Also list the y-axis tick labels you can see, topmost first.\n"
+    "Answer in exactly this format:\n"
+    "ticks: <n1>, <n2>, ...\n"
+    "<series label>: <value>"
+)
+
+
+def read_chart_values(pdf_path: Path, page_no: int, image_index: int, png: bytes,
+                      model: str, use_cache: bool = True) -> list[tuple[str, float]] | None:
+    """An independent model's own read of the chart's endpoint values.
+
+    The cross-check tier's input. The measurement (chart_measure.py) is the number
+    the pipeline uses; this read exists so every measured value has an independent
+    perception path agreeing or disagreeing with it - agreement builds confidence,
+    disagreement flags a human. Cached like every read; the cached reads are what
+    makes the agreement claim verifiable offline.
+    """
+    from . import chart_measure
+
+    safe = model.replace(":", "-").replace("/", "-")
+    ck = CACHE / f"{Path(pdf_path).stem}__p{page_no:02d}__{safe}__read{image_index}.json"
+    if use_cache and ck.exists():
+        rec = json.loads(ck.read_text(encoding="utf-8"))
+        return [(r["label"], r["value"]) for r in rec["reads"]]
+
+    if not (ollama.available() and ollama.has_model(model)):
+        return None
+    reply = ollama.generate(model, READ_PROMPT, images=[png], system=None,
+                            num_predict=1000, timeout=PAGE_TIMEOUT, think=False)
+    if not reply.ok or not reply.text or not reply.text.strip():
+        return None  # uncached failure - a re-run retries it
+    reads = chart_measure.parse_model_reads(reply.text)
+    if not reads:
+        return None
+    ck.parent.mkdir(parents=True, exist_ok=True)
+    ck.write_text(json.dumps(
+        {"reads": [{"label": l, "value": v} for l, v in reads],
+         "text": reply.text,
+         "meta": {"model": model, "ok": True, "seconds": round(reply.seconds, 2)}},
+        indent=2), encoding="utf-8")
+    return reads
+
+
 def measure_exhibit(pdf_path: Path, page_no: int, model: str, crop_text: str,
-                    use_cache: bool = True) -> str | None:
-    """Append measured values to a crop transcription, or return None untouched.
+                    use_cache: bool = True,
+                    verify_model: str | None = None
+                    ) -> tuple[str | None, dict | None]:
+    """Measure a page's exhibits and, optionally, cross-check the measurement.
 
     For each embedded exhibit: geometry finds the series colours and endpoint rows
     (chart_measure.py), the cached tick read supplies the calibration, and the two
@@ -339,13 +387,20 @@ def measure_exhibit(pdf_path: Path, page_no: int, model: str, crop_text: str,
     glyphs - its own estimated values stay in the transcription above, explicitly
     superseded. Any step that does not resolve (no gridlines, tick count mismatch,
     unparseable rows) leaves the transcription standing alone.
+
+    `verify_model` (when installed) independently reads the chart's endpoint
+    values - a second, perception-only path over the same pixels. The measurement
+    stays the number the pipeline uses; the read exists so every measured value
+    carries an agreement record: agree within tolerance builds confidence,
+    disagree flags a human. Returns (block, crosscheck) - either may be None.
     """
     from . import chart_measure
 
     images = page_embedded_images(pdf_path, page_no)
     if not images:
-        return None
+        return None, None
     blocks: list[str] = []
+    xcheck: dict | None = None
     for i, png in enumerate(images):
         rgb = chart_measure._rgb(png)
         grid = chart_measure.find_gridlines(rgb)
@@ -375,7 +430,17 @@ def measure_exhibit(pdf_path: Path, page_no: int, model: str, crop_text: str,
             values.append(round(v, 1))
         if len(values) != len(series):
             continue
-        block = chart_measure.measured_block(crop_text, values)
-        if block:
-            blocks.append(block)
-    return "\n\n".join(blocks) if blocks else None
+        pairs = chart_measure.measured_pairs(crop_text, values)
+        if not pairs:
+            continue
+        blocks.append(chart_measure.block_from_pairs(pairs))
+        if verify_model is None or xcheck is not None:
+            continue  # one cross-check per page is enough; first resolved image wins
+        model_reads = read_chart_values(pdf_path, page_no, i, png, verify_model,
+                                        use_cache=use_cache)
+        if model_reads:
+            recs = chart_measure.crosscheck(pairs, model_reads)
+            if recs:
+                xcheck = {"model": verify_model, "pairs": recs,
+                          "all_agree": all(r["agree"] for r in recs)}
+    return ("\n\n".join(blocks) if blocks else None), xcheck

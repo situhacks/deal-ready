@@ -149,11 +149,24 @@ def derive_callouts(result: dict, page_texts: dict[int, str] | None = None) -> l
         if cite.get("read") == "axis":
             measured = (f" (reader measured {rate}% on the committed eval)"
                         if rate is not None else "")
+            xc = cite.get("crosscheck")
+            crosschecked = ""
+            if xc:
+                if xc.get("all_agree"):
+                    worst = max((r["delta"] for r in xc["pairs"]), default=0)
+                    crosschecked = (f" Independent re-read by {xc['model']} agrees "
+                                    f"with the measurement within {worst:g}.")
+                else:
+                    detail = "; ".join(f"{r['label']}: model read {r['read']:g}, "
+                                       f"measured {r['measured']:g}"
+                                       for r in xc["pairs"] if not r["agree"])
+                    crosschecked = (f" Independent re-read by {xc['model']} "
+                                    f"DISAGREES ({detail}) - resolve before use.")
             add("axis_read", metric=m, confidence_pct=rate,
                 evidence_page=cite.get("page"),
                 question=f"{METRIC_LABELS.get(m, m)} was interpolated from chart "
-                         f"geometry, not printed on the page{measured} - confirm "
-                         f"or replace")
+                         f"geometry, not printed on the page{measured}."
+                         f"{crosschecked} Confirm or replace")
         else:
             add("label_read", metric=m, confidence_pct=None,
                 evidence_page=cite.get("page"),

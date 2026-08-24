@@ -42,6 +42,16 @@ from .base import ParsedDocument, ParsedPage
 CHEAP_MODEL = "glm-ocr"
 STRONG_MODEL = "qwen3.5:4b"
 
+# The cross-check tier: an independent perception path over the same exhibit
+# pixels. The measurement is the number; this model's read exists only to agree
+# or disagree with it (within chart_measure.READ_TOLERANCE), and the memo says
+# which happened. Optional by design - when the model is not installed the check
+# skips cleanly and the call-outs carry no agreement claim. Chosen on the 2026-08-24
+# probe (five retention charts: three reads exact, two within 0.2; tick reads
+# digit-identical to the strong tier's) - the newest open general multimodal,
+# which the research predicted would still estimate rather than measure. It does.
+VERIFY_MODEL = "qwen3.8:27b"
+
 _NUMERIC = re.compile(r"\d+(?:\.\d+)?\s?%|\$\s?\d")
 _EXHIBIT = re.compile(r"chart|graph|figure|exhibit|plot|axis", re.I)
 
@@ -108,22 +118,29 @@ def parse(pdf_path: Path, pages: list[int] | None = None,
             cheap_secs = p.meta.get("seconds", 0) or 0
             merged = p.text.rstrip() + "\n\n" + _CROP_MARKER + "\n" + crop_text
             measured = None
+            xcheck = None
             if kind == "unlabelled":
                 # The transcription's axis values are estimates; on an unlabelled
                 # chart they can be measured instead. Model read the tick glyphs
-                # once (cached); code does the rest, offline, forever.
-                measured = vision.measure_exhibit(pdf_path, p.page_number, strong,
-                                                  crop_text, use_cache=use_cache)
+                # once (cached); code does the rest, offline, forever. When the
+                # cross-check tier is installed it also reads the chart
+                # independently, and the agreement record rides the page meta.
+                measured, xcheck = vision.measure_exhibit(
+                    pdf_path, p.page_number, strong, crop_text,
+                    use_cache=use_cache, verify_model=VERIFY_MODEL)
                 if measured:
                     merged += "\n\n" + measured
             p.text = merged
-            p.meta.update({
+            meta = {
                 "tier": "escalated", "escalated_because": why,
                 "chart_kind": kind, "cheap_model": cheap, "strong_model": strong,
                 "crop": True, "measured": bool(measured),
                 "crop_seconds": (crop_meta or {}).get("seconds"),
                 "seconds": round(cheap_secs + (crop_meta or {}).get("seconds", 0) or 0, 2),
-            })
+            }
+            if xcheck:
+                meta["crosscheck"] = xcheck
+            p.meta.update(meta)
             escalated.append(p.page_number)
             out.append(p)
             continue

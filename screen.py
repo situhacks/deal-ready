@@ -103,8 +103,11 @@ def screen_one(pdf: Path, criteria: dict, use_vision: bool = True,
                             # flagged: an axis interpolation is not a printed label.
                             read = ("axis" if vmeta.get(pg, {}).get("chart_kind")
                                     == "unlabelled" else "label")
-                            citations[m] = {"page": pg, "method": "vision",
-                                            "read": read}
+                            cite = {"page": pg, "method": "vision", "read": read}
+                            xc = vmeta.get(pg, {}).get("crosscheck")
+                            if xc:
+                                cite["crosscheck"] = xc
+                            citations[m] = cite
                             break
 
     # 4 + 5 - arithmetic, then the tier.

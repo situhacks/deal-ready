@@ -239,7 +239,7 @@ def check_axis_values_remeasure() -> None:
         check("axis values re-measure offline", SKIP, "no chart ground truth")
         return
     strong = _re.sub(r"[:/]", "-", tiered.STRONG_MODEL)
-    bad, checked = [], 0
+    bad, checked, xchecked = [], 0, 0
     for r in rows:
         pdfs = list(DATA.glob(f"{r['target_id']}_*.pdf"))
         if not pdfs:
@@ -272,10 +272,26 @@ def check_axis_values_remeasure() -> None:
             bad.append(f"{r['target_id']}/{r['metric']}: measured {values or 'nothing'} "
                        f"does not recover {r['value']}")
             continue
+        # The cross-check claim, when published: the committed independent read
+        # must still agree with the re-measured value, offline.
+        verify = _re.sub(r"[:/]", "-", tiered.VERIFY_MODEL)
+        readrec = load(DATA / "vision_cache" /
+                       f"{stem}__p{r['page']:02d}__{verify}__read0.json")
+        if readrec:
+            pairs = chart_measure.measured_pairs(crop["text"], values)
+            recs = chart_measure.crosscheck(
+                pairs, [(x["label"], x["value"]) for x in readrec["reads"]])
+            if not recs or not all(x["agree"] for x in recs):
+                bad.append(f"{r['target_id']}/{r['metric']}: cross-check read does "
+                           f"not agree offline")
+                continue
+            xchecked += 1
         checked += 1
     check("axis values re-measure offline",
           PASS if not bad else FAIL,
           f"{checked} axis-read values re-measure from committed pixels, no GPU"
+          + (f"; {xchecked} cross-checked against committed independent reads"
+             if xchecked else "; cross-check reads not committed")
           if not bad else "; ".join(bad[:3]))
 
 

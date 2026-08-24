@@ -126,6 +126,21 @@ non-commercial; another relicensed mid-cycle), or replace working stages because
 benchmark implied it. The wheel was not reinvented — it was borrowed from the
 people who measured it, then re-measured here.
 
+**The cross-check tier.** One question was left open on purpose: the research said
+an escalation target must *perceive* better, and the strongest open general
+multimodal available — Qwen3.8-27B, ten days old when tested — had never been run
+against these charts. It read all five retention charts independently: three
+endpoint pairs exact, two within 0.2, tick labels digit-identical to the strong
+tier's. The research's prediction held — a frontier-class model still *estimates*
+on charts — and estimation is exactly one job: disagreeing. So v3.1 adds the
+independent read as a cross-check, never as a number: every measured axis value
+carries an agreement record from a second perception path over the same pixels.
+Agreement within half a gridline gap builds confidence; disagreement puts
+"resolve before use" in the memo. The check is optional by design — without the
+model installed it skips and the call-outs carry no claim — and the reads are
+committed, so the agreement claim itself verifies offline like everything else
+here.
+
 ---
 
 ## The finding
