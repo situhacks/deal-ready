@@ -36,6 +36,22 @@ gap between those two runs is the most interesting thing here.
 - A **correction loop**: review the memo, run one command, and your edits become
   regression cases and worked examples that the checks assert on every future run.
 
+**Review a real run, end to end** - every artifact below is committed, no re-run
+required. One target (Ashgrove, the corpus's most dangerous company), the full loop:
+
+| Step | Artifact |
+|---|---|
+| the input | [`data/T05_Ashgrove_CIM.pdf`](data/T05_Ashgrove_CIM.pdf) |
+| the scorecard | [`reports/findings.json`](reports/findings.json) - 97.7, tier 1, gross retention flagged below its floor at p7 |
+| the drafted memo | [`reports/memo_T05.md`](reports/memo_T05.md) - call-out ids on every uncertain value, measured chart values with the independent re-read's agreement, "ask the seller" questions |
+| the call-outs, machine-readable | [`reports/callouts_T05.json`](reports/callouts_T05.json) |
+| a human review of that memo | [`reports/memo_T05_reviewed.md`](reports/memo_T05_reviewed.md) - the marked-up copy, and [`data/corrections/T05_session01.json`](data/corrections/T05_session01.json) - the diff-captured session that caught a blind spot |
+| what the review taught | [`eval/regressions.json`](eval/regressions.json) and [`eval/judgement_examples.json`](eval/judgement_examples.json) - asserted by `run_checks.py` on every run |
+
+The other four targets live beside these: [`reports/memo_T01.md`](reports/memo_T01.md)
+through [`memo_T04.md`](reports/memo_T04.md), their call-outs, and the reader
+comparison in [`reports/bakeoff.md`](reports/bakeoff.md).
+
 **Contents**: [How it works](#how-it-works) · [The loop](#the-loop) ·
 [The finding](#the-finding) · [The numbers](#the-numbers) ·
 [The story: v1 → v3](#the-story-v1--v3) · [Honest boundaries](#honest-boundaries) ·
@@ -301,6 +317,7 @@ The repository is shaped to drop into an agent:
 | [`playbook.md`](playbook.md) | The rollout half: shadow mode, who to build with, what will actually go wrong |
 | [`docs/hardware.md`](docs/hardware.md) | Local model setup, AMD/ROCm traps, and three failures that would have published false findings |
 | [`reports/bakeoff.md`](reports/bakeoff.md) | The reader comparison that chose the current stack, with committed per-model caches |
+| [`reports/memo_T05.md`](reports/memo_T05.md) | A finished memo, as the reviewer receives it - its reviewed twin and the correction session sit beside it |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version by version, with what taught what |
 
