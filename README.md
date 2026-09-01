@@ -448,38 +448,21 @@ instead of a risk.
 license would not survive a commercial read, or replace working stages because a
 benchmark implied it.
 
-**v4 asked whether any of this travels.** Everything up to here ran on one machine with
-three models pulled. So the judgement — the rubric, what counts as a correct read, the
-call-out grammar, the research method — was packaged as a plugin that installs and runs
-with nothing else, while the repo kept the substrate and the evidence. One rubric,
-byte-compared, so the two cannot screen to different standards.
+**v4 asked whether any of this travels.** Everything up to here needed one machine with
+three models pulled, so the judgement moved into a plugin that installs and runs with
+nothing else while the repo kept the substrate and the evidence. One rubric, byte-compared,
+so the two cannot screen to different standards.
 
-Three things fell out of it that were not planned.
+**A cold agent was handed the repo and told to find the instructions.** It screened the
+target correctly, then found the scoring rule had never been written down: binary award
+gives 70 and Tier 2 where proportional gives 97.7 and Tier 1, so a plugin user and a repo
+user reached different verdicts on the same company. Chasing that exposed a worse one nobody
+had reported, a check suite that wrote its deterministic run straight into `reports/` and
+quietly degraded the committed artifacts every time anyone verified them.
 
-**Reviewer mode**, from asking what the tool should do if a human would rather keep the
-judgement. It checks numbers you wrote instead of writing them for you, and reports three
-buckets — disagreed, agreed, and *could not check*. The third is the whole safety property.
-
-**Then a cold agent was handed the repo and told to find the instructions.** It screened
-the target correctly and reported six defects. Two mattered: the documented entry path led
-away from the plugin, and the scoring rule was never written down — binary award gives 70
-and Tier 2 where proportional gives 97.7 and Tier 1, so a plugin user and a repo user would
-have reached different verdicts on the same company. Chasing that exposed a third nobody had
-reported: the check suite ran the deterministic path straight into `reports/`, so **every
-verification run silently replaced the committed full run with a degraded one.** A suite
-that corrupts the artifacts it verifies is worse than no suite.
-
-**And the research layer got rebuilt after failing its own standard.** The first market-context
-pass was three searches with source tiers assigned afterwards, which is rationalisation. It
-now reads a whitelist before searching, and the blacklist is a check — cite a banned domain
-and the build fails. Building that whitelist caught the source research contradicting itself:
-it blacklisted a publisher for having no method, then used it for ten verticals' multiples.
-After the correction, **one vertical has a defensible published multiple and the rest are
-gaps** — which the tool now says out loud instead of reaching for a nearby number.
-
-**What v4 did not do:** claim the plugin is installed-and-verified when it has only been
-cold-started off a filesystem, quote an accuracy number for the plugin path before measuring
-it on every value, or let a 100% on a corpus this repo generated stand in for a real CIM.
+**The research layer failed its own standard and was rebuilt.** The first market-context
+pass searched an open index and assigned source tiers afterwards, which is rationalisation.
+It now reads a whitelist first, and the blacklist is a check.
 
 ---
 
