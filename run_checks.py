@@ -317,9 +317,19 @@ def check_axis_values_remeasure() -> None:
 
 
 def check_deterministic_path_needs_no_model() -> None:
-    """screen.py --no-vision must complete with nothing installed."""
+    """screen.py --no-vision must complete with nothing installed.
+
+    Writes to a scratch directory, never to `reports/`. It used to write in place,
+    which meant running the check suite silently replaced the committed full run with
+    a degraded 6-of-10 one - the artifacts then disagreed with everything that quoted
+    them, and nothing said so. A verification suite that corrupts the artifacts it
+    verifies is worse than no suite.
+    """
+    import tempfile
+    scratch = Path(tempfile.mkdtemp(prefix="deal-ready-check-"))
     proc = subprocess.run(
-        [sys.executable, str(ROOT / "screen.py"), str(DATA), "--no-vision"],
+        [sys.executable, str(ROOT / "screen.py"), str(DATA), "--no-vision",
+         "--reports-dir", str(scratch)],
         capture_output=True, text=True, cwd=ROOT)
     # exit 1 is correct here: blocker findings exist in this corpus.
     ok = proc.returncode in (0, 1) and "Traceback" not in proc.stderr
@@ -456,6 +466,32 @@ def _frontmatter(path: Path) -> dict:
             k, _, v = line.partition(":")
             out[k.strip()] = v.strip()
     return out
+
+
+def check_committed_run_is_the_full_run() -> None:
+    """The committed findings must be the full run, not a degraded one.
+
+    The README and the scorecards quote these numbers. A `--no-vision` run recovers
+    only the prose and table metrics and scores every chart-carried criterion at zero,
+    which produces a different score and sometimes a different tier - silently, because
+    a degraded run looks exactly like a good one from the outside.
+
+    This is a regression guard for a real defect: the check suite itself used to
+    overwrite `reports/` with a no-vision run, so the artifacts drifted away from the
+    README every time anyone verified them.
+    """
+    found = load(REPORTS / "findings.json")
+    if not found:
+        check("committed run is the full run", SKIP, "no findings.json")
+        return
+    degraded = []
+    for r in found:
+        got, _, total = r.get("metrics_recovered", "0/0").partition("/")
+        if got != total:
+            degraded.append(f"{r.get('code_name')} {r.get('metrics_recovered')}")
+    check("committed run is the full run", FAIL if degraded else PASS,
+          f"degraded targets in reports/: {', '.join(degraded)}" if degraded
+          else f"{len(found)} targets, all metrics recovered")
 
 
 def check_plugin_manifests_valid() -> None:
@@ -631,6 +667,7 @@ def main() -> int:
     check_correction_records()
     check_fold_back_complete()
     check_regressions_hold()
+    check_committed_run_is_the_full_run()
     check_plugin_manifests_valid()
     check_rubric_does_not_drift()
     check_agent_tool_allowlists()

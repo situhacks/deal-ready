@@ -16,8 +16,15 @@ description: Screen a CIM end to end - extract cited values, apply the rubric, b
 stop, show your work, and wait for a reply. You do not ask them to run another command to
 continue - you continue in the same conversation once they answer.
 
-If the repo is available (`screen.py` present), prefer the deterministic path and use this
-skill to interpret and present its output. If only the plugin is installed, do the work here.
+**This skill is self-sufficient.** It does not need the repo, and the plugin path is the
+default. If the repo happens to be present *and* the operator asks for the deterministic run,
+`python screen.py <pdf>` produces the same scorecard with the arithmetic done in code - offer
+it, do not assume it.
+
+**If nobody is there to answer a gate** - a batch run, CI, or a subagent - **do the work up to
+the first gate, then stop and report.** Do not waive gates because no one is available to pass
+them. A finished-looking memo produced with nobody confirming the axis reads is precisely the
+artifact this workflow exists to prevent.
 
 ---
 

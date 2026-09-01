@@ -19,7 +19,7 @@ Models the acquisition criteria of buy-and-hold software acquirers: durable, mis
 
 Concentration note: Breaching either does not auto-fail. It reprices: a buyer underwrites the risk that one departure removes a material share of revenue.
 
-Rule of 40 note: Weight 0 by design. Rule of 40 is a growth-investor test; a permanent-capital buyer is not underwriting an exit. Reported as context, never scored. See deal_ready/scorer/rules.py R9.
+Rule of 40 note: Weight 0 by design. Rule of 40 is a growth-investor test; a permanent-capital buyer is not underwriting an exit. Reported as context, never scored. EBITDA margin is taken over ARR when total revenue is not stated; say which basis was used.
 
 ## Tier bands
 

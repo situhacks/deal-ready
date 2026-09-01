@@ -10,7 +10,12 @@ instead of interrogating a JSON file. Everything below serves that.
 
 ## Structure
 
-1. **Header** — target, source file, date, tier, score, coverage (`8/11 metrics recovered`).
+1. **Header** — target, source file, date, tier, score, coverage.
+
+**Coverage is counted against the ten metrics the rubric scores**, so it reads `8/10`, never a
+number invented from how many values happened to appear. Those ten: `arr_usd`, `mrr_usd`,
+`recurring_pct`, `grr_pct`, `nrr_pct`, `gross_margin_pct`, `ebitda_usd`, `yoy_growth_pct`,
+`top1_customer_pct`, `top5_customer_pct`. Anything else you extract is context, not coverage.
 2. **The numbers** — each metric with its value, page citation, and read type. Axis reads
    visibly marked.
 3. **What the rules found** — blockers first, then warnings, then what passed. Each with the

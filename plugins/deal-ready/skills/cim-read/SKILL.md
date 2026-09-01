@@ -11,6 +11,20 @@ description: Read a CIM page into structured, cited values - what counts as a co
 **The governing rule: a number is only a value once you can say where it came from and how you
 got it.** Everything below serves that.
 
+## Step 0 — actually see the page
+
+A CIM is a deck. Most of what decides a deal is drawn, not typed, so **reading the text layer
+alone will miss the values that matter.** Read the PDF itself so you see the charts.
+
+`Read` opens a PDF directly, a page range at a time. If the environment cannot render PDFs
+(`pdftoppm is not installed`, or a PDF-rendering error), say so and stop rather than falling back
+to the text layer silently — a text-only pass on a chart-carried metric produces a confident
+`null`, not a wrong number, but only if you know that is what happened.
+
+Where PDF rendering is unavailable and the repo is present, `python -c "import pymupdf; ..."`
+rasterising to PNG at 120 dpi is an acceptable substitute. Nothing about the read changes; only
+how the pixels reach you.
+
 ## The four read types, in descending trust
 
 | `read` | What it means | Confidence |
@@ -68,6 +82,21 @@ anything, say what.
 
 ## Cross-check when the document gives you the chance
 
-If a chart carries both a printed label and a measurable axis, read both. Agreement raises
-confidence; disagreement is reported as a conflict and the measured value is the one that ships,
-flagged. Never silently prefer whichever is more convenient.
+If a chart carries both a printed label and a measurable axis, read both.
+
+- **They agree** → ship the **`label`**, and record the axis measurement as a cross-check in
+  `evidence`. A printed number the geometry confirms is the strongest read available.
+- **They disagree** → ship the **`axis`** measurement, flagged, and report the conflict. The
+  printed label is the seller's claim about the chart; the geometry is the chart.
+
+Never silently prefer whichever is more convenient.
+
+## A caveat on the confidence column
+
+The table above ranks `label` above `axis`, and that ranking is about **printed versus
+interpolated**, not about trustworthiness in general. A printed label inside a rasterised chart
+is still something you had to read off an image, and it can be misread the same way any glyph
+can. What makes it higher-confidence is that the document *states* it — a human can check you
+against the page. Nobody can check an interpolation except by re-measuring.
+
+So: `label` means "the document said this". It does not mean "this is certainly right".

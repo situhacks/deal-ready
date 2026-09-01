@@ -157,7 +157,13 @@ def main() -> int:
     ap.add_argument("--no-vision", action="store_true",
                     help="deterministic path only - no model of any kind")
     ap.add_argument("--top-k", type=int, default=1)
+    ap.add_argument("--reports-dir", type=Path, default=None,
+                    help="write results somewhere other than reports/. A degraded run "
+                         "(--no-vision, a missing model) must not overwrite the "
+                         "committed full run - that drift is silent and it breaks "
+                         "agreement between the artifacts and everything that quotes them")
     args = ap.parse_args()
+    reports = args.reports_dir or REPORTS
 
     criteria = rules.load_criteria(args.criteria)
     p = Path(args.path)
@@ -169,16 +175,16 @@ def main() -> int:
     results = [screen_one(pdf, criteria, use_vision=not args.no_vision,
                           top_k=args.top_k) for pdf in pdfs]
 
-    REPORTS.mkdir(parents=True, exist_ok=True)
-    (REPORTS / "findings.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
-    written = write_all(results, criteria, REPORTS)
+    reports.mkdir(parents=True, exist_ok=True)
+    (reports / "findings.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
+    written = write_all(results, criteria, reports)
     print(f"\n  scorecards: {', '.join(written)}")
 
     print(f"\n{'target':<12} {'score':>6}  {'tier':<8} {'metrics':>8}  {'vision pages':>12}")
     for r in results:
         print(f"{r['code_name']:<12} {r['fit']['score']:>6.1f}  {r['fit']['tier']:<8} "
               f"{r['metrics_recovered']:>8}  {str(r['pages_read_with_vision']):>12}")
-    print(f"\n  -> reports/findings.json")
+    print(f"\n  -> {reports.name}/findings.json")
 
     return 1 if any(r["severity_counts"]["blocker"] for r in results) else 0
 

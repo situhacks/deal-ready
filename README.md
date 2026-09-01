@@ -373,6 +373,15 @@ benchmark implied it.
   future work, stated as such.
 - **This is not a data-room tool.** The parse answer changes at 10–50K pages; see
   [`docs/ingest.md`](docs/ingest.md) §8.
+- **The plugin has been cold-started once, not installed once.** An agent with no context
+  found the instructions and screened a target correctly
+  ([`reports/coldstart_test.md`](reports/coldstart_test.md)), but it read the plugin off
+  the filesystem rather than through the marketplace. Command registration and skill
+  auto-routing are still unverified, and stages past the first gate have never run end to
+  end because no gate has been answered by a human.
+- **`data/ground_truth.json` sits beside the corpus a screener is pointed at.** That is
+  convenient for the eval harness and a hazard for anything that globs `data/`. It is why
+  the cold-start test forbids it explicitly.
 
 ---
 
@@ -421,6 +430,7 @@ Everything degrades visibly without them, never silently.
 | [`reports/scorecard_T05.md`](reports/scorecard_T05.md) | A finished scorecard, as the reviewer reads it; the template it is judged against sits beside it |
 | [`reports/review_T05.json`](reports/review_T05.json) | Reviewer mode on a sheet with two deliberate errors in seven values: both caught, the axis read flagged as measured rather than printed |
 | [`reports/agent_read_T05.md`](reports/agent_read_T05.md) | The other substrate reading the same two chart pages, and an honest note on what that one spot check does and does not establish |
+| [`reports/coldstart_test.md`](reports/coldstart_test.md) | **An agent that had never seen this repo, given only a path and told to find the instructions.** What it got right, the six defects it found, and the worse one it surfaced by accident |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version by version, with what taught what |
 

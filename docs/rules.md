@@ -127,7 +127,8 @@ than a silent zero in an average.
 
 Worth being explicit, because the gap is where the real risk lives.
 
-Ashgrove in this corpus scores well on every rule above and is the most dangerous
+Ashgrove in this corpus clears every blocker and still scores 97.7 into Tier 1 — its only
+flags are a gross-retention warning and two info lines — and it is the most dangerous
 company in the set: the founder is the only person who has worked on the settlement
 engine, writes production code, approves every release, holds the six largest customer
 relationships personally, and there is no succession plan. The core is a 1998 Delphi
