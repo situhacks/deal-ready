@@ -63,9 +63,10 @@ standards.
   checks them against the document and reports what disagrees, what agrees, and **what
   it could not check**. That third bucket is the point — a checker that only speaks when
   it finds something teaches you that silence means correct.
-- **Market context** (plugin path): the benchmark band for each deciding metric and
-  named comparables, because a metric without a benchmark is not a screen. 81% gross
-  retention means nothing until you know the band starts at 90%.
+- **Market context** (plugin path): the benchmark band for each deciding metric, drawn
+  from a vetted whitelist of publishers, because a metric without a benchmark is not a
+  screen. 81% gross retention means nothing until you know the published median for that
+  size cohort is 91%.
 
 **Review a real run, end to end.** Every artifact below is committed. No re-run needed.
 One target (Ashgrove, the most dangerous company in the corpus), the whole loop.
@@ -81,7 +82,7 @@ the web.
 | the rubric it is judged against | [`reports/scorecard_template.md`](reports/scorecard_template.md) |
 | the scorecard | [`reports/scorecard_T05.md`](reports/scorecard_T05.md) - 97.7, tier 1, and one red-letter breach: gross retention 81% against an 85% floor |
 | the same scorecard, machine-readable | [`reports/findings.json`](reports/findings.json) |
-| the market context | [`reports/market_context_T05.md`](reports/market_context_T05.md) - the four-phase research pass: no agriculture-specific band exists, so it says so, and the proxy puts 81% below the median for a class that should beat it |
+| the market context | [`reports/market_context_T05.md`](reports/market_context_T05.md) - the four-phase research pass against the source whitelist: no agriculture-specific band exists, so it says so; at $4.3M ARR the cohort median is 91% GRR against this target's 81%; then it applies the survey correction in the target's favour |
 | the drafted memo | [`reports/memo_T05.md`](reports/memo_T05.md) - call-out ids on every uncertain value, the chart values and their independent re-read, the questions for the seller |
 | the call-outs, machine-readable | [`reports/callouts_T05.json`](reports/callouts_T05.json) |
 | a human's review of that memo | [`reports/memo_T05_reviewed.md`](reports/memo_T05_reviewed.md), and the diff-captured session it produced: [`data/corrections/T05_session01.json`](data/corrections/T05_session01.json) |
@@ -93,7 +94,7 @@ reader comparison in [`reports/bakeoff.md`](reports/bakeoff.md).
 
 **Contents**: [The walkthrough](#the-walkthrough) · [How it works](#how-it-works) ·
 [The loop](#the-loop) · [The finding](#the-finding) · [The numbers](#the-numbers) ·
-[The story: v1 → v3](#the-story-v1--v3) · [Honest boundaries](#honest-boundaries) ·
+[The story: v1 → v4](#the-story-v1--v4) · [Honest boundaries](#honest-boundaries) ·
 [Inside the plugin](#inside-the-plugin) · [Reading order](#reading-order) ·
 [Layout](#layout)
 
@@ -418,7 +419,7 @@ manifest exists to test against public documents this pipeline did not write.
 
 ---
 
-## The story: v1 → v3
+## The story: v1 → v4
 
 **v1 asked whether the work could be done at all, locally.** The text layer, the
 embedding router, tiered local vision, deterministic rules, and the finding that the
@@ -446,6 +447,39 @@ instead of a risk.
 **What v3 did not do:** chase a leaderboard past the evidence, adopt weights whose
 license would not survive a commercial read, or replace working stages because a
 benchmark implied it.
+
+**v4 asked whether any of this travels.** Everything up to here ran on one machine with
+three models pulled. So the judgement — the rubric, what counts as a correct read, the
+call-out grammar, the research method — was packaged as a plugin that installs and runs
+with nothing else, while the repo kept the substrate and the evidence. One rubric,
+byte-compared, so the two cannot screen to different standards.
+
+Three things fell out of it that were not planned.
+
+**Reviewer mode**, from asking what the tool should do if a human would rather keep the
+judgement. It checks numbers you wrote instead of writing them for you, and reports three
+buckets — disagreed, agreed, and *could not check*. The third is the whole safety property.
+
+**Then a cold agent was handed the repo and told to find the instructions.** It screened
+the target correctly and reported six defects. Two mattered: the documented entry path led
+away from the plugin, and the scoring rule was never written down — binary award gives 70
+and Tier 2 where proportional gives 97.7 and Tier 1, so a plugin user and a repo user would
+have reached different verdicts on the same company. Chasing that exposed a third nobody had
+reported: the check suite ran the deterministic path straight into `reports/`, so **every
+verification run silently replaced the committed full run with a degraded one.** A suite
+that corrupts the artifacts it verifies is worse than no suite.
+
+**And the research layer got rebuilt after failing its own standard.** The first market-context
+pass was three searches with source tiers assigned afterwards, which is rationalisation. It
+now reads a whitelist before searching, and the blacklist is a check — cite a banned domain
+and the build fails. Building that whitelist caught the source research contradicting itself:
+it blacklisted a publisher for having no method, then used it for ten verticals' multiples.
+After the correction, **one vertical has a defensible published multiple and the rest are
+gaps** — which the tool now says out loud instead of reaching for a nearby number.
+
+**What v4 did not do:** claim the plugin is installed-and-verified when it has only been
+cold-started off a filesystem, quote an accuracy number for the plugin path before measuring
+it on every value, or let a 100% on a corpus this repo generated stand in for a real CIM.
 
 ---
 
