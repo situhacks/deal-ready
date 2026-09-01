@@ -434,6 +434,188 @@ def check_regressions_hold() -> None:
 
 
 # --------------------------------------------------------------------------------
+PLUGIN = ROOT / "plugins" / "deal-ready"
+
+
+def _frontmatter(path: Path) -> dict:
+    """The YAML-ish header of a skill or agent file, without a YAML dependency.
+
+    Only flat `key: value` pairs, which is all these headers carry. A parser that
+    silently returned {} for a malformed header would make every check below vacuous,
+    so a missing delimiter is an error rather than an empty dict.
+    """
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        raise ValueError(f"{path.name}: no frontmatter delimiter")
+    end = text.find("\n---", 3)
+    if end == -1:
+        raise ValueError(f"{path.name}: unterminated frontmatter")
+    out = {}
+    for line in text[3:end].splitlines():
+        if ":" in line and not line.startswith(" "):
+            k, _, v = line.partition(":")
+            out[k.strip()] = v.strip()
+    return out
+
+
+def check_plugin_manifests_valid() -> None:
+    """The marketplace and plugin manifests parse, and every source path resolves.
+
+    A marketplace that points at a directory which does not exist installs cleanly
+    and then does nothing, which is the worst failure shape available - it looks like
+    it worked.
+    """
+    mp = load(ROOT / ".claude-plugin" / "marketplace.json")
+    pj = load(PLUGIN / ".claude-plugin" / "plugin.json")
+    if mp is None or pj is None:
+        check("plugin manifests are valid", FAIL, "a manifest is missing")
+        return
+    problems = []
+    for entry in mp.get("plugins", []):
+        src = (ROOT / entry.get("source", "")).resolve()
+        if not src.is_dir():
+            problems.append(f"{entry.get('name')}: source {entry.get('source')} missing")
+        if not (src / ".claude-plugin" / "plugin.json").exists():
+            problems.append(f"{entry.get('name')}: no plugin.json at source")
+    if pj.get("name") != "deal-ready":
+        problems.append(f"plugin.json name is {pj.get('name')!r}")
+    check("plugin manifests are valid", FAIL if problems else PASS,
+          "; ".join(problems) or
+          f"{len(mp.get('plugins', []))} plugin(s), all sources resolve")
+
+
+def check_rubric_does_not_drift() -> None:
+    """The rubric in the plugin is byte-identical to the one the code scores against.
+
+    Two copies of a judgement layer is a bug waiting to happen: the plugin would screen
+    to one standard and the repo to another, and nothing would say so out loud.
+    """
+    repo = (ROOT / "criteria" / "default.json")
+    plug = PLUGIN / "skills" / "deal-rules" / "references" / "criteria.json"
+    if not plug.exists():
+        check("rubric does not drift", FAIL, "plugin copy is missing")
+        return
+    same = repo.read_bytes() == plug.read_bytes()
+    check("rubric does not drift", PASS if same else FAIL,
+          "plugin and repo rubric are byte-identical" if same
+          else "plugin rubric differs from criteria/default.json")
+
+
+def check_agent_tool_allowlists() -> None:
+    """The isolation properties are asserted here, not merely described in prose.
+
+    The market researcher never seeing the document is the security claim this plugin
+    makes. A claim that lives only in a paragraph is one careless edit from being
+    false, so it is tested: if someone grants that agent Read, this fails.
+    """
+    want = {
+        "deal-screener":     {"forbidden": {"Write", "WebSearch", "WebFetch"}},
+        "page-reader":       {"forbidden": {"Write", "WebSearch", "WebFetch", "Task"}},
+        "market-researcher": {"forbidden": {"Read", "Write", "Glob", "Grep", "Task"}},
+        "memo-writer":       {"forbidden": {"WebSearch", "WebFetch", "Task"}},
+    }
+    problems, writers = [], []
+    for name, spec in want.items():
+        path = PLUGIN / "agents" / f"{name}.md"
+        if not path.exists():
+            problems.append(f"{name}: file missing")
+            continue
+        fm = _frontmatter(path)
+        tools = {t.strip() for t in fm.get("tools", "").split(",") if t.strip()}
+        if not tools:
+            problems.append(f"{name}: no tools allowlist")
+        bad = tools & spec["forbidden"]
+        if bad:
+            problems.append(f"{name}: must not hold {sorted(bad)}")
+        if "Write" in tools:
+            writers.append(name)
+    if writers != ["memo-writer"]:
+        problems.append(f"exactly one agent may write; found {writers or 'none'}")
+    check("agent tool allowlists hold", FAIL if problems else PASS,
+          "; ".join(problems) or
+          "reader has no network, researcher never reads, one writer only")
+
+
+def check_skill_frontmatter() -> None:
+    """Every skill declares a name and a description, and the name matches its folder.
+
+    Claude selects a skill from its description alone. A skill with a vague one is not
+    a broken file - it is a file that never gets picked, which is harder to notice.
+    """
+    problems, seen = [], 0
+    for skill in sorted((PLUGIN / "skills").glob("*/SKILL.md")):
+        seen += 1
+        fm = _frontmatter(skill)
+        folder = skill.parent.name
+        if fm.get("name") != folder:
+            problems.append(f"{folder}: name is {fm.get('name')!r}")
+        desc = fm.get("description", "")
+        if len(desc) < 40:
+            problems.append(f"{folder}: description too thin to route on")
+    for agent in sorted((PLUGIN / "agents").glob("*.md")):
+        fm = _frontmatter(agent)
+        if fm.get("name") != agent.stem:
+            problems.append(f"{agent.name}: name is {fm.get('name')!r}")
+    check("skill and agent frontmatter is routable", FAIL if problems else PASS,
+          "; ".join(problems) or f"{seen} skills, 4 agents, names match paths")
+
+
+def check_reviewer_catches_seeded_errors() -> None:
+    """Reviewer mode, measured: catch rate, false-flag rate, and coverage.
+
+    Runs text-layer only so it needs no GPU, which is what lets this file stay
+    offline. That also pins a property worth pinning: with the reader switched off,
+    chart-carried values must land in could-not-check rather than quietly agreeing.
+    """
+    from deal_ready.review import check_one
+
+    gt = load(DATA / "ground_truth.json")
+    if not gt:
+        check("reviewer catches seeded errors", SKIP, "no ground truth")
+        return
+
+    by_target = defaultdict(dict)
+    for r in gt:
+        by_target[r["target_id"]][r["metric"]] = r
+
+    caught = missed = false_flags = confirmed = 0
+    for tid, recs in sorted(by_target.items()):
+        pdf = next(DATA.glob(f"{tid}_*.pdf"), None)
+        if pdf is None:
+            continue
+        readable = {m: r for m, r in recs.items()
+                    if r.get("carrier") in ("prose", "table")}
+        if len(readable) < 4:
+            continue
+        metrics = sorted(readable)
+        # Alternate: seed an error on every other metric, assert the truth on the rest.
+        asserted, seeded = {}, set()
+        for i, m in enumerate(metrics):
+            true = readable[m]["value"]
+            if i % 2 == 0:
+                asserted[m] = round(true * 1.35, 2) if isinstance(true, float) else int(true * 1.35)
+                seeded.add(m)
+            else:
+                asserted[m] = true
+        res = check_one(pdf, asserted, use_vision=False, verbose=False)
+        flagged = {c["metric"] for c in res["disagreed"]}
+        agreed = {c["metric"] for c in res["agreed"]}
+        caught += len(flagged & seeded)
+        missed += len(seeded - flagged - {m for m in seeded if m not in flagged | agreed})
+        false_flags += len(flagged - seeded)
+        confirmed += len(agreed - seeded)
+
+    total_seeded = caught + missed
+    if not total_seeded:
+        check("reviewer catches seeded errors", SKIP, "no readable metrics to seed")
+        return
+    rate = 100.0 * caught / total_seeded
+    ok = caught == total_seeded and false_flags == 0
+    check("reviewer catches seeded errors", PASS if ok else FAIL,
+          f"{caught}/{total_seeded} seeded errors caught ({rate:.0f}%), "
+          f"{false_flags} false flags, {confirmed} correct values confirmed")
+
+
 def main() -> int:
     print("\ndeal-ready checks - offline, no model, no network\n")
     check_corpus_deterministic()
@@ -449,6 +631,11 @@ def main() -> int:
     check_correction_records()
     check_fold_back_complete()
     check_regressions_hold()
+    check_plugin_manifests_valid()
+    check_rubric_does_not_drift()
+    check_agent_tool_allowlists()
+    check_skill_frontmatter()
+    check_reviewer_catches_seeded_errors()
 
     n_pass = sum(1 for _, s, _ in results if s == PASS)
     n_fail = sum(1 for _, s, _ in results if s == FAIL)
