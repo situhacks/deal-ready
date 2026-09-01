@@ -6,6 +6,30 @@ research pass, run on the deciding metrics from the T05 screen.
 **The researcher never saw the CIM.** It received metric names, values, and the vertical. Nothing
 below was read out of the document.
 
+> ## ⚠ Corrected 2026-09-01 — read this before the analysis
+>
+> **This pass predates `references/sources.md` and does not meet its standard.** It was three web
+> searches against an open index with source tiers assigned afterwards, which is the failure the
+> source map now exists to prevent. Kept because two findings survive and one does not.
+>
+> **Survives — the agriculture gap.** The coverage map confirms it independently: no published
+> retention band and no defensible multiple range for agriculture and commodity-handling software.
+> Reported here as a gap, correctly.
+>
+> **Survives — the ARR-to-multiple point**, now better sourced. Aventis Advisors (543 disclosed
+> deals, median $80M EV) finds the $50–100M band clears at roughly twice the $20–50M band, and
+> founder-led sub-$3M ARR nearer 2.5x–4.0x. At $4.3M ARR the target is well below the inflection.
+>
+> **Does not survive — "81% is below the 84% median for a class that should beat it."** That median
+> comes from an **opt-in survey**, and survey retention medians run 5–10 points high because
+> outperformers volunteer and distressed companies do not respond or no longer exist. Billing
+> telemetry puts lower-quartile monthly churn at 5.8–9.1%, far below any survey median. So 81% is
+> below a *selected* median, which is a much weaker statement than the one made below. The rubric
+> breach at the 85% floor stands on its own; the market framing does not add to it as claimed.
+>
+> **Off-whitelist source.** The retention band below came from a domain that is not on the
+> whitelist. It is not blacklisted, but it is not a source this tool should have leaned on.
+
 ---
 
 ## Phase 1 — Scope

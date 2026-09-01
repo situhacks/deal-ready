@@ -18,6 +18,19 @@ means nothing until you know the band for that vertical starts at 90%.
 
 ---
 
+## Phase 0 - Read the source map first
+
+**`references/sources.md` before you search, not after.** It carries the whitelist of publishers
+with stated methodology and sample sizes, a blacklist of domains that must never be cited, a
+coverage map saying which verticals actually have a published band, and two standing corrections
+that change what almost every retention and multiple figure means.
+
+Search whitelist publishers **by name**, and go to the publisher's own page rather than to whoever
+summarised them. Assigning source tiers after an open search is rationalisation, not method - it is
+exactly how a content-farm number ends up in a memo wearing a tier label.
+
+**The coverage map will often tell you the answer is a gap.** Read it before promising a band.
+
 ## Phase 1 - Scope
 
 Before searching, write the plan. Two or three sentences plus a table - do not skip this, it is
@@ -108,6 +121,11 @@ named there. A context block whose limitations section is empty is not finished.
 
 ## Seed data
 
-`references/benchmarks.md` carries a dated starting set for vertical software. **It is a starting
-point, not an authority** - re-verify anything you are about to put in front of a human, and
-prefer a fresher source when you find one.
+`references/sources.md` is the source layer: whitelist, blacklist, coverage map, standing
+corrections. **Read it first, every time.**
+
+`references/benchmarks.md` carries a dated starting set of figures. **It is a starting point, not
+an authority** - re-verify anything you are about to put in front of a human, prefer a fresher
+source, and apply the two corrections in `sources.md` before quoting any of it. Several of its
+per-vertical multiples rest on a source now blacklisted; the coverage map in `sources.md` overrides
+it wherever the two disagree.

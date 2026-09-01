@@ -22,6 +22,7 @@ the point of running this at all.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from collections import defaultdict
@@ -468,6 +469,36 @@ def _frontmatter(path: Path) -> dict:
     return out
 
 
+def check_no_blacklisted_sources_cited() -> None:
+    """No committed report cites a domain the source map blacklists.
+
+    The blacklist exists because these domains publish valuation and retention figures
+    with no sample size, no method and no primary source, and they rank well for
+    exactly the queries this tool runs. A rule that lives only in a skill file is one
+    careless citation from being ignored, so it fails the build instead.
+
+    The blacklist file itself is excluded - it has to name them to ban them.
+    """
+    src = PLUGIN / "skills" / "market-context" / "references" / "sources.md"
+    if not src.exists():
+        check("no blacklisted sources cited", SKIP, "no sources.md")
+        return
+    block = re.search(r"```\n(.*?)```", src.read_text(encoding="utf-8"), re.S)
+    if not block:
+        check("no blacklisted sources cited", FAIL, "blacklist block not found in sources.md")
+        return
+    domains = [d for d in block.group(1).split() if "." in d]
+    hits = []
+    for path in sorted(REPORTS.glob("*.md")):
+        text = path.read_text(encoding="utf-8", errors="replace").lower()
+        for d in domains:
+            if d.lower() in text:
+                hits.append(f"{path.name}: {d}")
+    check("no blacklisted sources cited", FAIL if hits else PASS,
+          "; ".join(hits) or
+          f"{len(domains)} banned domains, absent from {len(list(REPORTS.glob('*.md')))} reports")
+
+
 def check_committed_run_is_the_full_run() -> None:
     """The committed findings must be the full run, not a degraded one.
 
@@ -668,6 +699,7 @@ def main() -> int:
     check_fold_back_complete()
     check_regressions_hold()
     check_committed_run_is_the_full_run()
+    check_no_blacklisted_sources_cited()
     check_plugin_manifests_valid()
     check_rubric_does_not_drift()
     check_agent_tool_allowlists()
