@@ -164,6 +164,19 @@ URL, a verbatim quote under 125 characters, and a date — plus a tier: `primary
 statistical agency, a filing, the transacting party), `practitioner` (a bank or research
 house publishing methodology), or `vendor` (anyone selling something adjacent).
 
+**Phase 0 · The source layer**, which is what makes the rest of it more than search-and-hope.
+`references/sources.md` carries a whitelist of publishers that state their sample and method,
+a **blacklist enforced by `run_checks.py`** — cite a banned domain in any committed report and
+the build fails — and a coverage map saying which verticals actually have a published band.
+Searching an open index and assigning tiers afterwards is rationalisation, not method; it is
+how a content-farm number ends up in a memo wearing a tier label.
+
+It also carries two standing corrections that change what almost every figure means:
+**published retention medians come from opt-in surveys and run 5–10 points high**, because
+outperformers volunteer and distressed companies no longer exist to answer; and **deal size
+predicts multiple more strongly than vertical does** — the disclosed population has a median
+enterprise value of $80M, and the $50–100M band clears at roughly twice the $20–50M band.
+
 **Phase 3 · Coverage gate.** Every deciding metric has a band **or a named gap**. No band
 rests on a single vendor-tier source. M&A and VC multiples are labelled separately — they
 differ by 35–50% and conflating them inflates everything downstream. Contradictions are
@@ -176,12 +189,17 @@ The researcher **never sees the document**. It gets metric names, values, and th
 a confidential CIM must not end up in a web query, so that isolation is enforced by the
 agent's tool allowlist and asserted in `run_checks.py`, not promised in a paragraph.
 
-**And context is never a verdict.** It does not move a score or a tier. On T05 it found no
-agriculture-specific retention band exists at all — reported as a gap rather than papered
-over — and that against the nearest proxy, 81% sits below the 84% median for a class of
-business that should be *beating* that median. The rubric said "missed a floor by four
-points." The research said "underperforms the peer set it should outperform." Same number,
-different question to ask about it.
+**And context is never a verdict.** It does not move a score or a tier. On T05 it found that no
+agriculture-specific band exists at all — reported as a gap rather than papered over — and
+that at $4.3M ARR the target sits inside a cohort whose published median gross retention is
+91%, against its own 81%. The rubric said "missed a floor by four points." The research said
+"retains ten points worse than the companies it most resembles." Same number, different
+question to ask about it.
+
+Then it applied the survey correction **in the target's favour**, because that is what the
+correction says to do: if opt-in medians run high, the gap narrows. A ten-point deficit
+survives a five-point correction, so the finding holds — but anyone quoting those medians as
+fact is overstating the case, and the report says so.
 
 ### 5 · ⏸ Gate — the scorecard, in context
 

@@ -1,98 +1,150 @@
-# Vertical software benchmark seed
+# Benchmark figures — whitelisted publishers only
 
-**As of 2026-08. Starting point, not an authority — re-verify before putting any of this in
-front of a human, and prefer a fresher source when one exists.**
+**Rebuilt 2026-09-01 from the publishers named in [`sources.md`](sources.md).** The previous
+version of this file carried per-vertical multiples traceable to a domain that is now blacklisted;
+those are gone rather than corrected, because there was nothing under them.
 
-Multiples move. A band quoted without its date is misleading rather than merely incomplete.
+**Read [`sources.md`](sources.md) first.** Its two standing corrections apply to everything here:
+survey retention medians run 5–10 points high, and deal size predicts multiple more strongly than
+vertical does.
+
+Every figure below carries its publisher, date, and sample. **A figure without those three does not
+belong in this file.**
 
 ---
 
-## M&A revenue multiples by vertical
+## Valuation multiples
 
-**These are M&A multiples. VC round multiples run roughly 35–50% higher and must never be
-quoted in the same breath.**
+### Aventis Advisors — the best-sourced multiples available
 
-| Vertical | EV/Revenue | Note |
-|---|---|---|
-| Healthcare IT | ~8.5x | Highest; compliance moat |
-| Construction tech | ~7.5x | Underdigitised end market |
-| Legal tech | ~7.0x | Deep workflow integration |
-| Field services | ~7.0x | Trades and professional services |
-| Restaurant / hospitality | ~6.5x | Transaction-dependent revenue |
-| Manufacturing | ~6.5x | ERP-adjacent |
-| PropTech | ~5.5x | Transaction-dependent compression |
-| Energy | ~5.0x | Cyclical end-market risk |
-| EdTech | ~4.5x | Budget constraints, commoditisation pressure |
+Published **2026-04-01**. Methodology, verbatim: *"In our analysis of Private SaaS M&A
+transactions, we looked at 1,000+ software deals since 2015 and marked the ones where the target
+company is considered to be operating a SaaS business model."*
 
-**Overall vertical SaaS M&A:** ~5.8x (2025), ~5.5x (YTD 2026).
-**Broader SaaS median EV/TTM revenue:** 4.2x → 4.0x, softening with the public-market reset.
-Vertical commands roughly a **25–30% premium over horizontal** at comparable performance.
+**543** transactions with disclosed revenue multiples; **232** with disclosed EBITDA multiples;
+2015–2026.
 
-Source: SaaSRise Vertical SaaS M&A and VC Report 2026; Software Equity Group quarterly.
-
-## Retention bands
-
-| Measure | Premium | Typical vertical | Horizontal comparison |
-|---|---|---|---|
-| Gross revenue retention | **>90%** | 85–93% | 80–85% |
-| Net revenue retention | **>120%** correlates with top-quartile valuations | — | — |
-
-**GRR above 90% is the premium threshold most often cited.** A target below it is not
-disqualified, but it is outside the band that carries the multiple.
-
-## What earns the top of a band (7.0x–10.6x)
-
-- Proprietary workflow data
-- Regulated workflows
-- Embedded operations and deep industry context
-- GRR above 90%
-- Mission-critical workflows with high switching costs
-- Embedded fintech — where it is 30–60% of revenue it adds a **33–60% valuation premium**
-
-## What compresses a multiple (3.5x–5.0x)
-
-- Transaction-dependent revenue
-- Commoditisation risk
-- Lower gross retention
-- No embedded financial infrastructure
-
-## The newer dimension: AI exposure
-
-**"Generic horizontal SaaS is increasingly commoditised by AI."** Proprietary data and workflow
-ownership are the differentiator. Businesses lacking proprietary data, deep workflow integration,
-embedded fintech, or AI differentiation face valuation pressure.
-
-**Treat AI-defensible versus AI-exposed as a pricing input.** It did not exist as a diligence
-line two years ago. AI-native vertical SaaS attracts 10x–15x+ in VC rounds — a VC number, not an
-M&A one.
-
-## Named comparables, 2025–26
-
-| Target | Acquirer | Value | Multiple | Vertical |
+| | Median | Q1 | Q3 | Median deal size |
 |---|---|---|---|---|
-| ModMed | Clearlake Capital | $5.3B | ~10.6x | Healthcare IT |
-| Edifecs | Cotiviti / KKR | $3.1B | ~8.0x | Healthcare data |
-| Melio | Xero | $2.5B | ~16.3x | SMB payments |
-| Olo | Thoma Bravo | $2.0B | ~6.2x | Restaurant SaaS |
-| CentralReach | Roper Technologies | $1.85B | ~9.0x | Autism / IDD care |
-| vLex | Clio | $1.0B | ~8.0x | Legal tech |
+| EV/Revenue | **4.5x** | 2.4x | 8.1x | $80M |
+| EV/EBITDA | **23.0x** | 12.8x | 47.1x | $181M |
 
-Platform bolt-on pattern: Clio + vLex, Fleetio + Auto Integrate ($500M), Procore + Datagrid
-($250M).
+**By deal size — the single most important row in this file:**
 
-## Market conditions
+| Band | Median EV/Revenue |
+|---|---|
+| $50–100M | **~6.1x** |
+| $20–50M | **~3.2x** |
 
-- Vertical software was **54% of SaaS M&A in 2Q26**, up from 46%.
-- 698 transactions in 2Q26 versus 637 in 2Q25 (+9.6%).
-- 1,275+ vertical SaaS M&A transactions Jan 2025 – May 2026.
-- Buyers have raised the bar on **strategic fit, AI relevance, workflow embedment, and long-term
-  defensibility**; scarce differentiated assets still command premiums as the median softens.
+The $50–100M band clears at nearly **double** the $20–50M band. **The medians above describe an
+$80M-EV population.** Quoting 4.5x at a $4M ARR target is a category error, not a rounding one.
 
-## Known limitations of this seed
+### Software Equity Group — quarterly market level
 
-- The per-vertical table comes from a **single practitioner report**. Corroborate before leaning
-  on any individual band.
-- Multiples are revenue-based; a target with unusual margin structure needs an EBITDA cross-check.
-- Nothing here covers geographies outside North America and Western Europe.
-- Deal values and multiples for private transactions are frequently estimated by the reporting
-  outlet rather than disclosed. Treat the comparables table as directional.
+**2Q26.** Median private SaaS M&A multiple **4.0x EV/TTM revenue**, down from 4.2x; mean eased
+6.3x → 6.2x. **698** transactions in the quarter (up 9.6% from 637 in 2Q25); **2,784** TTM.
+
+**Caveat, and it is not small:** the published brief states deal counts and its 106-company public
+index, but **does not state how private deal multiples are calculated or sourced.** Use SEG for
+market direction and volume. Use Aventis when you need a multiple with a method behind it.
+
+SEG's qualitative read is worth carrying: *"scarce assets with differentiated data, security, AI
+capabilities, or mission-critical workflows continue to command premium valuations"* — dispersion
+is wide even as the median compresses.
+
+---
+
+## Retention
+
+**Two whitelisted publishers disagree. Both are carried. Do not average them.**
+
+### Benchmarkit — 2026 B2B SaaS & AI-Native Metrics
+
+| | 2026 | Prior year |
+|---|---|---|
+| Median GRR | **84%** | 88% |
+| 75th percentile GRR | **91%** | 95% |
+
+**A four-point drop in the median in one year.** Two segment findings matter for vertical software:
+
+- **Vertical SaaS significantly outperforms horizontal SaaS on GRR.** A vertical business at the
+  horizontal median is underperforming its own peer set.
+- Seat-based pricing shows the lowest median GRR of any pricing model.
+
+*Reached via thesaascfo.com (2026-06-30), not Benchmarkit's own page — the figure is attributed,
+the URL is secondhand.*
+
+### SaaS Capital — annual private B2B survey
+
+Sample: private B2B SaaS above $1M ARR; **N=1,000+**; median growth across the sample 24%.
+NRR defined verbatim as *"(Monthly Recurring Revenue in December of 2024 only from customers who
+were customers in December 2023) ÷ (Total MRR in December 2023)"* (2025-09-18 edition).
+
+| Segment | GRR | NRR |
+|---|---|---|
+| Bootstrapped, $3–20M ARR | **91%** | **103%** |
+| ACV $25–50k | — | 102% median, 111% top quartile, 97% bottom quartile |
+
+Higher NRR correlates with higher ACV throughout.
+
+*The bootstrapped $3–20M row comes from a search summary of SaaS Capital's 2026 figures, not from
+a page directly opened. Flagged rather than dropped, because it is the closest published band to a
+lower-middle-market target.*
+
+### Why the two disagree, and how to use it
+
+**Different populations, not a data error.** SaaS Capital surveys bootstrapped private B2B above
+$1M ARR; Benchmarkit's 2026 sample includes AI-native companies and a broader spread. For a target
+in the $1–20M ARR range, **both are relevant and they bracket the answer**: roughly 84% at the
+broad median, roughly 91% for the bootstrapped size band that most resembles it.
+
+**And both are opt-in surveys**, so both run high. See `sources.md`, correction 1.
+
+### ChartMogul — telemetry, but stale
+
+The whitelist admits ChartMogul because billing telemetry captures the distressed and departed
+companies surveys miss. **The accessible report is the 2023 edition** (2,100+ businesses, 12 months
+ending March 2023), which is outside the recency window and measures **customer retention**, not
+gross revenue retention — a different metric.
+
+From it: B2B with ARPA >$1k/month reached 85.8% customer retention at the top quartile and 91.9%
+best-in-class; monthly customer churn ran 1–2% for the top 25% and 3–4% at the median.
+
+**Do not quote these as current, and do not quote them as GRR.** The value of the row is the
+correction it supports — telemetry medians sit below survey medians — not the numbers themselves.
+
+---
+
+## Coverage by vertical
+
+**Healthcare IT is the only vertical with a defensible published multiple:** 5.3x EV/Revenue and
+18.8x EV/EBITDA, Capstone Partners, disclosed transactions 2023 – July 2025.
+
+**Every other vertical is a gap or a horizontal proxy.** The full map is in
+[`sources.md`](sources.md). When a vertical is a gap, say so — do not substitute the horizontal
+median and let it read as vertical-specific.
+
+---
+
+## Diligence economics
+
+Lower-middle-market software, **$100K–$350K+** per transaction: QoE and accounting $35–90K;
+technical and code $20–50K; legal and tax $40–120K; SaaS operations and commercial $15–40K.
+
+Intermediated: 2–4 weeks to LOI, 4–9 months to close, 50–70% conversion, 5–15% auction premium.
+Proprietary: 18–36 months to LOI, 1–3% conversion from first touch, then 70–85% LOI-to-close at
+10–30% below auction pricing.
+
+---
+
+## What could not be reached
+
+- **SaaS Capital's 2026 edition** and **Benchmarkit's own report** are gated or were not opened
+  directly; both figures above are attributed but secondhand.
+- **ChartMogul's January 2026 edition** — the public URL served the 2023 report.
+- **Bridge Group (N=287)** covers sales quotas and ramp, not screening metrics. Whitelisted but not
+  used here.
+- **PitchBook** is paid. Financial terms are disclosed in under 10–15% of sub-$50M deals anyway.
+- **No source found** for customer-concentration norms in private vertical software. The rubric's
+  15% and 35% caps are the acquirer's policy, not a market benchmark, and should never be presented
+  as one.
