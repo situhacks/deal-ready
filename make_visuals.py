@@ -28,6 +28,7 @@ ASSETS = ROOT / "assets"
 
 # Validated categorical slots 1-2 (light mode, surface #fcfcfb).
 S1, S2 = "#2a78d6", "#eb6834"
+S3 = "#5b7ba6"           # the third substrate: plugin path, measured out of band
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"          # text-primary
 INK_2 = "#52514e"        # text-secondary
@@ -73,37 +74,51 @@ def chart_layer_p() -> None:
     rep = json.loads((REPORTS / "layer_p.json").read_text(encoding="utf-8"))
     agg, backends = rep["aggregate"], rep["backends"]
     vision_b = next(b for b in backends if b != "textlayer")
+    sub = json.loads((REPORTS / "substrate_comparison.json").read_text(encoding="utf-8"))
+    sub_local = sub["by_carrier_pct"]["local_vision"]
 
     carriers = ["prose", "table", "chart"]
     labels = ["Prose\n(narrative claims)", "Table cells", "Chart-only values"]
     text_v = [agg.get(f"textlayer|{c}", {}).get("attributed_pct", 0) for c in carriers]
-    vis_v = [agg.get(f"{vision_b}|{c}", {}).get("attributed_pct", 0) for c in carriers]
+
+    # The middle bar is the PRODUCTION PIPELINE, not a single backend. Layer P grades
+    # each backend alone as a full-page reader, and on that basis the best local one
+    # reaches 50% of chart fields - it reads printed labels and drops axis interiors.
+    # The pipeline adds the chart specialist and pixel geometry on top and recovers
+    # all 20. Plotting the single-backend number here read as a claim the pipeline
+    # only half-works, which contradicted this figure's own caption.
+    single_backend_chart = agg.get(f"{vision_b}|chart", {}).get("attributed_pct", 0)
+    vis_v = [sub_local[c] for c in carriers]
+
+    # The third substrate: a frontier reader following the plugin's cim-read skill.
+    # Measured separately (reports/substrate_comparison.md) rather than through Layer P,
+    # because it needs a model with vision and Layer P is the offline harness.
+    agent_v = [sub["by_carrier_pct"]["agent"][c] for c in carriers]
 
     fig, ax = plt.subplots(figsize=(7.6, 3.9))
     xs = list(range(len(carriers)))
-    w = 0.34
+    w = 0.26
     gap = 0.02  # 2px-equivalent surface gap between adjacent fills
-    _rounded_bars(ax, [x - w / 2 - gap / 2 for x in xs], text_v, w, S1, "Text layer (free)")
-    _rounded_bars(ax, [x + w / 2 + gap / 2 for x in xs], vis_v, w, S2,
-                  "+ local vision, routed")
-
-    for x, v in zip(xs, text_v):
-        ax.text(x - w / 2 - gap / 2, v + 2.5, f"{v:.0f}%", ha="center", fontsize=10,
-                fontweight="bold", color=INK)
-    for x, v in zip(xs, vis_v):
-        ax.text(x + w / 2 + gap / 2, v + 2.5, f"{v:.0f}%", ha="center", fontsize=10,
-                fontweight="bold", color=INK)
+    offs = [-(w + gap), 0.0, (w + gap)]
+    series = [(text_v, S1, "Text layer (free)"),
+              (vis_v, S2, "Local pipeline (parser + geometry)"),
+              (agent_v, S3, "Plugin path (frontier reader)")]
+    for off, (vals, colour, label) in zip(offs, series):
+        _rounded_bars(ax, [x + off for x in xs], vals, w, colour, label)
+        for x, v in zip(xs, vals):
+            ax.text(x + off, v + 2.5, f"{v:.0f}%", ha="center", fontsize=9,
+                    fontweight="bold", color=INK)
 
     ax.set_xticks(xs)
     ax.set_xticklabels(labels, fontsize=9.5)
     _style(ax, "Fields recovered and correctly attributed", 118)
     ax.set_title("Every metric that decides the deal lives in a chart",
                  fontsize=12.5, fontweight="bold", color=INK, pad=14, loc="left")
-    ax.text(0, 1.015, "Gross retention, net retention, and both concentration figures "
-                      "are carried only by charts", transform=ax.transAxes,
+    ax.text(0, 1.015, f"Chart-carried values: the text layer reads none of them; the best "
+                      f"single local backend reads {single_backend_chart:.0f}%", transform=ax.transAxes,
             fontsize=9.5, color=INK_2, va="bottom")
-    ax.legend(frameon=False, fontsize=9.5, loc="upper left",
-              bbox_to_anchor=(0.0, -0.16), ncol=2)
+    ax.legend(frameon=False, fontsize=9, loc="upper left",
+              bbox_to_anchor=(0.0, -0.16), ncol=3)
     fig.tight_layout()
     fig.savefig(ASSETS / "layer-p.png", dpi=200, bbox_inches="tight")
     plt.close(fig)

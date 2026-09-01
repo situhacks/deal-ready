@@ -67,9 +67,13 @@ standards.
   named comparables, because a metric without a benchmark is not a screen. 81% gross
   retention means nothing until you know the band starts at 90%.
 
-**Review a real run, end to end.** Every artifact below is committed. No re-run
-needed. One target (Ashgrove, the most dangerous company in the corpus), the whole
-loop:
+**Review a real run, end to end.** Every artifact below is committed. No re-run needed.
+One target (Ashgrove, the most dangerous company in the corpus), the whole loop.
+
+**The process is the same on both paths; these artifacts came from the repo path**, because
+that is the one whose numbers re-derive offline. The plugin produces the same shapes — the
+market context below is the exception, and came from the plugin path, since researching needs
+the web.
 
 | Step | Artifact |
 |---|---|
@@ -77,6 +81,7 @@ loop:
 | the rubric it is judged against | [`reports/scorecard_template.md`](reports/scorecard_template.md) |
 | the scorecard | [`reports/scorecard_T05.md`](reports/scorecard_T05.md) - 97.7, tier 1, and one red-letter breach: gross retention 81% against an 85% floor |
 | the same scorecard, machine-readable | [`reports/findings.json`](reports/findings.json) |
+| the market context | [`reports/market_context_T05.md`](reports/market_context_T05.md) - the four-phase research pass: no agriculture-specific band exists, so it says so, and the proxy puts 81% below the median for a class that should beat it |
 | the drafted memo | [`reports/memo_T05.md`](reports/memo_T05.md) - call-out ids on every uncertain value, the chart values and their independent re-read, the questions for the seller |
 | the call-outs, machine-readable | [`reports/callouts_T05.json`](reports/callouts_T05.json) |
 | a human's review of that memo | [`reports/memo_T05_reviewed.md`](reports/memo_T05_reviewed.md), and the diff-captured session it produced: [`data/corrections/T05_session01.json`](data/corrections/T05_session01.json) |
@@ -131,15 +136,52 @@ becomes a definition conflict, not a rounding decision.
 It shows you every value with its read type and stops. You confirm or correct anything
 measured off an axis **before it is scored**. Answer in chat; it carries on from there.
 
-### 4 · Context
+### 4 · Research
 
-Market context for the deciding metrics: the benchmark band for the vertical, named
-comparables, and what would compress the multiple. Cited and dated.
+**A metric without a benchmark is not a screen.** 81% gross retention means nothing until
+you know where the band starts. So this stage is a scoped four-phase research pass, not a
+lookup — worked example in
+[`reports/market_context_T05.md`](reports/market_context_T05.md).
 
-The researcher **never sees the document**. It gets metric names, values, and the
-vertical — a confidential CIM must not end up in a web query, so that isolation is
-enforced by the agent's tool allowlist and asserted in `run_checks.py`, not promised in
-a paragraph.
+**Phase 1 · Scope.** Name the vertical as narrowly as the evidence will support, list only
+the metrics that move the tier, and state the as-of window. Metrics that decide nothing do
+not get researched.
+
+**Phase 2 · Four typed passes**, run separately because they ask different questions:
+
+| Pass | The question | Good output |
+|---|---|---|
+| Benchmark | What is normal here? | A range, dated, from a named source |
+| Comparable | What did similar businesses transact at? | Named deals, values, multiples |
+| Trend | Which way is this vertical moving? | Dated direction with a magnitude |
+| **Critical** | **What would make this worse than the band suggests?** | Specific, falsifiable risks |
+
+**The critical pass is not optional.** A context block that only found reasons the number
+looks fine has not been researched, it has been confirmed.
+
+Every finding is an atom, and no claim survives without all five fields — statement, source,
+URL, a verbatim quote under 125 characters, and a date — plus a tier: `primary` (a
+statistical agency, a filing, the transacting party), `practitioner` (a bank or research
+house publishing methodology), or `vendor` (anyone selling something adjacent).
+
+**Phase 3 · Coverage gate.** Every deciding metric has a band **or a named gap**. No band
+rests on a single vendor-tier source. M&A and VC multiples are labelled separately — they
+differ by 35–50% and conflating them inflates everything downstream. Contradictions are
+carried as contradictions, never averaged into a middle number no source supports.
+
+**Phase 4 · Write it grounded**, ending in the limitations. A context block whose
+limitations section is empty is not finished.
+
+The researcher **never sees the document**. It gets metric names, values, and the vertical —
+a confidential CIM must not end up in a web query, so that isolation is enforced by the
+agent's tool allowlist and asserted in `run_checks.py`, not promised in a paragraph.
+
+**And context is never a verdict.** It does not move a score or a tier. On T05 it found no
+agriculture-specific retention band exists at all — reported as a gap rather than papered
+over — and that against the nearest proxy, 81% sits below the 84% median for a class of
+business that should be *beating* that median. The rubric said "missed a floor by four
+points." The research said "underperforms the peer set it should outperform." Same number,
+different question to ask about it.
 
 ### 5 · ⏸ Gate — the scorecard, in context
 
@@ -270,12 +312,17 @@ concentration and top-five concentration: the metrics that decide whether to buy
 company. Revenue, margin and EBITDA, which a text layer reads perfectly, only tell
 you how big it is.
 
-![Recovery by field type: the text layer gets 100% of prose and table fields and 0% of chart-carried ones; the full pipeline lifts charts to 100%](assets/layer-p.png)
+![Recovery by field type across three substrates: the text layer gets 100% of prose and table fields and 0% of chart-carried ones; the local pipeline and the plugin path both reach 100% on all three](assets/layer-p.png)
 
 The same five companies, the same rules, the only difference being whether the
 pipeline could read a chart:
 
 ![Criteria fit scores by target: under a text-only read the clean company, the concentrated one and the leaking one all score 60; the full pipeline separates them to 100, 95 and 98](assets/discrimination.png)
+
+Only two bars here, deliberately: the plugin path reads the same values, so it produces
+the same scores. There is no third line to draw. The difference between substrates is
+cost and reproducibility, not what they see —
+[`reports/substrate_comparison.md`](reports/substrate_comparison.md).
 
 Three companies with materially different risk, one identical score. A text-only
 pipeline does not degrade gracefully. It goes blind exactly where the decision lives,

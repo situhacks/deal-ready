@@ -1,5 +1,52 @@
 # Changelog
 
+## v4.0.0 — 2026-09-01
+
+The judgement layer becomes portable. Everything below is additive: the local
+pipeline is unchanged and still the path that publishes numbers.
+
+- **Packaged as a Claude Code plugin** (`plugins/deal-ready/`, registered in
+  `.claude-plugin/marketplace.json`). Three commands — `screen`, `review`,
+  `research` — four agents, six skills, and a copy of the rubric that
+  `run_checks.py` byte-compares against `criteria/default.json` so the two paths
+  cannot screen to different standards. It installs and runs with no clone, no
+  Python and no models.
+- **The isolation is enforced, not described.** Each agent carries a tool
+  allowlist: the page reader has no network and no write, the memo writer is the
+  only agent that can write, and the market researcher holds web tools and **never
+  receives the document** — a confidential CIM must not reach a web query. A check
+  fails the build if any of that changes.
+- **Reviewer mode** (`review.py`): you write the numbers, it checks them against
+  the source and reports three buckets — disagreed, agreed, and **could not
+  check**. The third is the safety property; a checker that only speaks when it
+  finds something teaches its user that silence means correct. Measured: 15 of 15
+  seeded errors caught, 0 false flags.
+- **Research mode**: a scoped four-phase pass — scope, then benchmark, comparable,
+  trend and a mandatory **critical** pass that asks what would make the number
+  worse. Every claim carries a URL, a verbatim quote, a date and a source tier.
+  Worked example at `reports/market_context_T05.md`, which found that no
+  agriculture-specific retention band exists and said so rather than reaching for
+  a nearby number.
+- **Both substrates measured on every chart-carried value: 20 of 20 exact each**
+  (`reports/substrate_comparison.md`). The corpus cannot separate them on accuracy,
+  so what distinguishes them is cost, hardware, and reproducibility — and only the
+  local path's numbers re-derive offline from committed pixels by a third party.
+- **A cold agent was given the repo and told to find the instructions**
+  (`reports/coldstart_test.md`). It screened the target correctly and then found
+  six defects, two of them serious: the documented entry path led away from the
+  plugin, and the scoring award rule was never stated — binary award gives 70 and
+  Tier 2 where proportional gives 97.7 and Tier 1. Both fixed; root `SKILL.md` is
+  deleted and `AGENTS.md` now names both paths.
+- **Fixed a suite that corrupted its own evidence.** The deterministic-path check
+  ran `screen.py --no-vision` straight into `reports/`, so every verification run
+  silently replaced the committed full run with a degraded one — the README quoted
+  97.7 while the artifacts said 60.0. `screen.py` gained `--reports-dir`, the check
+  writes to scratch, and a new check asserts the committed run is the full run.
+- The Layer-P figure gained the third substrate, and its middle bar now plots the
+  production pipeline rather than a single backend — it read as a claim the
+  pipeline half-works, contradicting the figure's own caption.
+- 19 checks, all green.
+
 ## v3.2.0 — 2026-08-24
 
 - The escalation ladder is gone. The bake-off that measured every candidate as a
