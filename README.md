@@ -6,26 +6,46 @@ are ten numbers an analyst needs. Finding them means two to four hours of readin
 spreadsheet, and a one-page recommendation, and about nine in ten of those memoranda
 end in "pass" anyway.
 
-This is a first pass at that work, built to run locally. Point it at a CIM and you
-get the artifact the analyst was going to assemble by hand: the metrics, the
-arithmetic checked against the buyer's rubric, a criteria fit and a tier, and a
-drafted memo where every uncertain value carries a call-out. Every figure traces to
-the page it came from. Nothing here recommends a transaction; the tool sorts an inbox
-and asks questions, and a human signs.
+This is a first pass at that work. Point it at a CIM and you get the artifact the
+analyst was going to assemble by hand: the metrics, the arithmetic checked against the
+buyer's rubric, a criteria fit and a tier, and a drafted memo where every uncertain
+value carries a call-out. Every figure traces to the page it came from. Nothing here
+recommends a transaction; the tool sorts an inbox and asks questions, and a human signs.
+
+## Two ways to run it
+
+**As a plugin — nothing to install.** The judgement lives in skills and subagents, so a
+fresh agent session can screen a CIM with no clone, no Python, and no models.
+
+```
+/plugin marketplace add situhacks/deal-ready
+/plugin install deal-ready
+/deal-ready:screen path/to/cim.pdf
+```
+
+Three commands are exposed: `screen` runs the whole workflow, `review` checks numbers
+you already wrote, `research` builds market context on its own.
+
+**As a repo — the substrate and the evidence.** Clone it when you want the local
+models, the corpus generator, and the checks that reproduce every number here offline.
 
 ```bash
 pip install -r requirements.txt
 python generate.py                 # build the synthetic corpus (no model, no network)
 python screen.py data/             # screen it: scorecards + findings
 python memo.py data/               # draft screening memos with call-outs
-python capture.py T05 --edited reports/memo_T05_reviewed.md   # turn a review into records
+python review.py data/T05_Ashgrove_CIM.pdf reports/asserted_T05.json   # check your numbers
 python run_checks.py               # verify every number in this README, offline
 ```
 
-Python 3.12, no API key, no account, no paid inference. The parts that need a model
-use local models through Ollama. With no models installed, `python screen.py data/
---no-vision` still runs end to end, and the gap between that run and the full one is
-the most interesting thing here.
+Python 3.12, no API key, no account, no paid inference. The parts that need a model use
+local models through Ollama. With no models installed, `python screen.py data/
+--no-vision` still runs end to end, and the gap between that run and the full one is the
+most interesting thing here.
+
+**One rubric, both paths.** `criteria/default.json` is copied into the plugin and
+byte-compared by `run_checks.py`, so the two cannot drift into screening by different
+standards.
 
 **What you get**
 
@@ -39,6 +59,13 @@ the most interesting thing here.
 - A **correction loop**: review the memo, run one command, and your edits become
   regression cases and worked examples that automated checks assert on every future
   run.
+- **Reviewer mode**, which inverts the usual arrangement: you write the numbers, it
+  checks them against the document and reports what disagrees, what agrees, and **what
+  it could not check**. That third bucket is the point — a checker that only speaks when
+  it finds something teaches you that silence means correct.
+- **Market context** (plugin path): the benchmark band for each deciding metric and
+  named comparables, because a metric without a benchmark is not a screen. 81% gross
+  retention means nothing until you know the band starts at 90%.
 
 **Review a real run, end to end.** Every artifact below is committed. No re-run
 needed. One target (Ashgrove, the most dangerous company in the corpus), the whole
@@ -59,11 +86,83 @@ The other four targets live beside these: [`reports/memo_T01.md`](reports/memo_T
 through [`memo_T04.md`](reports/memo_T04.md), their scorecards and call-outs, and the
 reader comparison in [`reports/bakeoff.md`](reports/bakeoff.md).
 
-**Contents**: [How it works](#how-it-works) · [The loop](#the-loop) ·
-[The finding](#the-finding) · [The numbers](#the-numbers) ·
+**Contents**: [The walkthrough](#the-walkthrough) · [How it works](#how-it-works) ·
+[The loop](#the-loop) · [The finding](#the-finding) · [The numbers](#the-numbers) ·
 [The story: v1 → v3](#the-story-v1--v3) · [Honest boundaries](#honest-boundaries) ·
-[Using it as a skill](#using-it-as-a-skill) · [Reading order](#reading-order) ·
+[Inside the plugin](#inside-the-plugin) · [Reading order](#reading-order) ·
 [Layout](#layout)
+
+---
+
+## The walkthrough
+
+What actually happens when you point it at a CIM. Five stages, **three places it stops
+and waits for you**.
+
+The gates are not decoration. The values most likely to be wrong are the ones a reader
+cannot tell apart from the ones that are right, so the workflow surfaces them before
+they are scored rather than after they are signed.
+
+### 1 · Read
+
+A reader worker goes through the pages and returns structured values — each with the
+page it came from and **how it was read**:
+
+| `read` | Means | Trust |
+|---|---|---|
+| `text` | Printed in prose | high |
+| `table` | A labelled table cell | high |
+| `label` | A printed value on a chart | high |
+| `axis` | **Measured** off chart geometry — nothing printed says it | **low, always** |
+
+That last row is the whole reason this tool exists. On the sample target, gross
+retention is not written anywhere: it is a dot on a line chart, and it is the number
+that breaches the rubric.
+
+### 2 · Compute
+
+Deterministic. Arithmetic and thresholds from `criteria/default.json` — eleven rules, a
+fit score, a tier. **No model computes a number the business acts on.** Derived values
+are computed rather than trusted, and a stated figure that disagrees with a computed one
+becomes a definition conflict, not a rounding decision.
+
+### 3 · ⏸ Gate — confirm the uncertain reads
+
+It shows you every value with its read type and stops. You confirm or correct anything
+measured off an axis **before it is scored**. Answer in chat; it carries on from there.
+
+### 4 · Context
+
+Market context for the deciding metrics: the benchmark band for the vertical, named
+comparables, and what would compress the multiple. Cited and dated.
+
+The researcher **never sees the document**. It gets metric names, values, and the
+vertical — a confidential CIM must not end up in a web query, so that isolation is
+enforced by the agent's tool allowlist and asserted in `run_checks.py`, not promised in
+a paragraph.
+
+### 5 · ⏸ Gate — the scorecard, in context
+
+Scorecard beside the benchmarks, so each number is read against something. Anything
+still unresolved is named. It asks whether to draft.
+
+### 6 · Draft
+
+A memo where every figure cites its page and every uncertain value carries a call-out —
+and a call-out is a **question with an answer that would resolve it**, not a warning
+label. Four kinds: axis read, missing metric, definition conflict, judgement.
+
+### 7 · ⏸ Gate — hand back
+
+What was written, and what is still open. It does not close on a summary implying more
+certainty than the file has.
+
+### Then the loop closes
+
+Edit the memo. `python capture.py` diffs your edits into correction records: accepted
+judgement becomes a worked example in future prompts, and extraction gaps become
+regression cases `run_checks.py` asserts forever. **The corrections you make are the
+only training signal, and they are gated, committed, and reviewable.**
 
 ---
 
@@ -277,18 +376,34 @@ benchmark implied it.
 
 ---
 
-## Using it as a skill
+## Inside the plugin
 
-The repository is shaped to drop into an agent:
+`plugins/deal-ready/` carries the judgement layer. It installs on its own and needs no
+Python, no models, and no clone.
 
-- **Claude Code**: copy or clone the repo as a skill folder. [`SKILL.md`](SKILL.md)
-  at the root carries the name, the trigger description, and the five-command
-  walk-through.
-- **Any AGENTS.md-reading agent** (Codex-class CLIs, ChatGPT desktop workspace):
-  [`AGENTS.md`](AGENTS.md) at the root is the agent-agnostic entry, with the hard
-  rules and the pointers.
-- **Requirements**: Ollama with `glm-ocr`, `qwen3.8:27b` and `nomic-embed-text`
-  pulled. Everything degrades visibly without them, never silently.
+**Three commands.** `/deal-ready:screen` runs the workflow above. `/deal-ready:review`
+checks numbers you already wrote. `/deal-ready:research` builds market context alone.
+
+**Four agents, each with a tool allowlist rather than a note asking nicely.** The
+isolation is the security claim this thing makes, so it is tested — grant the researcher
+`Read` and the check suite goes red.
+
+| Agent | Holds | Notably cannot |
+|---|---|---|
+| `deal-screener` | Read, Grep, Glob, Task | write, browse |
+| `page-reader` | Read, Grep, Glob | write, browse, delegate |
+| `market-researcher` | WebSearch, WebFetch | **read anything** — it never sees the CIM |
+| `memo-writer` | Read, Write | browse, delegate |
+
+**Six skills.** `cim-screen` (the workflow and its gates) · `cim-read` (what a correct
+read is, and when to refuse to produce a number) · `deal-rules` (the rubric) ·
+`review-check` (reviewer mode) · `market-context` (a four-phase research pass —
+benchmark, comparable, trend, and a **critical** pass that asks what would make the
+number worse) · `memo-draft` (memo structure and call-out grammar).
+
+**For the repo path**, Ollama with `glm-ocr`, `qwen3.8:27b` and `nomic-embed-text`.
+Everything degrades visibly without them, never silently.
+[`AGENTS.md`](AGENTS.md) remains the agent-agnostic entry for Codex-class CLIs.
 
 ---
 
@@ -304,6 +419,8 @@ The repository is shaped to drop into an agent:
 | [`docs/hardware.md`](docs/hardware.md) | Local model setup, AMD/ROCm traps, and three failures that would have published false findings |
 | [`reports/bakeoff.md`](reports/bakeoff.md) | The reader comparison that chose the current stack, with committed per-model caches |
 | [`reports/scorecard_T05.md`](reports/scorecard_T05.md) | A finished scorecard, as the reviewer reads it; the template it is judged against sits beside it |
+| [`reports/review_T05.json`](reports/review_T05.json) | Reviewer mode on a sheet with two deliberate errors in seven values: both caught, the axis read flagged as measured rather than printed |
+| [`reports/agent_read_T05.md`](reports/agent_read_T05.md) | The other substrate reading the same two chart pages, and an honest note on what that one spot check does and does not establish |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version by version, with what taught what |
 
@@ -315,12 +432,19 @@ The repository is shaped to drop into an agent:
 generate.py            build the synthetic corpus; fails if a chart value leaks to text
 screen.py              the CLI an analyst would run: findings + readable scorecards
 memo.py                draft screening memos with call-outs
+review.py              check your numbers against the document: three buckets
 capture.py             diff an edited memo into correction records
 bakeoff.py             compare page-reader candidates, identical grading
 parse_corpus.py        run every parse backend, write Layer P
 run_checks.py          reproduce every published number, offline
 
+plugins/deal-ready/    the judgement layer: commands, agents, skills, the rubric copy
+  commands/            screen · review · research
+  agents/              four workers, each with a tool allowlist
+  skills/              what a correct read is, the rubric, the research method
+
 deal_ready/
+  review.py            reviewer mode: disagreed · agreed · could not check
   generator/           target profiles + PDF deck rendering
   parse/               text layer · reading pipeline · chart geometry, one interface
   embed/               page routing, MaxSim in numpy, no vector database
