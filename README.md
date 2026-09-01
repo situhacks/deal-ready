@@ -308,6 +308,14 @@ its data labels, and the boundary is specific:
 | `glm-ocr` (0.9B parser, page render) | 100% (10/10) | 0% (0/10) |
 | `qwen3.8:27b` (open frontier, page render) | 100% (10/10) | 80% (8/10) |
 | production pipeline (parser + chart specialist + geometry) | **100% (10/10)** | **100% (10/10)** |
+| **plugin path** (frontier reader, one page at a time) | **100% (10/10)** | **100% (10/10)** |
+
+**Both substrates read this corpus perfectly** — 20 of 20 chart-carried values, exact,
+no tolerance applied ([`reports/substrate_comparison.md`](reports/substrate_comparison.md)).
+Note that the last two rows are not a like-for-like model comparison: the bake-off row
+above graded a model as a full-page reader over a whole document, while the plugin path
+reads one chart page at a time with explicit instructions. Task framing is doing work
+there, not only model capability.
 
 Reading a printed label is recognition. Reading a value off an axis is spatial
 reasoning, and every model that tries it estimates: the frontier model landed three
@@ -318,6 +326,24 @@ line entering the end marker (a 13-pixel marker rasterises wherever its sub-pixe
 phase lands; a 200-pixel line averages that noise away), and interpolates against
 the gridlines. That is arithmetic, and `run_checks.py` re-runs it from the committed
 images on any machine, with no GPU and no model.
+
+**Which substrate, then?** Not an accuracy question — on this corpus there is nothing to
+choose between them. The difference is elsewhere:
+
+| | Local | Plugin |
+|---|---|---|
+| Latency, 1 target (warm cache) | 2.6s | seconds per page, 2 pages |
+| Marginal cost per document | electricity | tokens |
+| Needs | a GPU and three pulled models | nothing |
+| **Re-derivable by a third party, offline, forever** | **yes** | **no — it can only be re-run** |
+| Failure mode | loud: an unreadable page is reported unresolved | model-shaped: a confident wrong number is possible |
+
+**That fourth row is the one that decides it.** `run_checks.py` re-measures every axis
+value from committed pixels on any machine with no GPU and no model, so a number the
+local path produced can be re-derived by someone who does not trust you. A number the
+plugin produced can only be re-run. For a screen a deal lead may have to defend a year
+later, those are not the same property — which is why the plugin is the convenient way
+in and the repo is the one that publishes numbers.
 
 **A caveat stated plainly:** the corpus is synthetic and this repo wrote it. Ground
 truth is a by-product of generation rather than labelling after the fact, which
@@ -429,7 +455,8 @@ Everything degrades visibly without them, never silently.
 | [`reports/bakeoff.md`](reports/bakeoff.md) | The reader comparison that chose the current stack, with committed per-model caches |
 | [`reports/scorecard_T05.md`](reports/scorecard_T05.md) | A finished scorecard, as the reviewer reads it; the template it is judged against sits beside it |
 | [`reports/review_T05.json`](reports/review_T05.json) | Reviewer mode on a sheet with two deliberate errors in seven values: both caught, the axis read flagged as measured rather than printed |
-| [`reports/agent_read_T05.md`](reports/agent_read_T05.md) | The other substrate reading the same two chart pages, and an honest note on what that one spot check does and does not establish |
+| [`reports/substrate_comparison.md`](reports/substrate_comparison.md) | **Both readers on all 20 chart-carried values.** 20/20 each, exact — and why that means accuracy is not what separates them |
+| [`reports/agent_read_T05.md`](reports/agent_read_T05.md) | The first spot check, superseded by the comparison above but kept for its note on how the two read types were decided |
 | [`reports/coldstart_test.md`](reports/coldstart_test.md) | **An agent that had never seen this repo, given only a path and told to find the instructions.** What it got right, the six defects it found, and the worse one it surfaced by accident |
 | [`criteria/default.json`](criteria/default.json) | The investment profile — config, not code |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version by version, with what taught what |

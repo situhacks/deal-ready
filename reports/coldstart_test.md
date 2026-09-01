@@ -11,6 +11,17 @@ the PDF itself and confirmed at the end that it had broken none of those constra
 **It reached Gate 1 and stopped, which is correct.** Stages beyond that need an operator reply it
 could not get.
 
+## Two numbers that are easy to confuse
+
+**The agent's reading accuracy was 10 of 10 — every rubric metric, correct.** Separately, and
+measured across the whole corpus afterwards, both substrates read all twenty chart-carried values
+exactly ([`substrate_comparison.md`](substrate_comparison.md)).
+
+**The 70 and the 97.7 below are the target company's score against the rubric, out of 100.** They
+have nothing to do with how well the agent read. Binary award of each criterion's weight gives
+Ashgrove 70; proportional credit gives it 97.7. That is a defect in the *rubric documentation*,
+not in the reading.
+
 ## What it got right
 
 All ten rubric metrics recovered from the document, read types classified correctly, both
