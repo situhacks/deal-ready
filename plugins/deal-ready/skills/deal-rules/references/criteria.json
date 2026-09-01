@@ -1,0 +1,55 @@
+{
+  "profile_name": "Buy-and-hold software",
+  "description": "Models the acquisition criteria of buy-and-hold software acquirers: durable, mission-critical products with recurring revenue. Swapping in a real scorecard is a config change, not a rewrite - which is the point of keeping this out of the code.",
+  "posture": "Durability over growth. A permanent-capital buyer holds forever, so retention, mission-criticality and revenue quality outrank growth rate. A Pass means 'not a fit against this profile', never 'bad company'.",
+  "arr_band_usd": {
+    "min": 2000000,
+    "max": 30000000,
+    "weight": 15
+  },
+  "recurring_pct_floor": {
+    "value": 80.0,
+    "weight": 20
+  },
+  "grr_pct_floor": {
+    "value": 85.0,
+    "weight": 20
+  },
+  "nrr_pct_target": {
+    "value": 100.0,
+    "weight": 10
+  },
+  "gross_margin_pct_floor": {
+    "value": 65.0,
+    "weight": 10
+  },
+  "ebitda_positive": {
+    "required": true,
+    "weight": 15
+  },
+  "rule_of_40_floor": {
+    "value": 40.0,
+    "weight": 0,
+    "note": "Weight 0 by design. Rule of 40 is a growth-investor test; a permanent-capital buyer is not underwriting an exit. Reported as context, never scored. See deal_ready/scorer/rules.py R9."
+  },
+  "concentration_caps": {
+    "top1_pct_max": 15.0,
+    "top5_pct_max": 35.0,
+    "note": "Breaching either does not auto-fail. It reprices: a buyer underwrites the risk that one departure removes a material share of revenue.",
+    "weight": 10
+  },
+  "tiers": {
+    "tier_1_min_score": 75,
+    "tier_2_min_score": 55,
+    "labels": {
+      "tier_1": "Tier 1 - advance to management call",
+      "tier_2": "Tier 2 - diligence questions attached",
+      "pass": "Pass - criteria not met on this profile"
+    }
+  },
+  "blocker_rules": [
+    "recurring_below_floor",
+    "ebitda_negative",
+    "arr_outside_band"
+  ]
+}

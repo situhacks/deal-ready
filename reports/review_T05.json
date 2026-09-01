@@ -1,0 +1,74 @@
+{
+  "source": "T05_Ashgrove_CIM.pdf",
+  "asserted_count": 7,
+  "checked_count": 7,
+  "coverage_pct": 100.0,
+  "pages_read_with_vision": [
+    6,
+    7
+  ],
+  "disagreed": [
+    {
+      "metric": "grr_pct",
+      "asserted": 91.0,
+      "verdict": "disagreed",
+      "page": 7,
+      "method": "vision",
+      "read": "axis",
+      "document_says": [
+        81.0,
+        86.0
+      ]
+    },
+    {
+      "metric": "yoy_growth_pct",
+      "asserted": 12.0,
+      "verdict": "disagreed",
+      "page": 2,
+      "method": "textlayer",
+      "document_says": [
+        2.0,
+        84.0
+      ]
+    }
+  ],
+  "agreed": [
+    {
+      "metric": "arr_usd",
+      "asserted": 4300000,
+      "verdict": "agreed",
+      "page": 8,
+      "method": "textlayer"
+    },
+    {
+      "metric": "recurring_pct",
+      "asserted": 84.0,
+      "verdict": "agreed",
+      "page": 2,
+      "method": "textlayer"
+    },
+    {
+      "metric": "gross_margin_pct",
+      "asserted": 69.0,
+      "verdict": "agreed",
+      "page": 8,
+      "method": "textlayer"
+    },
+    {
+      "metric": "ebitda_usd",
+      "asserted": 1160000,
+      "verdict": "agreed",
+      "page": 8,
+      "method": "textlayer"
+    },
+    {
+      "metric": "top1_customer_pct",
+      "asserted": 11.0,
+      "verdict": "agreed",
+      "page": 6,
+      "method": "vision",
+      "read": "label"
+    }
+  ],
+  "could_not_check": []
+}

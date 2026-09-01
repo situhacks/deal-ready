@@ -1,0 +1,14 @@
+{
+  "name": "deal-ready",
+  "owner": {
+    "name": "situhacks"
+  },
+  "plugins": [
+    {
+      "name": "deal-ready",
+      "displayName": "Deal Ready",
+      "source": "./plugins/deal-ready",
+      "description": "Screen a CIM into a cited scorecard and a drafted memo. Chart-carried metrics, deterministic rules, market context, every uncertain value flagged."
+    }
+  ]
+}
