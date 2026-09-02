@@ -384,9 +384,18 @@ reads one chart page at a time with explicit instructions. Task framing is doing
 there, not only model capability.
 
 Reading a printed label is recognition. Reading a value off an axis is spatial
-reasoning, and every model that tries it estimates: the frontier model landed three
-of five endpoint pairs exact and two within 0.2, which sounds fine until the
-arithmetic needs the number. So the pipeline measures instead. The chart model reads
+reasoning: the model estimates against gridlines instead of reading a glyph, and how
+well that goes depends on the substrate and on how the task is framed. Run locally,
+quantised, over whole page renders, `qwen3.8:27b` read 8 of 10 axis values at 148
+seconds a page — fine until the arithmetic needs the two it missed. Handed one chart
+at a time with explicit instructions, a hosted frontier model got all ten.
+
+So the reason to measure is not that a model cannot do this. **It is that a model's
+answer is an assertion and a measurement is evidence.** `run_checks.py` re-derives every
+axis value from the committed pixels on any machine, with no GPU and no model, so a
+number this pipeline produced can be checked by someone with no reason to trust it. A
+number a model produced can only be re-run — against a model that may have changed
+underneath you. The pipeline measures instead. The chart model reads
 the tick glyphs once. Code finds each series by colour, fits the centreline of the
 line entering the end marker (a 13-pixel marker rasterises wherever its sub-pixel
 phase lands; a 200-pixel line averages that noise away), and interpolates against
