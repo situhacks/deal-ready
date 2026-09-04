@@ -34,7 +34,7 @@ from.** The people who read this reconcile to the penny for a living.
 - [4] Persona red-team, measured and rejected
 - [10] Outward research, rebuilt facing out · [13] Running it for real, and what it broke
 
-**Forecasting — six experiments that closed a question**
+**Forecasting — five experiments that closed a question**
 - [3] Synthetic bake-off · [5] Real companies from SEC filings
 - [6] **How much history it actually needs** — the one that settled it
 - [7] Covariates · [8] Is TimesFM even the right model

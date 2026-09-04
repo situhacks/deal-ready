@@ -1,5 +1,68 @@
 # Changelog
 
+## v5.0.0 — 2026-09-04
+
+Enrichment. The screen gains what the document cannot contain — and none of it
+scores. Everything below lands in the memo as flagged context a human weighs; the
+rubric, the rules, the fit score and the tier are byte-identical to v4.
+
+- **The no-scoring wall is structural, not stated.** `run_checks.py` fails the build
+  if `scorer/rules.py`, `scorer/fit.py`, `scorecard.py` or `screen.py` so much as
+  imports a signal or a forecast. Easy to promise in a section header and easy to
+  break in a refactor, so it is checked by import rather than by intention.
+- **Customer health** (`signals/customers.py`). A named roster with each customer's
+  share of ARR and any distress found, plus the sentence that justifies the whole
+  layer: gross retention is lagging by construction and cannot contain a customer
+  that has not left yet, so a healthy retention line and a collapsing customer base
+  are perfectly consistent. **An unresearched customer is counted separately and is
+  never a clean bill of health.**
+- **A base rate from past acquisitions** (`signals/baserate.py`). The answer to
+  having no future history for a target is that you have every other company's
+  future. Cohort matching widens one rung at a time and reports which rung produced
+  the answer; below eight comparables it refuses, and it refuses again when the
+  target sits outside the range of the book. **Every figure recomputes from the deal
+  ids printed beneath it.**
+- **A scenario layer that emits assumptions, not numbers** (`signals/scenario.py`).
+  Each one names the input block it rests on — A the document, B the base rate, C
+  customer health, D external research — and what would falsify it. A forecast
+  invites belief; an assumption invites challenge, and only one of those is useful
+  to a committee.
+- **Outward research, rebuilt facing out** (`target-research` skill,
+  `target-researcher` agent). It composes a plan for the specific target rather than
+  running a checklist, and the rules that fired become targeting: a concentration
+  breach makes change-of-control clauses urgent, a legacy stack makes the talent
+  market for that stack urgent. Standing lenses cover operators, ownership and why
+  now, customers as organisations, market and disruptors, and end-market health;
+  conditional lenses add contracts, security, vendor and channel dependency, pricing
+  power, litigation and adjacent transactions. **The lenses are discretionary; the
+  sourcing, the coverage report and the refusal to treat absence as evidence are
+  not.**
+- **The Tier A/B wall** (`outside-signals` skill). A whitelist-backed benchmark can
+  be cited as a number; a wide-search signal is context and may never become one.
+  The blacklist is a check, not a guideline.
+- **Forecasting was built, measured, and kept out of the screen.** Six experiments
+  across TimesFM-2.5, TimesFM-3, Chronos-Bolt and Chronos-2 against six real SEC
+  filers. On four annual points nothing forecasts at all — TimesFM-3 scores 1.472
+  MASE, worse than repeating last year — and eight quarters is where a foundation
+  model first beats arithmetic. **A CIM prints three to five annual points.** The
+  harnesses stay in `eval/` as an exhibit and are unreachable from the screening
+  path. Full record in `reports/enrichment_experiments.md`.
+- **The persona red-team was built, measured and rejected**: 20% novel, 46% noise.
+  Kept as `eval/redteam_eval.py` because the measurement is the finding.
+- **Pointed at real companies, and one layer broke.** A $900M target was matched to a
+  cohort of $20–28M deals and reported cleanly, because the top size band was
+  open-ended. Five synthetic targets all inside the mandate band could never have
+  surfaced it. Fixed with an out-of-range guard that refuses and names the range;
+  verified at the boundaries.
+- **Real-data harnesses**, all auditable to the filing: `realworld/edgar.py` pulls
+  quarterly revenue from SEC XBRL with accession number, form type and filed date on
+  every point; `eval/customer_lens_realworld.py` derives customer exposure with a
+  pigeonhole floor a reviewer can redo on an envelope.
+- Plugin grows to **five agents and eight skills**; `outside-signals` and
+  `target-research` join, and the tool-allowlist check now catches an agent that
+  declares no allowlist at all.
+- 21 checks, all green.
+
 ## v4.0.0 — 2026-09-01
 
 The judgement layer becomes portable. Everything below is additive: the local

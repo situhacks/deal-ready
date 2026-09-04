@@ -94,7 +94,8 @@ reader comparison in [`reports/bakeoff.md`](reports/bakeoff.md).
 
 **Contents**: [The walkthrough](#the-walkthrough) · [How it works](#how-it-works) ·
 [The loop](#the-loop) · [The finding](#the-finding) · [The numbers](#the-numbers) ·
-[The story: v1 → v4](#the-story-v1--v4) · [Honest boundaries](#honest-boundaries) ·
+[The story: v1 → v5](#the-story-v1--v5) · [Forecasting](#what-happened-when-we-tried-to-forecast) ·
+[Honest boundaries](#honest-boundaries) ·
 [Inside the plugin](#inside-the-plugin) · [Reading order](#reading-order) ·
 [Layout](#layout)
 
@@ -428,7 +429,7 @@ manifest exists to test against public documents this pipeline did not write.
 
 ---
 
-## The story: v1 → v4
+## The story: v1 → v5
 
 **v1 asked whether the work could be done at all, locally.** The text layer, the
 embedding router, tiered local vision, deterministic rules, and the finding that the
@@ -473,6 +474,100 @@ quietly degraded the committed artifacts every time anyone verified them.
 pass searched an open index and assigned source tiers afterwards, which is rationalisation.
 It now reads a whitelist first, and the blacklist is a check.
 
+**v5 asked what the document cannot contain.** A retention line is lagging by
+construction — it cannot hold a customer who has not left yet — so a healthy number and a
+collapsing customer base are perfectly consistent, and only one of them is in the deck.
+The memo gained the other one: customer health, outward research across the operators,
+ownership, workforce and end market, and a base rate from past acquisitions.
+
+**The base rate is the answer to having no future history for a target.** You have every
+other company's future. On the sample target the matched cohort of sixteen grew a median
+2.1% a year and one in eight shrank, and the same arithmetic says the case ran 3.95 points
+optimistic at the median on every one of them. The memo prints the sixteen deal ids it
+recomputes from.
+
+**Then the layers were pointed at real companies and one of them broke.** A $900M target
+was matched to a cohort of $20–28M deals and reported cleanly, because the top size band
+was open-ended. Five synthetic targets all inside the mandate band could never have
+surfaced it. Every enrichment layer now fails loudly and none of them can reach the score.
+
+---
+
+## What happened when we tried to forecast
+
+A screen reads history off a document, and the obvious next question is whether a model can
+extend it. Five experiments answered that, and the answer was no — for a reason specific
+enough to be worth publishing. All of it is in
+[`reports/enrichment_experiments.md`](reports/enrichment_experiments.md), reproducible from
+[`eval/`](eval/).
+
+**What these models are.** TimesFM (Google), Chronos (Amazon) and their kin are *time-series
+foundation models*: pretrained on billions of points from unrelated series, then handed a
+sequence they have never seen and asked for the next N values, with no training on your data
+at all. The pitch is a forecast with no model-fitting step, which is exactly the shape a
+screen would want.
+
+**The scoring.** MASE — error divided by the error of just repeating last year's value.
+**1.0 means the model did no better than doing nothing.** Below 1.0 it beat that; above,
+it lost to it.
+
+**On synthetic data it looked excellent, and that was the problem.** TimesFM-3 came in 46%
+better than the best arithmetic baseline (0.354 against drift at 0.660). Then the generator
+was read back: this repo had authored a decay into the holdout period, and the model was
+recovering a pattern this repo put there. **A synthetic corpus cannot validate a forecaster,
+because the corpus author knows the future.**
+
+**So it was run against real companies.** Six vertical software filers pulled from SEC EDGAR
+XBRL — APPF, MANH, PAYC, PCTY, TYL, VEEV — where every quarterly value carries its accession
+number, form type and filing date, so the inputs are as auditable as the outputs
+([`deal_ready/realworld/edgar.py`](deal_ready/realworld/edgar.py)).
+
+| Mean MASE, 6 real filers | 1 year out | 2 years out |
+|---|---|---|
+| seasonal naive | 1.286 | 2.239 |
+| linear fit | 0.823 | 1.287 |
+| **drift** (two points and a ruler) | 0.507 | **0.718 — best** |
+| TimesFM-2.5 | 0.589 | 1.432 |
+| TimesFM-3 | 0.502 | 0.846 |
+| **Chronos-2** | **0.402 — best** | 1.094 |
+
+At one year a foundation model wins, and Chronos-2 wins it at 0.95s against TimesFM's 5.5s.
+**At two years, arithmetic wins outright** and every foundation model degrades past it.
+
+**Then the experiment that actually settled it: how much history does it need?** The same six
+companies, truncated to progressively less history:
+
+| History given, quarters | Best baseline | TimesFM-3 |
+|---|---|---|
+| **4** | linear fit 0.935 | **1.472 — worse than doing nothing** |
+| 6 | linear fit 0.377 | 0.526 |
+| **8** | linear fit 0.335 | **0.305 — overtakes** |
+| 24 | drift 0.435 | 0.349 |
+
+**Eight observations is the threshold, and a CIM prints three to five annual points.** At
+four, nothing works — not the foundation model, not the baselines, not the thing you would
+have done by hand. That is not a tuning problem, it is an information problem, and it closes
+the question. **Forecasting does not belong in a CIM screen.**
+
+Two smaller findings, kept because they cost real time. **Covariates mostly hurt.** Handing
+the model a sector index — the mean of the other five filers, which is what a sector index
+actually is — made one-year accuracy *worse* (0.358 univariate against 0.412 with the
+cohort's past), and helped only when the cohort's own future was supplied at the long horizon
+(0.530 → 0.489 at two years). Which is to say: correlated context does not rescue a short
+series, and the version that helps requires knowing something you would not know. And the
+licence read matters: TimesFM-2.5 is Apache-2.0, TimesFM-3 is not commercially licensed,
+which decides the question for anyone shipping this rather than testing it.
+
+**What replaced it.** If the target has no future history, use everyone else's:
+`signals/baserate.py` computes what comparable past acquisitions actually went on to do,
+prints the deal ids, and refuses when the cohort is too small or the target sits outside the
+book. And `signals/scenario.py` emits falsifiable assumptions rather than a number, because
+**a forecast invites belief and an assumption invites challenge** — which is the right thing
+to hand a committee.
+
+The forecasting harnesses stay in `eval/` as an exhibit. **Nothing in `eval/forecast*.py` is
+reachable from the screening path**, and `run_checks.py` fails the build if it ever becomes so.
+
 ---
 
 ## Honest boundaries
@@ -490,15 +585,20 @@ It now reads a whitelist first, and the blacklist is a check.
   future work, stated as such.
 - **This is not a data-room tool.** The parse answer changes at 10–50K pages; see
   [`docs/ingest.md`](docs/ingest.md) §8.
-- **The plugin has been cold-started once, not installed once.** An agent with no context
-  found the instructions and screened a target correctly
-  ([`reports/coldstart_test.md`](reports/coldstart_test.md)), but it read the plugin off
-  the filesystem rather than through the marketplace. Command registration and skill
-  auto-routing are still unverified, and stages past the first gate have never run end to
-  end because no gate has been answered by a human.
 - **`data/ground_truth.json` sits beside the corpus a screener is pointed at.** That is
   convenient for the eval harness and a hazard for anything that globs `data/`. It is why
   the cold-start test forbids it explicitly.
+- **The dealbook is fabricated.** A real acquirer's history of what it bought and what
+  happened next is the one genuinely proprietary prediction asset it owns. What is
+  demonstrated here is the machinery and the shape of the reasoning, not a fact about any
+  portfolio.
+- **The scenario layer's assumptions have never been rated by a human for quality.**
+  Sensitivity testing shows they respond to evidence
+  ([`reports/sensitivity.json`](reports/sensitivity.json)); it says nothing about whether
+  they are good.
+- **Outward research has only run against public filers.** A public company publishes its
+  board changes and its customers can be looked up. A founder-owned private business does
+  neither, and that is the harder case.
 
 ---
 
