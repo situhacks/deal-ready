@@ -1,0 +1,348 @@
+{
+  "h4": {
+    "horizon": 4,
+    "tickers": [
+      "APPF",
+      "MANH",
+      "PAYC",
+      "PCTY",
+      "TYL",
+      "VEEV"
+    ],
+    "methods": {
+      "drift": {
+        "status": "ok",
+        "seconds": 0.0,
+        "per_ticker": {
+          "APPF": {
+            "mase": 0.6079,
+            "mape": 7.457
+          },
+          "MANH": {
+            "mase": 0.3589,
+            "mape": 2.997
+          },
+          "PAYC": {
+            "mase": 0.8169,
+            "mape": 10.322
+          },
+          "PCTY": {
+            "mase": 0.6046,
+            "mape": 7.601
+          },
+          "TYL": {
+            "mase": 0.2771,
+            "mape": 2.393
+          },
+          "VEEV": {
+            "mase": 0.3745,
+            "mape": 3.855
+          }
+        },
+        "mean_mase": 0.5066,
+        "mean_mape": 5.771
+      },
+      "linear_fit": {
+        "status": "ok",
+        "seconds": 0.0,
+        "per_ticker": {
+          "APPF": {
+            "mase": 1.3848,
+            "mape": 17.237
+          },
+          "MANH": {
+            "mase": 1.2734,
+            "mape": 10.794
+          },
+          "PAYC": {
+            "mase": 0.2776,
+            "mape": 3.211
+          },
+          "PCTY": {
+            "mase": 0.5619,
+            "mape": 7.102
+          },
+          "TYL": {
+            "mase": 0.5446,
+            "mape": 4.742
+          },
+          "VEEV": {
+            "mase": 0.8946,
+            "mape": 9.514
+          }
+        },
+        "mean_mase": 0.8228,
+        "mean_mape": 8.767
+      },
+      "timesfm_3": {
+        "status": "ok",
+        "seconds": 5.54,
+        "per_ticker": {
+          "APPF": {
+            "mase": 0.5886,
+            "mape": 7.195
+          },
+          "MANH": {
+            "mase": 0.7423,
+            "mape": 6.214
+          },
+          "PAYC": {
+            "mase": 0.4224,
+            "mape": 5.167
+          },
+          "PCTY": {
+            "mase": 0.4578,
+            "mape": 5.803
+          },
+          "TYL": {
+            "mase": 0.3089,
+            "mape": 2.662
+          },
+          "VEEV": {
+            "mase": 0.489,
+            "mape": 5.069
+          }
+        },
+        "mean_mase": 0.5015,
+        "mean_mape": 5.352
+      },
+      "chronos_bolt_base": {
+        "status": "ok",
+        "seconds": 10.33,
+        "per_ticker": {
+          "APPF": {
+            "mase": 0.6457,
+            "mape": 7.952
+          },
+          "MANH": {
+            "mase": 0.5678,
+            "mape": 4.742
+          },
+          "PAYC": {
+            "mase": 0.4329,
+            "mape": 5.301
+          },
+          "PCTY": {
+            "mase": 0.976,
+            "mape": 12.489
+          },
+          "TYL": {
+            "mase": 0.4058,
+            "mape": 3.462
+          },
+          "VEEV": {
+            "mase": 0.279,
+            "mape": 2.904
+          }
+        },
+        "mean_mase": 0.5512,
+        "mean_mape": 6.142
+      },
+      "chronos_2": {
+        "status": "ok",
+        "seconds": 0.95,
+        "per_ticker": {
+          "APPF": {
+            "mase": 0.1841,
+            "mape": 2.254
+          },
+          "MANH": {
+            "mase": 0.3808,
+            "mape": 3.157
+          },
+          "PAYC": {
+            "mase": 0.4402,
+            "mape": 5.408
+          },
+          "PCTY": {
+            "mase": 0.5732,
+            "mape": 7.149
+          },
+          "TYL": {
+            "mase": 0.4316,
+            "mape": 3.707
+          },
+          "VEEV": {
+            "mase": 0.4034,
+            "mape": 4.13
+          }
+        },
+        "mean_mase": 0.4022,
+        "mean_mape": 4.301
+      }
+    }
+  },
+  "h8": {
+    "horizon": 8,
+    "tickers": [
+      "APPF",
+      "MANH",
+      "PAYC",
+      "PCTY",
+      "TYL",
+      "VEEV"
+    ],
+    "methods": {
+      "drift": {
+        "status": "ok",
+        "seconds": 0.0,
+        "per_ticker": {
+          "APPF": {
+            "mase": 1.3038,
+            "mape": 13.934
+          },
+          "MANH": {
+            "mase": 0.762,
+            "mape": 5.807
+          },
+          "PAYC": {
+            "mase": 0.5243,
+            "mape": 5.831
+          },
+          "PCTY": {
+            "mase": 0.4934,
+            "mape": 6.524
+          },
+          "TYL": {
+            "mase": 0.4971,
+            "mape": 4.468
+          },
+          "VEEV": {
+            "mase": 0.725,
+            "mape": 7.439
+          }
+        },
+        "mean_mase": 0.7176,
+        "mean_mape": 7.334
+      },
+      "linear_fit": {
+        "status": "ok",
+        "seconds": 0.0,
+        "per_ticker": {
+          "APPF": {
+            "mase": 2.2452,
+            "mape": 24.561
+          },
+          "MANH": {
+            "mase": 2.6387,
+            "mape": 20.24
+          },
+          "PAYC": {
+            "mase": 0.8607,
+            "mape": 9.79
+          },
+          "PCTY": {
+            "mase": 0.5175,
+            "mape": 6.846
+          },
+          "TYL": {
+            "mase": 0.6267,
+            "mape": 5.709
+          },
+          "VEEV": {
+            "mase": 0.835,
+            "mape": 8.688
+          }
+        },
+        "mean_mase": 1.2873,
+        "mean_mape": 12.639
+      },
+      "timesfm_3": {
+        "status": "ok",
+        "seconds": 3.0,
+        "per_ticker": {
+          "APPF": {
+            "mase": 1.1055,
+            "mape": 11.647
+          },
+          "MANH": {
+            "mase": 1.3524,
+            "mape": 10.235
+          },
+          "PAYC": {
+            "mase": 0.6877,
+            "mape": 7.757
+          },
+          "PCTY": {
+            "mase": 0.4956,
+            "mape": 6.597
+          },
+          "TYL": {
+            "mase": 0.7131,
+            "mape": 6.475
+          },
+          "VEEV": {
+            "mase": 0.7195,
+            "mape": 7.369
+          }
+        },
+        "mean_mase": 0.8456,
+        "mean_mape": 8.347
+      },
+      "chronos_bolt_base": {
+        "status": "ok",
+        "seconds": 0.88,
+        "per_ticker": {
+          "APPF": {
+            "mase": 1.5364,
+            "mape": 16.452
+          },
+          "MANH": {
+            "mase": 1.7008,
+            "mape": 12.846
+          },
+          "PAYC": {
+            "mase": 1.792,
+            "mape": 20.369
+          },
+          "PCTY": {
+            "mase": 1.5152,
+            "mape": 20.361
+          },
+          "TYL": {
+            "mase": 1.5993,
+            "mape": 14.311
+          },
+          "VEEV": {
+            "mase": 1.0125,
+            "mape": 10.381
+          }
+        },
+        "mean_mase": 1.526,
+        "mean_mape": 15.787
+      },
+      "chronos_2": {
+        "status": "ok",
+        "seconds": 0.93,
+        "per_ticker": {
+          "APPF": {
+            "mase": 1.2723,
+            "mape": 13.226
+          },
+          "MANH": {
+            "mase": 0.7284,
+            "mape": 5.491
+          },
+          "PAYC": {
+            "mase": 1.0185,
+            "mape": 11.513
+          },
+          "PCTY": {
+            "mase": 1.0415,
+            "mape": 13.979
+          },
+          "TYL": {
+            "mase": 1.8278,
+            "mape": 16.431
+          },
+          "VEEV": {
+            "mase": 0.6736,
+            "mape": 6.827
+          }
+        },
+        "mean_mase": 1.0937,
+        "mean_mape": 11.245
+      }
+    }
+  }
+}

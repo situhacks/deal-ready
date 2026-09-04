@@ -405,3 +405,130 @@ including the part where a straight line wins.
 A forecast in this memo should carry three things or it does not go in: the naive baseline beside it,
 the model's delta in dollars, and the sentence that on a steadily growing business the baseline is
 probably enough.
+
+
+---
+
+## Experiment 6 — How much history does forecasting actually need?
+
+**The experiment that decides whether any of this applies to a CIM.** A memorandum gives four annual
+figures. A public filer gives twenty-five quarters. Somewhere between them the exercise stops being
+arithmetic in a costume. Nobody had told us where, so: hand every method progressively less real
+history and watch the error curve.
+
+Mean MASE, one year ahead, six real companies. **Below 1.0 is skill. Above 1.0 is worse than
+repeating last year.**
+
+| History | last_value | seasonal_naive | linear_fit | drift | timesfm_3 |
+|---|---|---|---|---|---|
+| **4 quarters** | 2.519 | 3.416 | **0.934** | 1.039 | **1.472** |
+| 6 quarters | 0.850 | 1.139 | **0.377** | 0.472 | 0.526 |
+| 8 quarters | 0.708 | 0.976 | 0.335 | 0.352 | **0.305** |
+| 12 quarters | 0.747 | 1.048 | 0.475 | **0.337** | 0.389 |
+| 16 quarters | 0.721 | 0.997 | 0.495 | **0.346** | 0.351 |
+| 20 quarters | 0.834 | 1.149 | 0.493 | 0.413 | **0.358** |
+| 24 quarters | 0.832 | 1.194 | 0.649 | 0.435 | **0.349** |
+
+**Read the top row. At four data points every method is broken**, and the foundation model is the
+second worst thing you could do — 1.472, meaningfully worse than doing nothing clever. Only a
+straight line stays under 1.0, and barely.
+
+**That is the CIM case, measured on real data, and it settles the question: a four-point annual
+series cannot be forecast by anything.** Not by a 330M foundation model, not by arithmetic. This is
+not a limitation of the tools.
+
+**The cliff is between four and six quarters.** Error drops by more than half. Six real observations
+is apparently where a trend becomes visible at all.
+
+**Eight quarters is where the foundation model starts winning** (0.305 against 0.335 for a straight
+line), and after that nothing much improves. TimesFM sits flat around 0.35 from 8 quarters to 24.
+
+**And a genuine surprise: more history makes the straight line worse.** `linear_fit` goes from 0.335
+at 8 quarters to 0.649 at 24 — because a line fitted through six years of accelerating growth
+underfits the recent trend. `drift` avoids this by anchoring to the last value. **More data is not
+monotonically better if your method cannot forget.**
+
+---
+
+## Experiment 7 — Do covariates help? I had undersold the model
+
+The first real-data test ran TimesFM-3 **univariate**: one series, no side information. That was
+testing the weak configuration, because multivariate forecasting with covariates is the entire
+reason version 3 exists. So it was run properly, handing each company **the other five as a sector
+cohort** — the closest a numeric model gets to "what is happening in this industry."
+
+| Mode | 1 year (MASE) | 2 years (MASE) |
+|---|---|---|
+| univariate | **0.358** | 0.530 |
+| past_only (cohort history) | 0.412 | 0.587 |
+| past_future (cohort history + its actual future) | 0.374 | **0.489** |
+
+**Covariates made it worse at one year, in both modes.** The headline feature did not help.
+
+**Past-only covariates hurt at both horizons.** Handing the model twenty-four quarters of a
+correlated series added noise, not signal — which makes sense: twenty-four points is nowhere near
+enough for a model to learn a cross-series relationship it can trust.
+
+**Knowing the cohort's future helped only at two years, by 8%.** And that mode is optimistic: it
+assumes you know where the sector goes, which you would only have from a published index or a
+contracted schedule.
+
+**The design lesson is sharper than the numbers.** The value of a covariate is almost entirely in
+**knowing something about the future** — contracted renewals, signed backlog, an announced price
+change. Correlated history is close to worthless. So if forecasting ever enters a deal context, the
+covariate to fight for is the contracted revenue schedule, not a market index.
+
+---
+
+## Experiment 8 — Is TimesFM even the right model?
+
+It was chosen because it was the model named, not because it won anything. Benchmark reporting puts
+Chronos-2 and Moirai 2.0 ahead of it. Same six companies, same split, same metric.
+
+### One year
+
+| Method | Mean MASE | Mean MAPE | Seconds |
+|---|---|---|---|
+| **chronos_2** | **0.402** | **4.30%** | **0.95** |
+| timesfm_3 | 0.502 | 5.35% | 5.54 |
+| drift | 0.507 | 5.77% | 0.00 |
+| chronos_bolt_base | 0.551 | 6.14% | 10.33 |
+| linear_fit | 0.823 | 8.77% | 0.00 |
+
+**Chronos-2 beats TimesFM by 20% and runs six times faster.** The leaderboard was right and the
+model we spent the most time on is not the best one.
+
+### Two years
+
+| Method | Mean MASE | Mean MAPE |
+|---|---|---|
+| **drift** | **0.718** | **7.33%** |
+| timesfm_3 | 0.846 | 8.35% |
+| chronos_2 | 1.094 | 11.25% |
+| linear_fit | 1.287 | 12.64% |
+| chronos_bolt_base | 1.526 | 15.79% |
+
+**At two years arithmetic still wins, and Chronos-2 collapses** from best to third — worse than
+TimesFM. Chronos-Bolt is poor at both horizons.
+
+**So model choice matters at short horizon and is irrelevant at long horizon**, where nothing has
+yet beaten "last value plus average change."
+
+---
+
+## What the forecasting thread actually established
+
+Six experiments in, the picture is consistent and it is not the one we started with.
+
+1. **Four annual data points cannot be forecast.** Measured, on real companies. This closes the
+   question of whether forecasting belongs in a CIM screen: it does not.
+2. **Eight quarters is the threshold** where a foundation model starts beating arithmetic.
+3. **At one year, pick Chronos-2**, not TimesFM. Twenty percent better and six times faster.
+4. **At two years, pick arithmetic.** Nothing beats drift.
+5. **Covariates are worth having only if they carry future knowledge.** Correlated history hurts.
+6. **A foundation model is insurance against the trend breaking**, not a better ruler. On a business
+   doing what it has always done, a straight line is the honest answer.
+
+**And the synthetic result that started this — 46% better than baseline — was a measurement of a
+choice I made**, not a property of the model. Every number above comes from companies that filed
+with the SEC and cannot be edited to flatter anybody.

@@ -1,0 +1,107 @@
+{
+  "horizon": 4,
+  "tickers": [
+    "APPF",
+    "MANH",
+    "PAYC",
+    "PCTY",
+    "TYL",
+    "VEEV"
+  ],
+  "aligned_quarters": 24,
+  "modes": {
+    "univariate": {
+      "status": "ok",
+      "per_ticker": {
+        "APPF": {
+          "mase": 0.4672,
+          "mape": 6.308
+        },
+        "MANH": {
+          "mase": 0.0943,
+          "mape": 1.031
+        },
+        "PAYC": {
+          "mase": 0.3899,
+          "mape": 5.569
+        },
+        "PCTY": {
+          "mase": 0.4578,
+          "mape": 5.803
+        },
+        "TYL": {
+          "mase": 0.2119,
+          "mape": 2.314
+        },
+        "VEEV": {
+          "mase": 0.5277,
+          "mape": 5.942
+        }
+      },
+      "mean_mase": 0.3581,
+      "mean_mape": 4.494
+    },
+    "past_only": {
+      "status": "ok",
+      "per_ticker": {
+        "APPF": {
+          "mase": 0.4844,
+          "mape": 6.556
+        },
+        "MANH": {
+          "mase": 0.1532,
+          "mape": 1.662
+        },
+        "PAYC": {
+          "mase": 0.3955,
+          "mape": 5.701
+        },
+        "PCTY": {
+          "mase": 0.4492,
+          "mape": 5.733
+        },
+        "TYL": {
+          "mase": 0.3584,
+          "mape": 3.891
+        },
+        "VEEV": {
+          "mase": 0.6293,
+          "mape": 7.129
+        }
+      },
+      "mean_mase": 0.4117,
+      "mean_mape": 5.112
+    },
+    "past_future": {
+      "status": "ok",
+      "per_ticker": {
+        "APPF": {
+          "mase": 0.5648,
+          "mape": 7.672
+        },
+        "MANH": {
+          "mase": 0.0728,
+          "mape": 0.811
+        },
+        "PAYC": {
+          "mase": 0.4248,
+          "mape": 6.129
+        },
+        "PCTY": {
+          "mase": 0.403,
+          "mape": 5.202
+        },
+        "TYL": {
+          "mase": 0.1579,
+          "mape": 1.65
+        },
+        "VEEV": {
+          "mase": 0.6198,
+          "mape": 7.022
+        }
+      },
+      "mean_mase": 0.3739,
+      "mean_mape": 4.748
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "horizon": 4,
+  "season": 4,
+  "companies": [
+    "APPF",
+    "MANH",
+    "PAYC",
+    "PCTY",
+    "TYL",
+    "VEEV"
+  ],
+  "mean_mase_by_history": {
+    "4": {
+      "last_value": 2.5187,
+      "seasonal_naive": 3.4157,
+      "linear_fit": 0.9345,
+      "drift": 1.0388,
+      "timesfm_3": 1.472
+    },
+    "6": {
+      "last_value": 0.8499,
+      "seasonal_naive": 1.1394,
+      "linear_fit": 0.3772,
+      "drift": 0.4722,
+      "timesfm_3": 0.5257
+    },
+    "8": {
+      "last_value": 0.7076,
+      "seasonal_naive": 0.976,
+      "linear_fit": 0.3347,
+      "drift": 0.3522,
+      "timesfm_3": 0.3051
+    },
+    "12": {
+      "last_value": 0.7473,
+      "seasonal_naive": 1.0485,
+      "linear_fit": 0.4752,
+      "drift": 0.337,
+      "timesfm_3": 0.389
+    },
+    "16": {
+      "last_value": 0.7208,
+      "seasonal_naive": 0.9973,
+      "linear_fit": 0.4954,
+      "drift": 0.3459,
+      "timesfm_3": 0.3513
+    },
+    "20": {
+      "last_value": 0.8344,
+      "seasonal_naive": 1.149,
+      "linear_fit": 0.4927,
+      "drift": 0.413,
+      "timesfm_3": 0.3581
+    },
+    "24": {
+      "last_value": 0.8317,
+      "seasonal_naive": 1.1945,
+      "linear_fit": 0.6487,
+      "drift": 0.4351,
+      "timesfm_3": 0.3488
+    }
+  }
+}
