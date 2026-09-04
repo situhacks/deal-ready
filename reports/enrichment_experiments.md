@@ -227,7 +227,7 @@ why the adoption verdict below is conditional rather than enthusiastic.
 |---|---|---|
 | **1 · Customer health** | **Adopt. Shipped.** | A memo section, `deal_ready/signals/customers.py` |
 | **2 · Outside-signal layer** | **Adopt. Shipped.** | `outside-signals` skill; the Tier A/B wall |
-| **3 · TimesFM forecasting** | **Adopt as a separate exhibit. Not in the screen.** | `eval/forecast.py`, `reports/forecast_bakeoff.json` |
+| **3 · TimesFM forecasting** | **Adopt as a separate exhibit. Not in the screen.** See experiment 5 — the real-data test changes the story | `eval/forecast.py`, `reports/forecast_bakeoff.json` |
 | **4 · Persona red-team** | **Not adopted as-is.** Kept as an eval | `eval/redteam_eval.py`, no memo section |
 
 ## 1 and 2 — adopted, and the reason is one paragraph in a memo
@@ -298,3 +298,110 @@ import the signals package at all. Wire an outside signal into a criterion and t
 That is the only reason the enrichment layer is safe to add. The screen's numbers still re-derive
 offline from committed artifacts, exactly as before — and the world around the company now sits
 beside them, clearly labelled as something a human has to weigh.
+
+
+---
+
+## Experiment 5 — TimesFM against real companies, and what it costs the synthetic result
+
+Experiment 3 was a rig test: the generator wrote the answer key, so a good score proved
+the plumbing worked and nothing about the world. This is the real one.
+
+**Six real vertical-software companies. 179 quarters of revenue, pulled from their own SEC
+filings.** AppFolio, Manhattan Associates, Paycom, Paylocity, Tyler Technologies, Veeva — the asset
+class a permanent-hold software acquirer actually looks at. Train on everything up to a cut, forecast
+forward, compare to what the companies went on to report.
+
+Source is EDGAR's XBRL API: free, no key, and **every quarter carries the accession number of the
+filing that reported it**, which is the property that makes any of this usable for accounting work.
+
+### One year forward
+
+| Method | Mean MASE | Mean MAPE |
+|---|---|---|
+| timesfm_3 | **0.502** | 5.35% |
+| drift | 0.507 | 5.77% |
+| timesfm_2.5 | 0.589 | 6.21% |
+| linear_fit | 0.823 | 8.77% |
+| seasonal_naive | 1.286 | 14.22% |
+
+**TimesFM-3 and drift are tied.** 0.502 against 0.507 is not skill, it is a rounding difference.
+And per company there is no consistent winner at all — of six companies, four different methods win
+one or more. **Nothing reliably beats anything.**
+
+### Two years forward
+
+| Method | Mean MASE | Mean MAPE |
+|---|---|---|
+| **drift** | **0.718** | **7.33%** |
+| timesfm_3 | 0.846 | 8.35% |
+| linear_fit | 1.287 | 12.64% |
+| timesfm_2.5 | 1.432 | 15.35% |
+| seasonal_naive | 2.239 | 23.57% |
+
+**Drift wins, and it wins four companies out of six.** "Take the last value and add the average
+change" beats a 330M foundation model over two years on real software revenue. TimesFM-2.5 at 1.432
+is worse than a straight line.
+
+### What this costs the synthetic result, stated plainly
+
+Experiment 3 reported TimesFM-3 at **46% better than the best baseline.** On real data it is **tied
+at one year and loses at two.**
+
+**The synthetic corpus flattered the model, and I built the thing that flattered it.** I authored a
+decline into the holdout for two archetypes. Drift and linear extrapolate the recent trend, so a
+decline they cannot see is exactly where they fail catastrophically — and I had put one there. The
+foundation models handled it, scored well, and the number looked like evidence.
+
+It was not evidence. It was a measurement of a choice I had made.
+
+### So when does it actually help?
+
+The real data answers this cleanly, and the answer is narrow:
+
+- **Steady compounding growth → a straight line is as good or better.** Which describes most healthy
+  software companies most of the time. Drift *is* the correct model for that, and a foundation model
+  adds opacity without accuracy.
+- **Regime change → the foundation model earns its place.** Deceleration, inflection, decline. Drift
+  assumes the trend continues; when it does not, drift is worse than doing nothing. That was T05 in
+  the synthetic run at 1.687 MASE, and it is a real property of extrapolation, not an artifact.
+
+**The honest one-liner: TimesFM is insurance against the trend breaking, not a better ruler.** On a
+business that keeps doing what it has been doing, you do not need it.
+
+### What auditable actually looks like
+
+Every run emits, per company and per quarter: what the naive method said, what the model said, **the
+dollar difference between them**, and what actually happened. Tyler Technologies, two years out:
+
+| Quarter | Naive | Model | Model − naive | Actual | Model error |
+|---|---|---|---|---|---|
+| 2024-03-31 | $473.2M | $501.7M | +$28.5M | $512.4M | −$10.7M |
+| 2024-06-30 | $471.9M | $508.4M | +$36.5M | $541.0M | −$32.6M |
+| 2025-06-30 | $473.2M | $541.9M | +$68.7M | $596.1M | −$54.2M |
+| 2026-06-30 | $494.7M | $583.0M | +$88.3M | $645.1M | −$62.1M |
+
+**Read the third column: that is the model's opinion, in dollars.** The naive method says revenue
+repeats last year. The model adds $28M rising to $88M — it correctly saw that Tyler was growing.
+Reality grew faster still, so the model was **directionally right and consistently short.**
+
+That column is as close to an explanation as a foundation model gives. It does not say *why* the
+model added $88M. It does say **exactly how much of the forecast is arithmetic and how much is the
+model's judgement**, which is the part a reviewer has to decide whether to accept — and it is
+checkable without re-running anything.
+
+And the inputs are traceable: `2024-03-31 · 10-Q · accession 0000860731-24-000025 · filed
+2024-04-24`. A number in a memo can be walked back to a document the SEC received.
+
+### Revised verdict on forecasting
+
+**Keep it. Keep it as an exhibit. And ship it with the real-data result attached, not the synthetic
+one.**
+
+The synthetic run stays because it demonstrates the pipeline end to end on a document the tool can
+actually read. But it is labelled as a demonstration, and **the real-company test is the evidence** —
+including the part where a straight line wins.
+
+A forecast in this memo should carry three things or it does not go in: the naive baseline beside it,
+the model's delta in dollars, and the sentence that on a steadily growing business the baseline is
+probably enough.
