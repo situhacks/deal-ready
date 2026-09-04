@@ -1,14 +1,88 @@
-# Enrichment experiments — running record
+# Enrichment experiments — the record
 
-**Question behind all four:** a screen reads numbers off a document. Sometimes the number is not
-the whole story, and the state of the world around the company matters. Can outside signals and
-prediction enrich the memo?
+**The question behind all of them.** A screen reads numbers off a document. Sometimes the number is
+right and incomplete, because the state of the market and the customer base is not in the document
+at all. Can outside signals and prediction enrich the memo without damaging the part that works?
 
-**Constraint held throughout: none of this scores.** Everything here lands in the memo as flagged
-context a human reads and judges. Nothing moves a criterion, a fit score, or a tier. The moment a
-signal moves a number, the tool stops being the thing whose numbers re-derive offline.
+**The constraint held throughout: none of this scores.** Everything lands as flagged context a human
+weighs. Nothing moves a criterion, a fit score or a tier — and that is enforced by `run_checks.py`,
+which fails the build if the scoring path can so much as import a signal.
 
-Started 2026-09-03. Kept as it went, including what failed.
+**Everything reaching a reviewer carries a source, a date, or the records the number recomputes
+from.** The people who read this reconcile to the penny for a living.
+
+---
+
+## What was adopted
+
+| | Verdict | Where it lives |
+|---|---|---|
+| **Customer health** | **Adopted** | Memo section · `signals/customers.py` |
+| **Outside-signal layer** | **Adopted** | `outside-signals` skill — the Tier A/B wall |
+| **Outward research, five-plus lenses** | **Adopted** | `target-research` skill · `target-researcher` agent |
+| **Base rate from past deals** | **Adopted** | Memo section · `signals/baserate.py` |
+| **Scenario layer** | **Adopted** | Memo section · `signals/scenario.py` |
+| **Forecasting** | **Exhibit only, never in the screen** | `eval/forecast*.py` |
+| **Persona red-team** | **Rejected** — 20% novel, 46% noise | `eval/redteam_eval.py`, kept as an eval |
+
+---
+
+## Index, by theme rather than by order
+
+**Enrichment — what the document cannot contain**
+- [1] Customer health · [2] The outside-signal layer and the Tier A/B wall
+- [4] Persona red-team, measured and rejected
+- [10] Outward research, rebuilt facing out · [13] Running it for real, and what it broke
+
+**Forecasting — six experiments that closed a question**
+- [3] Synthetic bake-off · [5] Real companies from SEC filings
+- [6] **How much history it actually needs** — the one that settled it
+- [7] Covariates · [8] Is TimesFM even the right model
+
+**The prediction system**
+- [9] Base rate · [11] Scenario layer · [12] Sensitivity — does it reason or does it write
+
+---
+
+## The findings worth carrying out of here
+
+**Four annual data points cannot be forecast by anything.** Measured on real companies, not asserted.
+That closes the question of whether forecasting belongs in a CIM screen. Eight quarters is the
+threshold where a foundation model beats arithmetic; at two years nothing beats arithmetic at all.
+
+**A retention number is lagging by construction.** It cannot contain a customer who has not left
+yet, so a healthy retention line and a collapsing customer base are perfectly consistent — and only
+one of them is in the document.
+
+**The answer to "we have no future history for this target" is that you have every other company's
+future.** That is the base rate, and it is the one prediction asset an acquirer owns that nobody
+outside can compute.
+
+**A forecast invites belief; an assumption invites challenge.** Which is why the scenario layer
+emits things that can be disproved rather than a number.
+
+---
+
+## Four bugs, all caught by measuring rather than by reading
+
+Recorded because they are the argument for the discipline, not an embarrassment to it.
+
+1. **The roster leaked chart values into the text layer.** The generator's own leak guard failed the
+   build and refused to write the corpus. [1]
+2. **The red-team's novel rate was double the truth** — `"ai"` matched inside `"retain"`. 41% became
+   20%. I then blamed run-to-run instability, which was also wrong: three runs are identical. [4]
+3. **The verification suite was corrupting its own evidence** — it ran the deterministic path
+   straight into `reports/`, degrading the committed artifacts every time anyone verified them.
+4. **The base rate matched a $900M company to a cohort of $20–28M deals** and reported it cleanly.
+   The top size band was open-ended. **Five synthetic targets all inside the mandate band could
+   never have surfaced it** — it took pointing the layer at something real. [13]
+
+**The pattern in all four: the defect was invisible to reading and obvious to a measurement.**
+
+---
+
+*Below: the experiments in the order they were run, including the ones that failed and the numbers
+that were wrong before they were right.*
 
 ---
 
@@ -797,3 +871,59 @@ company has no sale process to explain, contracts were not run because no concen
 justified it, and **no named customer was researched at all, because a public filer does not
 disclose an anchor roster.** On a real CIM that lens would be the most valuable one and here it was
 unavailable.
+
+---
+
+## Experiment 14 — The customer lens, against customers you can actually check
+
+Experiment 13 closed the "never run" criticism but left the sharpest lens still untested. **Customer
+health is the most valuable thing in the research layer** — retention cannot contain a customer who
+has not left yet — and it had never touched a real named customer. The synthetic corpus invents
+them. A public filer discloses no anchor roster.
+
+**Tyler Technologies closes it**, because its customers are counties, cities and courts. The roster
+is public and their financial condition is published by rating agencies and municipal researchers.
+It is the one vertical where a buyer can genuinely verify whether the customer base is in trouble.
+
+### What the lens found
+
+- **23 of the 25 largest US counties and 21 of the 25 largest US cities are customers**; 85% of the
+  base is local government. *(vendor-published, marked as such)*
+- **At least 20 of the 25 most populous cities reported budget gaps for FY2026.** *(Pew — primary)*
+- **Chicago, Los Angeles, San Francisco and Washington all downgraded between Dec 2024 and Apr
+  2025**, and each of the three largest cities took a negative rating action in H1 2026, with New
+  York City placed on negative outlook by Moody's and Fitch. *(primary)*
+- **Finance-officer optimism about meeting FY2026 needs fell to 45% from 64% a year earlier.**
+  *(practitioner)*
+
+### The arithmetic, which is the point
+
+Both sides of the overlap are published, so the exposure has a **derivable floor** rather than an
+estimate:
+
+```
+21 customers among the 25 largest cities
+20 of those same 25 have FY26 budget gaps
+minimum overlap = 21 + 20 − 25 = 16
+```
+
+**At least 16 of the 21 largest-city customers — 76.2% — are in a budget-gap year.** A floor, not a
+guess, and a reviewer can redo it on the back of an envelope. That is the standard this output has
+to meet, and an estimate would not have met it.
+
+### Coverage, stated as always
+
+- **Only the 25 largest cities are covered.** Tyler reports 15,000 locations; this says nothing
+  about the other ~14,975.
+- **No county customers**, despite counties being the larger share — the stress research found was
+  city-level.
+- **A budget gap is not churn.** It is pressure on a discretionary line, not evidence any contract
+  is at risk.
+- The customer-count side is **vendor-published and unaudited**.
+
+### Why this one mattered
+
+Every previous customer-health run was either against invented companies or against a target with no
+disclosed roster. This is the first time the lens has produced a claim about **real, named
+organisations, from independent sources, with an exposure number a reviewer can verify by hand** —
+and it did it without once asserting that any customer will churn.

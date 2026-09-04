@@ -1,0 +1,66 @@
+{
+  "target": "Tyler Technologies",
+  "researched": "2026-09-04",
+  "why_this_target": "customers are public entities, so the roster and their financial condition are both matters of public record",
+  "findings": [
+    {
+      "lens": "customers",
+      "claim": "customer_base_composition",
+      "finding": "23 of the 25 largest US counties and 21 of the 25 largest US cities are customers; 85% of the customer base is local government.",
+      "url": "https://www.tylertech.com/about-us/media-room/fast-facts",
+      "quote": "23 of the 25 largest counties",
+      "date": "2026",
+      "tier": "vendor",
+      "materiality": "high",
+      "why_it_matters": "Establishes the overlap denominator. Vendor-sourced, because the company publishes its own client counts - marked as such."
+    },
+    {
+      "lens": "customers",
+      "claim": "customer_fiscal_stress",
+      "finding": "At least 20 of the 25 most populous US cities reported budget gaps for fiscal year 2026.",
+      "url": "https://www.pew.org/en/research-and-analysis/articles/2025/08/05/big-cities-face-deficits-should-states-worry",
+      "quote": "at least 20 of the nation's 25 most populous cities have reported budget gaps",
+      "date": "2025-08",
+      "tier": "primary",
+      "materiality": "high",
+      "why_it_matters": "The other side of the overlap, from an independent research institution rather than the vendor."
+    },
+    {
+      "lens": "customers",
+      "claim": "rating_actions",
+      "finding": "Chicago, Los Angeles, San Francisco and Washington were all downgraded between December 2024 and April 2025; each of the three largest cities took a negative rating action in H1 2026, with New York City placed on negative outlook by Moody's and Fitch.",
+      "url": "https://comptroller.nyc.gov/reports/the-risks-to-the-citys-credit-ratings/",
+      "quote": "placing New York City on negative outlook",
+      "date": "2026",
+      "tier": "primary",
+      "materiality": "high",
+      "why_it_matters": "Named, dated stress at specific customers rather than a sector generalisation."
+    },
+    {
+      "lens": "end_market",
+      "claim": "sector_outlook",
+      "finding": "Only 45% of local government finance officers felt optimistic about meeting fiscal needs in FY2026, down from 64% a year earlier; the local government sector outlook is 'cautious' as expense pressure outweighs slowing revenue growth.",
+      "url": "https://www.hilltopsecurities.com/municipal_commentary/the-municipal-market-in-2026-hilltopsecurities-sector-credit-outlooks/",
+      "quote": "expense pressure is expected to outweigh positive but slowing revenue growth",
+      "date": "2026",
+      "tier": "practitioner",
+      "materiality": "medium",
+      "why_it_matters": "A 19-point fall in finance-officer optimism in one year is the leading indicator for discretionary software budgets."
+    }
+  ],
+  "derived_exposure": {
+    "method": "pigeonhole floor via inclusion-exclusion",
+    "universe": 25,
+    "customers": 21,
+    "stressed": 20,
+    "minimum_overlap": 16,
+    "minimum_share_of_large_city_customers_pct": 76.2,
+    "checkable_by_hand": "21 + 20 - 25 = 16"
+  },
+  "coverage": {
+    "covered": "the 25 largest US cities only",
+    "not_covered": "roughly 14,975 other locations; all county customers",
+    "caveat": "a budget gap is a pressure signal on a discretionary line, not evidence that any contract is at risk",
+    "vendor_sourced": "the customer-count side is published by the company"
+  }
+}
