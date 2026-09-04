@@ -1,0 +1,433 @@
+{
+  "totals": {
+    "redundant": 20,
+    "novel-real": 12,
+    "noise": 27
+  },
+  "per_target": [
+    {
+      "target_id": "T01",
+      "code_name": "Meridian",
+      "archetype": "clean_gem",
+      "status": "ok",
+      "n": 12,
+      "counts": {
+        "redundant": 6,
+        "novel-real": 0,
+        "noise": 6
+      },
+      "challenges": [
+        {
+          "bucket": "noise",
+          "tag": "founder_dependency",
+          "persona": "operator",
+          "question": "Who personally owns the payer credential migration logic that prevents churn?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "founder_dependency",
+          "persona": "operator",
+          "question": "What specific operational friction exists for the top 5 customers if their founder leaves tomorrow?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "retention",
+          "persona": "operator",
+          "question": "Why is MRR growth only 14% when NRR exceeds 108% and churn appears negligible?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "retention",
+          "persona": "cfo",
+          "question": "What specific revenue recognition adjustments are required to reconcile the 108% NRR against the 94% GRR?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "concentration",
+          "persona": "cfo",
+          "question": "How does the 19% top-five customer share impact the stability of the $7M MRR if one client churns?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "ebitda",
+          "persona": "cfo",
+          "question": "Which line items in the $1.85M EBITDA are excluded from GAAP expenses to mask true operating costs?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "customer_health",
+          "persona": "customer",
+          "question": "Why does Meridian's top customer represent exactly 19% of ARR if the document explicitly states no distress signals were found across that same 19%?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "How can a business with only 61 employees sustain 14% YoY growth when its core value proposition relies on switching costs that take years to build?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "recurring",
+          "persona": "customer",
+          "question": "What specific operational friction is driving the 22 percentage point gap between gross margin and recurring revenue percentage?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "Can AI agents reconstruct Meridian's proprietary clinical data models without manual intervention?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "arr_band",
+          "persona": "technologist",
+          "question": "What happens to the 19% of ARR if Meridian's internal implementation team goes dormant?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "technologist",
+          "question": "Does AI-driven credentialing reduce the time-to-migrate for a practice leaving Meridian?"
+        }
+      ]
+    },
+    {
+      "target_id": "T02",
+      "code_name": "Halyard",
+      "archetype": "concentration_risk",
+      "status": "ok",
+      "n": 12,
+      "counts": {
+        "redundant": 4,
+        "novel-real": 3,
+        "noise": 5
+      },
+      "challenges": [
+        {
+          "bucket": "redundant",
+          "tag": "arr_band",
+          "persona": "operator",
+          "question": "If Tidewater Logistics Group defaults in Q4, will the remaining 66% of ARR be sufficient to cover Halyard's fixed costs and legal fees?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "ai_displacement",
+          "persona": "operator",
+          "question": "How does Ferrand Freight Systems' acquisition by a rival platform affect Halyard's ability to retain its top 15% customer base?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "founder_dependency",
+          "persona": "operator",
+          "question": "Who specifically owns the proprietary berth allocation algorithms, and can they be extracted without the founder's involvement?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "retention",
+          "persona": "cfo",
+          "question": "If Tidewater Logistics Group defaults, does Halyard's revenue collapse by nearly one-third despite the 96% GRR metric?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "legacy_tech",
+          "persona": "cfo",
+          "question": "With Ferrand Freight Systems acquired by a rival platform, how much of the reported 103% NRR is actually new growth versus retained legacy contracts?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "recurring",
+          "persona": "cfo",
+          "question": "Why does an 88% recurring revenue figure mask the reality that two major clients now represent nearly half of total ARR?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "If Tidewater Logistics Group defaults, does Halyard's embedded nature prevent them from migrating to a competitor?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "arr_band",
+          "persona": "customer",
+          "question": "How much of Ferrand Freight Systems' ARR is at risk if their new platform integrates with the same port operators?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "customer_health",
+          "persona": "customer",
+          "question": "What specific operational dependencies do the 49% of distressed customers have that would make switching systems prohibitively expensive?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "Can Halyard replace Tidewater's legacy systems if the customer enters bankruptcy proceedings?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "ai_displacement",
+          "persona": "technologist",
+          "question": "How does Ferrand Freight Systems' acquisition by a rival platform impact Halyard's ability to retain its remaining market share?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "What is the total cost of replacing Halyard's legacy stack with AI-driven tools if Tidewater decides to exit the current vendor?"
+        }
+      ]
+    },
+    {
+      "target_id": "T03",
+      "code_name": "Ridgeline",
+      "archetype": "fake_saas_low_recurring",
+      "status": "ok",
+      "n": 12,
+      "counts": {
+        "redundant": 6,
+        "novel-real": 2,
+        "noise": 4
+      },
+      "challenges": [
+        {
+          "bucket": "redundant",
+          "tag": "concentration",
+          "persona": "operator",
+          "question": "If the top 5 customers (31% ARR) all renew simultaneously, does the company's cash flow survive a single quarter of zero revenue?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "ai_displacement",
+          "persona": "operator",
+          "question": "Given the 'substantial configuration phase,' can the new owner realistically reconfigure these systems for a displaced customer within 90 days?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "operator",
+          "question": "With public-sector cycles measured in years, what is the probability of displacing an incumbent mid-term before the next renewal window opens?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "customer_health",
+          "persona": "cfo",
+          "question": "Why does the top customer alone account for 8% of ARR when the top five represent 31%, and how does this specific consolidation threat impact your churn model?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "recurring",
+          "persona": "cfo",
+          "question": "If only 58% is truly recurring while 42% is configuration-heavy, why are you projecting an 89% GRR that assumes all revenue renews identically?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "ebitda",
+          "persona": "cfo",
+          "question": "How does the substantial configuration phase embedded in five-year contracts distort your EBITDA margin if those costs are deferred or capitalized rather than expensed?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "concentration",
+          "persona": "customer",
+          "question": "If Lenmark Academy Trust exits, does the remaining roster of 31% customers have enough churned revenue to replace their 8% ARR loss?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "With five-year contracts and long procurement cycles, what specific mechanism prevents a customer from simply letting their contract expire without replacement?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "Does the substantial configuration phase create genuine switching costs, or is it merely a delay tactic that customers can bypass with a competitor's pre-built workflows?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "concentration",
+          "persona": "technologist",
+          "question": "If the top 5 customers (31% of ARR) lose their contracts, does Ridgeline's revenue collapse?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "How much configuration debt prevents a competitor from displacing Lenmark Academy Trust mid-cycle?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "arr_band",
+          "persona": "technologist",
+          "question": "Can cheap generative AI tools replicate the specific workflow orchestration that justifies Ridgeline's $10M ARR today?"
+        }
+      ]
+    },
+    {
+      "target_id": "T04",
+      "code_name": "Kestrel",
+      "archetype": "unprofitable_high_growth",
+      "status": "ok",
+      "n": 12,
+      "counts": {
+        "redundant": 2,
+        "novel-real": 3,
+        "noise": 7
+      },
+      "challenges": [
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "operator",
+          "question": "If Aldercrest Medical exits, does the remaining roster have enough mass to absorb a similar 4% loss without triggering a cascade?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "founder_dependency",
+          "persona": "operator",
+          "question": "Who personally owns the onboarding playbook and can it be executed if the current team departs tomorrow?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "operator",
+          "question": "Can Kestrel's predictive model survive a complete reset of telematics data feeds without retraining from scratch?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "cfo",
+          "question": "How does Kestrel recognize revenue for implementation services if the contract states support is bundled in the subscription?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "customer_health",
+          "persona": "cfo",
+          "question": "Why does Aldercrest Medical's distress signal matter given it represents only 4% of ARR despite being the largest customer?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "definition_quality",
+          "persona": "cfo",
+          "question": "What specific events trigger a 'churn' event in your NRR calculation versus a simple renewal date pass-through?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "Why does Aldercrest Medical's two closed sites and headcut reduction threaten the entire model's predictive accuracy?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "ebitda",
+          "persona": "customer",
+          "question": "How can a company with 71% gross margins sustain -24M EBITDA while growing revenue 22% year-over-year?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "customer_health",
+          "persona": "customer",
+          "question": "What drives the remaining 74% of ARR that was not researched and shows no distress signals?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "technologist",
+          "question": "Can Kestrel's predictive model survive if Aldercrest Medical's fleet data disappears entirely?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "ebitda",
+          "persona": "technologist",
+          "question": "What specific operational inefficiencies are driving a $2.4M EBITDA loss against $9.6M ARR?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "Is the company's inability to modernize its stack a symptom of technical debt or a strategic choice to protect proprietary data?"
+        }
+      ]
+    },
+    {
+      "target_id": "T05",
+      "code_name": "Ashgrove",
+      "archetype": "legacy_tech_key_person",
+      "status": "ok",
+      "n": 11,
+      "counts": {
+        "redundant": 2,
+        "novel-real": 4,
+        "noise": 5
+      },
+      "challenges": [
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "operator",
+          "question": "What specific contractual clauses protect Ashgrove if Kettleridge's merger forces a system switch?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "operator",
+          "question": "How does the 2% growth rate reconcile with two major customers currently idled or merging out?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "customer_health",
+          "persona": "cfo",
+          "question": "Why does the top 5 customers account for 28% of ARR when two of them represent 18% of revenue and are actively distressed?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "recurring",
+          "persona": "cfo",
+          "question": "How can you justify an 84% recurring percentage if 18% of that recurring base is tied to customers currently idling or merging with competitors?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "legacy_tech",
+          "persona": "cfo",
+          "question": "What explains the mere 2% year-over-year growth given a market where buyers are actively retiring legacy systems?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "What specific contractual protections exist if Kettleridge's merger forces them to switch systems?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "Why is growth only 2% when the market explicitly cites retiring spreadsheet operators as an expansion driver?"
+        },
+        {
+          "bucket": "noise",
+          "tag": "unmapped",
+          "persona": "customer",
+          "question": "How does Ashgrove's revenue model withstand simultaneous idling of two major customers during a price trough?"
+        },
+        {
+          "bucket": "redundant",
+          "tag": "arr_band",
+          "persona": "technologist",
+          "question": "If Kettleridge exits and Braemar delays renewal, does the remaining roster have enough mass to absorb a 20% ARR shock without triggering a liquidity crisis?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "Can Ashgrove's two-decade-old provincial grading logic be re-engineered fast enough if Saskatchewan regulators change their settlement rules next harvest?"
+        },
+        {
+          "bucket": "novel-real",
+          "tag": "legacy_tech",
+          "persona": "technologist",
+          "question": "What specific technical legacy components prevent Ashgrove from adopting cloud-native architecture without a multi-year rebuild cycle?"
+        }
+      ]
+    }
+  ]
+}

@@ -35,22 +35,25 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
 
-<!--co-T02-judgement-001-->
-- The business relies on two co-founders who personally manage the largest commercial relationships, creating significant operational risk if either departs. (p9)
+## Outside the document — for consideration, not scoring
 
-<!--co-T02-judgement-002-->
-- Revenue concentration is severe with the top five customers accounting for 71% of ARR and a single customer representing 34%, leaving little room for organic growth to offset potential churn. (p6)
+*None of this moved a metric, a rule, a fit score or a tier. It is context a reviewer weighs, and it carries its own uncertainty.*
 
-<!--co-T02-judgement-003-->
-- The core platform is a .NET monolith built in 2020 that runs on a single region with warm standby, lacking the architectural depth or geographic redundancy required for enterprise-grade port operations software. (p10)
+**Customer health.** 2 of 5 researched customers show distress signals, together 49.43% of ARR. Largest is Tidewater Logistics Group at 34.43%. Roster covers 71.43% of ARR; the remainder was not researched.
 
-<!--co-T02-judgement-004-->
-- Management defines gross margin as excluding amortisation and EBITDA via add-backs for transaction costs, which obscures the true profitability impact of heavy implementation and integration expenses. (p8)
+| Customer | Share of ARR | Status |
+|---|---|---|
+| Tidewater Logistics Group | 34.43% | **distress** — filed for creditor protection Q3 FY25; two depots closed |
+| Ferrand Freight Systems | 15.0% | **distress** — acquired by a competitor running a rival platform |
+| Ostrand Haulage | 9.0% | no signal found — stable |
+| Calder Transport Co-op | 7.0% | no signal found — stable |
+| Merrow Distribution | 6.0% | no signal found — stable |
 
-<!--co-T02-judgement-005-->
-- Retention metrics are presented only as net retention including expansion, masking whether the core product is actually driving stickiness or if growth is purely driven by upselling existing clients. (p7)
+*Roster covers 71.43% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
+
+> **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
 
 ## Ask the seller
 

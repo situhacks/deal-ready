@@ -37,22 +37,25 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
 
-<!--co-T03-judgement-001-->
-- The document claims the platform is hosted and configurable but provides no evidence of the underlying technology stack, raising concerns about legacy code dependencies or unsupported infrastructure. (p5)
+## Outside the document — for consideration, not scoring
 
-<!--co-T03-judgement-002-->
-- Management attributes all implementation delivery to its own services team without identifying specific individuals or a dedicated technical lead, creating significant founder dependency risk for complex configuration work. (p9)
+*None of this moved a metric, a rule, a fit score or a tier. It is context a reviewer weighs, and it carries its own uncertainty.*
 
-<!--co-T03-judgement-003-->
-- The absence of any mention of the core application's age, language, or database version in the technology section suggests a lack of transparency regarding generational technical risks. (p10)
+**Customer health.** 1 of 5 researched customers show distress signals, together 8.0% of ARR. Largest is Lenmark Academy Trust at 8.0%. Roster covers 30.93% of ARR; the remainder was not researched.
 
-<!--co-T03-judgement-004-->
-- While the document states that ongoing support is included in subscriptions, it fails to quantify the cost of this service relative to revenue, obscuring the true economics of the bundled implementation and support model. (p3)
+| Customer | Share of ARR | Status |
+|---|---|---|
+| Ashfield County Schools | 8.93% | no signal found — stable, public budget |
+| Lenmark Academy Trust | 8.0% | **distress** — consolidating into a larger trust with an incumbent system |
+| Perrin Valley District | 6.0% | no signal found — stable |
+| Coldwell Learning Partnership | 5.0% | no signal found — stable |
+| Halstow Education Group | 3.0% | no signal found — stable |
 
-<!--co-T03-judgement-005-->
-- The definition of recurring revenue as 'contracted, annualised' rather than actual cash collected masks the reality that a significant portion of revenue may be tied up in unbilled or uncollected amounts. (p8)
+*Roster covers 30.93% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
+
+> **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
 
 ## Ask the seller
 

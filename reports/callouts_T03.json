@@ -1,7 +1,7 @@
 {
   "target_id": "T03",
   "draft_version": "v2",
-  "judge_status": "ok",
+  "judge_status": "narrative pass disabled (--no-model)",
   "examples_folded": 3,
   "callouts": [
     {
@@ -35,46 +35,6 @@
       "confidence_pct": null,
       "evidence_page": 6,
       "question": "Top-five customer share came from a printed chart label"
-    },
-    {
-      "id": "co-T03-judgement-001",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 5,
-      "question": "The document claims the platform is hosted and configurable but provides no evidence of the underlying technology stack, raising concerns about legacy code dependencies or unsupported infrastructure."
-    },
-    {
-      "id": "co-T03-judgement-002",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 9,
-      "question": "Management attributes all implementation delivery to its own services team without identifying specific individuals or a dedicated technical lead, creating significant founder dependency risk for complex configuration work."
-    },
-    {
-      "id": "co-T03-judgement-003",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 10,
-      "question": "The absence of any mention of the core application's age, language, or database version in the technology section suggests a lack of transparency regarding generational technical risks."
-    },
-    {
-      "id": "co-T03-judgement-004",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 3,
-      "question": "While the document states that ongoing support is included in subscriptions, it fails to quantify the cost of this service relative to revenue, obscuring the true economics of the bundled implementation and support model."
-    },
-    {
-      "id": "co-T03-judgement-005",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 8,
-      "question": "The definition of recurring revenue as 'contracted, annualised' rather than actual cash collected masks the reality that a significant portion of revenue may be tied up in unbilled or uncollected amounts."
     }
   ]
 }

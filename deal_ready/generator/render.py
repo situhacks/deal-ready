@@ -65,6 +65,7 @@ PAGE_MAP = {
     "technology": 10,
     "growth": 11,
     "process": 12,
+    "anchor_customers": 13,   # appended last so every page above keeps its number
 }
 TOTAL_PAGES = max(PAGE_MAP.values())
 
@@ -379,6 +380,46 @@ def render_cim(profile: dict, out_path: Path) -> list[dict]:
         Paragraph("Enquiries should be directed to the advisor named on the cover.",
                   st["muted"]),
     ]
+
+    # 13 - anchor customers. Appended last on purpose: every page number above it is
+    # unchanged, so the committed ground truth, the vision cache and the pixel
+    # re-measurement checks all keep pointing at the same pages.
+    #
+    # A real CIM names its anchor accounts. It does not tell you how they are doing -
+    # that is the research the buyer has to go and do, and it is the input to the
+    # customer-health signal.
+    roster = profile.get("customers") or []
+    if roster:
+        # Contract value in dollars, never the percentage. The top-1 and top-5 shares
+        # are chart-carried by design, and printing them here as percentages would leak
+        # them into the text layer - the generator's own leak check fails the build for
+        # exactly that, and it caught this when the roster first shipped percentages.
+        arr = profile["metrics"]["arr_usd"]["value"]
+        rows = [["Customer", "Annual contract value"]]
+        rows += [[c["name"], _money(int(round(arr * c["pct_arr"] / 100.0)))]
+                 for c in roster]
+        tbl = Table(rows, colWidths=[3.6 * inch, 1.8 * inch], hAlign="LEFT")
+        tbl.setStyle(TableStyle([
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("FONTSIZE", (0, 0), (-1, -1), 9.5),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 7),
+            ("TOPPADDING", (0, 0), (-1, -1), 4),
+            ("LINEBELOW", (0, 0), (-1, 0), 0.7, colors.HexColor("#1f3864")),
+            ("LINEBELOW", (0, 1), (-1, -2), 0.25, colors.HexColor("#d9d9d9")),
+            ("ALIGN", (1, 1), (1, -1), "RIGHT"),
+        ]))
+        flow += [
+            PageBreak(),
+            Paragraph("Anchor customers", st["h1"]),
+            Paragraph(
+                "The accounts below represent the largest contracted relationships by "
+                "share of annual recurring revenue. All are under written agreement "
+                "with staggered renewal dates.", st["body"]),
+            tbl,
+            Paragraph(
+                "Customer names are disclosed for diligence purposes and are subject "
+                "to the confidentiality agreement.", st["muted"]),
+        ]
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     SimpleDocTemplate(

@@ -35,22 +35,25 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
 
-<!--co-T04-judgement-001-->
-- The business relies on a single founder who writes production code for its core settlement logic, with no CTO or documented succession plan to mitigate the risk of operational paralysis if that individual departs. (p9)
+## Outside the document — for consideration, not scoring
 
-<!--co-T04-judgement-002-->
-- Management highlights a difficult-to-replicate data asset but fails to disclose whether the proprietary predictive models are proprietary algorithms or simply trained on historical telematics data, creating ambiguity about the true source of competitive advantage. (p2)
+*None of this moved a metric, a rule, a fit score or a tier. It is context a reviewer weighs, and it carries its own uncertainty.*
 
-<!--co-T04-judgement-003-->
-- The document presents EBITDA as negative while simultaneously adding back one-time transaction and legal costs to justify the valuation, obscuring the operational reality that the company is burning cash at a rate that contradicts its growth metrics. (p8)
+**Customer health.** 1 of 5 researched customers show distress signals, together 4.0% of ARR. Largest is Aldercrest Medical at 4.0%. Roster covers 26.0% of ARR; the remainder was not researched.
 
-<!--co-T04-judgement-004-->
-- Retention is reported only as a net figure including expansion and contraction, which masks the possibility that new customers are being acquired solely through aggressive discounts or churned accounts to maintain the recurring revenue total. (p7)
+| Customer | Share of ARR | Status |
+|---|---|---|
+| Verity Health Network | 9.0% | no signal found — expanding |
+| Stonebridge Clinics | 7.0% | no signal found — stable |
+| Aldercrest Medical | 4.0% | **distress** — two sites closed, headcount reduction announced |
+| Pemberton Care Group | 3.5% | no signal found — stable |
+| Wynhurst Family Health | 2.5% | no signal found — stable |
 
-<!--co-T04-judgement-005-->
-- The integration surface is described as supporting customer-built extensions via API, yet no evidence is provided regarding the stability of these integrations or whether they rely on third-party vendors that could introduce supply chain risk. (p5)
+*Roster covers 26.0% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
+
+> **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
 
 ## Ask the seller
 

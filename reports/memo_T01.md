@@ -30,22 +30,25 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
 
-<!--co-T01-judgement-001-->
-- The document claims the founder stepped back in 2021 and lists a professional CEO, yet provides no evidence of technical succession planning or knowledge transfer for the core settlement logic. (p9)
+## Outside the document — for consideration, not scoring
 
-<!--co-T01-judgement-002-->
-- Revenue growth is described as 14% year over year, but the Rule of 40 score of 36 indicates this growth rate is insufficient to offset the company's valuation multiple without significant profitability improvements. (p8)
+*None of this moved a metric, a rule, a fit score or a tier. It is context a reviewer weighs, and it carries its own uncertainty.*
 
-<!--co-T01-judgement-003-->
-- The financial summary states EBITDA is positive after add-backs for one-time transaction preparation costs and non-recurring legal expenses, obscuring whether organic operations are truly profitable. (p8)
+**Customer health.** No distress signals found across 5 researched customers covering 19.0% of ARR.
 
-<!--co-T01-judgement-004-->
-- Retention metrics are presented as a chart without specific numerical values or definitions distinguishing between gross and net retention in the text itself. (p7)
+| Customer | Share of ARR | Status |
+|---|---|---|
+| Brightwater Dental Group | 6.0% | no signal found — expanding, four new locations FY25 |
+| Cascade Family Dentistry | 4.0% | no signal found — stable, renewed three years |
+| Northline Orthodontics | 3.5% | no signal found — stable |
+| Harbor Point Dental Partners | 3.0% | no signal found — stable |
+| Sable Creek Dental | 2.5% | no signal found — stable |
 
-<!--co-T01-judgement-005-->
-- The document asserts high switching costs due to data migration, yet offers no quantification of the time or cost required for a practice to re-credential payer connections during a transition. (p2)
+*Roster covers 19.0% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
+
+> **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
 
 ## Ask the seller
 

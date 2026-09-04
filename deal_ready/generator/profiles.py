@@ -31,6 +31,13 @@ CLEAN_GEM = {
     "employees": 61,
     "hq": "Columbus, Ohio",
     "seeded_defects": [],
+    "customers": [
+        {"name": "Brightwater Dental Group", "pct_arr": 6.0, "distress": False, "note": "expanding, four new locations FY25"},
+        {"name": "Cascade Family Dentistry", "pct_arr": 4.0, "distress": False, "note": "stable, renewed three years"},
+        {"name": "Northline Orthodontics", "pct_arr": 3.5, "distress": False, "note": "stable"},
+        {"name": "Harbor Point Dental Partners", "pct_arr": 3.0, "distress": False, "note": "stable"},
+        {"name": "Sable Creek Dental", "pct_arr": 2.5, "distress": False, "note": "stable"},
+    ],
     "metrics": {
         "arr_usd": {"value": 8_400_000, "carrier": "table"},
         "mrr_usd": {"value": 700_000, "carrier": "table"},
@@ -76,6 +83,13 @@ CONCENTRATION_RISK = {
     "employees": 44,
     "hq": "Halifax, Nova Scotia",
     "seeded_defects": ["top1_concentration_breach", "top5_concentration_breach"],
+    "customers": [
+        {"name": "Tidewater Logistics Group", "pct_arr": 34.0, "distress": True, "note": "filed for creditor protection Q3 FY25; two depots closed"},
+        {"name": "Ferrand Freight Systems", "pct_arr": 15.0, "distress": True, "note": "acquired by a competitor running a rival platform"},
+        {"name": "Ostrand Haulage", "pct_arr": 9.0, "distress": False, "note": "stable"},
+        {"name": "Calder Transport Co-op", "pct_arr": 7.0, "distress": False, "note": "stable"},
+        {"name": "Merrow Distribution", "pct_arr": 6.0, "distress": False, "note": "stable"},
+    ],
     "metrics": {
         "arr_usd": {"value": 6_100_000, "carrier": "table"},
         "mrr_usd": {"value": 508_333, "carrier": "table"},
@@ -120,6 +134,13 @@ FAKE_SAAS = {
     "employees": 88,
     "hq": "Boise, Idaho",
     "seeded_defects": ["recurring_below_floor", "services_revenue_in_arr"],
+    "customers": [
+        {"name": "Ashfield County Schools", "pct_arr": 9.0, "distress": False, "note": "stable, public budget"},
+        {"name": "Lenmark Academy Trust", "pct_arr": 8.0, "distress": True, "note": "consolidating into a larger trust with an incumbent system"},
+        {"name": "Perrin Valley District", "pct_arr": 6.0, "distress": False, "note": "stable"},
+        {"name": "Coldwell Learning Partnership", "pct_arr": 5.0, "distress": False, "note": "stable"},
+        {"name": "Halstow Education Group", "pct_arr": 3.0, "distress": False, "note": "stable"},
+    ],
     "metrics": {
         # Headline ARR is inflated by implementation and training revenue.
         "arr_usd": {"value": 11_200_000, "carrier": "table"},
@@ -165,6 +186,13 @@ UNPROFITABLE_GROWTH = {
     "employees": 73,
     "hq": "Austin, Texas",
     "seeded_defects": ["ebitda_negative", "rule_of_40_fail"],
+    "customers": [
+        {"name": "Verity Health Network", "pct_arr": 9.0, "distress": False, "note": "expanding"},
+        {"name": "Stonebridge Clinics", "pct_arr": 7.0, "distress": False, "note": "stable"},
+        {"name": "Aldercrest Medical", "pct_arr": 4.0, "distress": True, "note": "two sites closed, headcount reduction announced"},
+        {"name": "Pemberton Care Group", "pct_arr": 3.5, "distress": False, "note": "stable"},
+        {"name": "Wynhurst Family Health", "pct_arr": 2.5, "distress": False, "note": "stable"},
+    ],
     "metrics": {
         "arr_usd": {"value": 9_600_000, "carrier": "table"},
         "mrr_usd": {"value": 800_000, "carrier": "table"},
@@ -208,6 +236,13 @@ LEGACY_KEY_PERSON = {
     "employees": 29,
     "hq": "Regina, Saskatchewan",
     "seeded_defects": ["key_person_dependency", "legacy_stack_rewrite_risk", "grr_below_floor"],
+    "customers": [
+        {"name": "Kettleridge Grain Co-operative", "pct_arr": 11.0, "distress": True, "note": "merging with a larger co-op that runs a competing system"},
+        {"name": "Braemar Elevators", "pct_arr": 7.0, "distress": True, "note": "two elevators idled through the price trough"},
+        {"name": "Dunmore Agri Services", "pct_arr": 4.0, "distress": False, "note": "stable"},
+        {"name": "Solway Commodity Handling", "pct_arr": 3.5, "distress": False, "note": "stable"},
+        {"name": "Ninebark Farms Alliance", "pct_arr": 2.5, "distress": False, "note": "stable"},
+    ],
     "metrics": {
         "arr_usd": {"value": 4_300_000, "carrier": "table"},
         "mrr_usd": {"value": 358_333, "carrier": "table"},

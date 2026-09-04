@@ -1,7 +1,7 @@
 {
   "target_id": "T02",
   "draft_version": "v2",
-  "judge_status": "ok",
+  "judge_status": "narrative pass disabled (--no-model)",
   "examples_folded": 3,
   "callouts": [
     {
@@ -35,46 +35,6 @@
       "confidence_pct": null,
       "evidence_page": 6,
       "question": "Top-five customer share came from a printed chart label"
-    },
-    {
-      "id": "co-T02-judgement-001",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 9,
-      "question": "The business relies on two co-founders who personally manage the largest commercial relationships, creating significant operational risk if either departs."
-    },
-    {
-      "id": "co-T02-judgement-002",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 6,
-      "question": "Revenue concentration is severe with the top five customers accounting for 71% of ARR and a single customer representing 34%, leaving little room for organic growth to offset potential churn."
-    },
-    {
-      "id": "co-T02-judgement-003",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 10,
-      "question": "The core platform is a .NET monolith built in 2020 that runs on a single region with warm standby, lacking the architectural depth or geographic redundancy required for enterprise-grade port operations software."
-    },
-    {
-      "id": "co-T02-judgement-004",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 8,
-      "question": "Management defines gross margin as excluding amortisation and EBITDA via add-backs for transaction costs, which obscures the true profitability impact of heavy implementation and integration expenses."
-    },
-    {
-      "id": "co-T02-judgement-005",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 7,
-      "question": "Retention metrics are presented only as net retention including expansion, masking whether the core product is actually driving stickiness or if growth is purely driven by upselling existing clients."
     }
   ]
 }

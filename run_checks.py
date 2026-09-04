@@ -469,6 +469,36 @@ def _frontmatter(path: Path) -> dict:
     return out
 
 
+def check_signals_never_reach_the_score() -> None:
+    """Nothing in the scoring path may import the signals package.
+
+    The enrichment layer's whole licence to exist is that it does not score. That is
+    easy to say in a memo section header and easy to break in a later refactor, so it
+    is enforced structurally: the scorer, the rules and the fit calculation must have
+    no path to customer health, forecasts or red-team output.
+
+    Checked by import rather than by intention. If someone wires a signal into a
+    criterion, this fails before anyone has to notice it in a review.
+    """
+    scoring = [ROOT / "deal_ready" / "scorer" / "rules.py",
+               ROOT / "deal_ready" / "scorer" / "fit.py",
+               ROOT / "deal_ready" / "scorecard.py",
+               ROOT / "screen.py"]
+    offenders = []
+    for path in scoring:
+        if not path.exists():
+            continue
+        for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            stripped = line.strip()
+            if not (stripped.startswith("import ") or stripped.startswith("from ")):
+                continue
+            if "signals" in stripped or "forecast" in stripped:
+                offenders.append(f"{path.name}:{n}")
+    check("signals never reach the score", FAIL if offenders else PASS,
+          f"scoring path imports a signal: {', '.join(offenders)}" if offenders
+          else f"{len(scoring)} scoring modules, none import signals or forecasts")
+
+
 def check_no_blacklisted_sources_cited() -> None:
     """No committed report cites a domain the source map blacklists.
 
@@ -699,6 +729,7 @@ def main() -> int:
     check_fold_back_complete()
     check_regressions_hold()
     check_committed_run_is_the_full_run()
+    check_signals_never_reach_the_score()
     check_no_blacklisted_sources_cited()
     check_plugin_manifests_valid()
     check_rubric_does_not_drift()

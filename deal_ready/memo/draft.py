@@ -269,7 +269,8 @@ def judge(doc_text: str, finding_headlines: list[str]) -> tuple[list[dict], str]
 
 def render_memo(result: dict, criteria: dict, callouts: list[dict],
                 observations: list[dict], judge_status: str,
-                examples_folded: int) -> tuple[str, list[dict]]:
+                examples_folded: int,
+                signal: dict | None = None) -> tuple[str, list[dict]]:
     """Assemble the markdown memo. Returns (markdown, all_callouts) - the judgement
     ids are minted here because they belong to specific sentences."""
 
@@ -375,6 +376,37 @@ def render_memo(result: dict, criteria: dict, callouts: list[dict],
                      f"rather than with a pretended one.*")
         lines.append("")
 
+    # Outside signal. Deliberately its own section, after the arithmetic and before the
+    # questions, with a visible boundary: nothing below scored anything above. A screen
+    # reads what the document says; this is the state of the world around it, and the
+    # separation is what stops one contaminating the other.
+    if signal:
+        lines.append("## Outside the document — for consideration, not scoring")
+        lines.append("")
+        lines.append("*None of this moved a metric, a rule, a fit score or a tier. It is "
+                     "context a reviewer weighs, and it carries its own uncertainty.*")
+        lines.append("")
+        lines.append(f"**Customer health.** {signal['headline']}")
+        lines.append("")
+        if signal.get("customers"):
+            lines.append("| Customer | Share of ARR | Status |")
+            lines.append("|---|---|---|")
+            for c in signal["customers"]:
+                state = "**distress**" if c["distressed"] else "no signal found"
+                note = f" — {c['evidence']}" if c.get("evidence") else ""
+                lines.append(f"| {c['name']} | {c['pct_arr']}% | {state}{note} |")
+            lines.append("")
+        lines.append(f"*Roster covers {signal['roster_covers_pct_arr']}% of ARR. "
+                     f"{signal['researched']} researched, {signal['unresearched']} not. "
+                     f"An unresearched customer is an open question, not a clean bill "
+                     f"of health.*")
+        lines.append("")
+        lines.append("> **Why this is not in the retention number.** Gross retention is a "
+                     "lagging measure. It cannot contain a customer that has not left "
+                     "yet, so a distressed customer base and a healthy retention history "
+                     "are perfectly consistent with each other.")
+        lines.append("")
+
     lines.append("## Ask the seller")
     lines.append("")
     qs = [c["question"] for c in by_kind.get("missing_metric", [])]
@@ -398,12 +430,13 @@ def render_memo(result: dict, criteria: dict, callouts: list[dict],
 
 
 def draft(result: dict, criteria: dict, doc_text: str | None = None,
-          use_model: bool = True, page_texts: dict[int, str] | None = None) -> dict:
+          use_model: bool = True, page_texts: dict[int, str] | None = None,
+          signal: dict | None = None) -> dict:
     """Full memo stage for one screened target. Returns artifacts dict."""
     callouts = derive_callouts(result, page_texts)
     observations, status = [], "narrative pass disabled (--no-model)"
     if use_model and doc_text:
         observations, status = judge(doc_text, [f["headline"] for f in result["findings"]])
     md, all_callouts = render_memo(result, criteria, callouts, observations, status,
-                                   len(_load_examples()))
+                                   len(_load_examples()), signal=signal)
     return {"markdown": md, "callouts": all_callouts, "judge_status": status}

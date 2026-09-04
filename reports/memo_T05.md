@@ -35,22 +35,25 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
 
-<!--co-T05-judgement-001-->
-- The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency on his continued involvement. (p9)
+## Outside the document — for consideration, not scoring
 
-<!--co-T05-judgement-002-->
-- The core application relies on a Delphi platform from 1998 running on an unsupported database version with zero automated test coverage, representing generational technical obsolescence rather than incremental risk. (p10)
+*None of this moved a metric, a rule, a fit score or a tier. It is context a reviewer weighs, and it carries its own uncertainty.*
 
-<!--co-T05-judgement-003-->
-- With revenue growth at only 2% and EBITDA positive, the company lacks the organic momentum to outpace its inherent technological and operational risks without significant external intervention. (p8)
+**Customer health.** 2 of 5 researched customers show distress signals, together 18.0% of ARR. Largest is Kettleridge Grain Co-operative at 11.0%. Roster covers 28.0% of ARR; the remainder was not researched.
 
-<!--co-T05-judgement-004-->
-- The document highlights expansion into adjacent operator segments as a near-term initiative despite the market being fragmented with buyers who are operationally conservative and resistant to replacement cycles. (p4)
+| Customer | Share of ARR | Status |
+|---|---|---|
+| Kettleridge Grain Co-operative | 11.0% | **distress** — merging with a larger co-op that runs a competing system |
+| Braemar Elevators | 7.0% | **distress** — two elevators idled through the price trough |
+| Dunmore Agri Services | 4.0% | no signal found — stable |
+| Solway Commodity Handling | 3.49% | no signal found — stable |
+| Ninebark Farms Alliance | 2.51% | no signal found — stable |
 
-<!--co-T05-judgement-005-->
-- Gross retention of 81% falls below the 85% floor, suggesting that while the core product is valued, the business model lacks sufficient stickiness or expansion leverage to sustain growth independently. (p7)
+*Roster covers 28.0% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
+
+> **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
 
 ## Ask the seller
 

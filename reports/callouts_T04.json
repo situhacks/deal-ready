@@ -1,7 +1,7 @@
 {
   "target_id": "T04",
   "draft_version": "v2",
-  "judge_status": "ok",
+  "judge_status": "narrative pass disabled (--no-model)",
   "examples_folded": 3,
   "callouts": [
     {
@@ -35,46 +35,6 @@
       "confidence_pct": null,
       "evidence_page": 6,
       "question": "Top-five customer share came from a printed chart label"
-    },
-    {
-      "id": "co-T04-judgement-001",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 9,
-      "question": "The business relies on a single founder who writes production code for its core settlement logic, with no CTO or documented succession plan to mitigate the risk of operational paralysis if that individual departs."
-    },
-    {
-      "id": "co-T04-judgement-002",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 2,
-      "question": "Management highlights a difficult-to-replicate data asset but fails to disclose whether the proprietary predictive models are proprietary algorithms or simply trained on historical telematics data, creating ambiguity about the true source of competitive advantage."
-    },
-    {
-      "id": "co-T04-judgement-003",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 8,
-      "question": "The document presents EBITDA as negative while simultaneously adding back one-time transaction and legal costs to justify the valuation, obscuring the operational reality that the company is burning cash at a rate that contradicts its growth metrics."
-    },
-    {
-      "id": "co-T04-judgement-004",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 7,
-      "question": "Retention is reported only as a net figure including expansion and contraction, which masks the possibility that new customers are being acquired solely through aggressive discounts or churned accounts to maintain the recurring revenue total."
-    },
-    {
-      "id": "co-T04-judgement-005",
-      "kind": "judgement",
-      "metric": null,
-      "confidence_pct": null,
-      "evidence_page": 5,
-      "question": "The integration surface is described as supporting customer-built extensions via API, yet no evidence is provided regarding the stability of these integrations or whether they rely on third-party vendors that could introduce supply chain risk."
     }
   ]
 }

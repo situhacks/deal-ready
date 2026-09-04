@@ -1,0 +1,153 @@
+{
+  "horizon": 12,
+  "history_months": 48,
+  "targets": [
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05"
+  ],
+  "methods": {
+    "seasonal_naive": {
+      "status": "ok",
+      "seconds": 0.0,
+      "per_target": {
+        "T01": {
+          "mase": 1.2762,
+          "mape": 12.188
+        },
+        "T02": {
+          "mase": 1.0105,
+          "mape": 7.049
+        },
+        "T03": {
+          "mase": 1.1492,
+          "mape": 9.352
+        },
+        "T04": {
+          "mase": 1.4691,
+          "mape": 17.877
+        },
+        "T05": {
+          "mase": 0.8634,
+          "mape": 1.944
+        }
+      },
+      "mean_mase": 1.1537,
+      "mean_mape": 9.682
+    },
+    "linear_fit": {
+      "status": "ok",
+      "seconds": 0.0,
+      "per_target": {
+        "T01": {
+          "mase": 0.3823,
+          "mape": 3.641
+        },
+        "T02": {
+          "mase": 0.4512,
+          "mape": 3.148
+        },
+        "T03": {
+          "mase": 0.4526,
+          "mape": 3.647
+        },
+        "T04": {
+          "mase": 0.6026,
+          "mape": 7.283
+        },
+        "T05": {
+          "mase": 1.6966,
+          "mape": 3.855
+        }
+      },
+      "mean_mase": 0.7171,
+      "mean_mape": 4.315
+    },
+    "drift": {
+      "status": "ok",
+      "seconds": 0.0,
+      "per_target": {
+        "T01": {
+          "mase": 0.2242,
+          "mape": 2.133
+        },
+        "T02": {
+          "mase": 0.4806,
+          "mape": 3.385
+        },
+        "T03": {
+          "mase": 0.5009,
+          "mape": 4.036
+        },
+        "T04": {
+          "mase": 0.4054,
+          "mape": 4.873
+        },
+        "T05": {
+          "mase": 1.6865,
+          "mape": 3.838
+        }
+      },
+      "mean_mase": 0.6595,
+      "mean_mape": 3.653
+    },
+    "timesfm_2.5": {
+      "status": "ok",
+      "seconds": 4.76,
+      "per_target": {
+        "T01": {
+          "mase": 0.2321,
+          "mape": 2.182
+        },
+        "T02": {
+          "mase": 0.3211,
+          "mape": 2.222
+        },
+        "T03": {
+          "mase": 0.7545,
+          "mape": 6.126
+        },
+        "T04": {
+          "mase": 0.3557,
+          "mape": 4.226
+        },
+        "T05": {
+          "mase": 0.5428,
+          "mape": 1.234
+        }
+      },
+      "mean_mase": 0.4412,
+      "mean_mape": 3.198
+    },
+    "timesfm_3": {
+      "status": "ok",
+      "seconds": 2.55,
+      "per_target": {
+        "T01": {
+          "mase": 0.1824,
+          "mape": 1.721
+        },
+        "T02": {
+          "mase": 0.2543,
+          "mape": 1.773
+        },
+        "T03": {
+          "mase": 0.3482,
+          "mape": 2.817
+        },
+        "T04": {
+          "mase": 0.3892,
+          "mape": 4.64
+        },
+        "T05": {
+          "mase": 0.5955,
+          "mape": 1.36
+        }
+      },
+      "mean_mase": 0.3539,
+      "mean_mape": 2.462
+    }
+  }
+}
