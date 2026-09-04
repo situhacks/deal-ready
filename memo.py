@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 from deal_ready.memo.draft import _load_examples, draft as draft_memo
-from deal_ready.signals import customers as customer_signal
+from deal_ready.signals import baserate, customers as customer_signal
 from deal_ready.parse import textlayer
 from deal_ready.scorer import rules
 from screen import REPORTS, screen_one
@@ -46,9 +46,20 @@ def memo_one(pdf: Path, criteria: dict, use_model: bool) -> dict:
     if roster:
         sig = customer_signal.build(roster).to_dict()
 
+    # Base rate: what comparable past acquisitions went on to do. Auditable by
+    # construction - the memo prints the deal ids the cohort was built from.
+    br = None
+    book = Path(__file__).parent / "data" / "dealbook.json"
+    if book.exists():
+        br = baserate.compute(
+            {"arr_usd": result.get("metrics", {}).get("arr_usd"),
+             "grr_pct": result.get("metrics", {}).get("grr_pct")},
+            json.loads(book.read_text(encoding="utf-8"))).summary()
+
     artifacts = draft_memo(result, criteria,
                            doc_text=marked if use_model else None,
-                           use_model=use_model, page_texts=pages, signal=sig)
+                           use_model=use_model, page_texts=pages, signal=sig,
+                           base_rate=br)
     (REPORTS / f"memo_{tid}.md").write_text(artifacts["markdown"], encoding="utf-8")
     (REPORTS / f"callouts_{tid}.json").write_text(
         json.dumps({"target_id": tid, "draft_version": "v2",

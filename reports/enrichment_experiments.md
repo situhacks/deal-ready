@@ -532,3 +532,167 @@ Six experiments in, the picture is consistent and it is not the one we started w
 **And the synthetic result that started this — 46% better than baseline — was a measurement of a
 choice I made**, not a property of the model. Every number above comes from companies that filed
 with the SEC and cannot be edited to flatter anybody.
+
+---
+
+# The prediction system — experiments 9 to 12
+
+A CIM is a snapshot and there is no future history for the target. But a serial acquirer holds
+something better than a forecast: **the futures of every other company it bought.** These four
+experiments build that idea into a system and then try to break it.
+
+**One constraint over all of it, and it is not decoration: the people who read this output
+reconcile to the penny for a living.** Anything reaching them carries a source, a date, or a list of
+records the number recomputes from. Nothing reaches them as an assertion.
+
+---
+
+## Experiment 9 — The base rate
+
+**The idea.** Do not predict the target. Report what comparable past acquisitions went on to do.
+That is not a forecast, it is a prior, and the difference is the whole thing: a forecast invites
+belief, a base rate invites argument.
+
+**What was built.** A 120-deal history, deterministic and seeded, each row carrying the profile at
+acquisition and the revenue CAGR three years later, plus what was underwritten at the time.
+`signals/baserate.py` matches a target to comparable deals and summarises the outcomes.
+
+**Cohort matching widens one rung at a time and reports which rung it stopped on:** vertical + size
++ retention, then size + retention, then retention alone, then size alone, then the whole book.
+**Below eight comparables it refuses** — a median of three is noise wearing a number's clothes, and
+"we have never bought anything like this" is itself a finding worth putting in front of a committee.
+
+### Result
+
+| Target | Cohort | Matched on | Median outcome CAGR | Shrank |
+|---|---|---|---|---|
+| T01 Meridian | 29 | retention band | 6.3% | 0% |
+| T02 Halyard | 29 | retention band | 6.3% | 0% |
+| T03 Ridgeline | 16 | size + retention | 4.21% | 0% |
+| T04 Kestrel | 21 | size + retention | 5.34% | 4.8% |
+| **T05 Ashgrove** | **16** | size + retention | **2.1%** | **12.5%** |
+
+Ashgrove's 81% retention puts it in the weakest cohort in the book — median 2.1% growth, p10 of
+minus 0.2%, and one in eight shrank outright. **The rubric already flagged its retention. The base
+rate says what that has historically meant.**
+
+### The calibration finding
+
+Across the whole book, **underwriting ran +3.72 points optimistic at the median and was optimistic
+on 98% of deals.** On Ashgrove's cohort specifically: +3.95 points, optimistic on 100%.
+
+That is the answer to "were our underwriting DCFs correct, or are we underwriting too
+aggressively?" — and it needs no model at all. It is arithmetic over outcomes, and it is the one
+prediction asset an acquirer owns that nobody outside can compute.
+
+### Auditability
+
+The memo prints the cohort. Not a count — **the deal ids**:
+
+> *Cohort, for audit — every figure above recomputes from these 16 deals: D005, D011, D013, D022,
+> D023, D026, D035, D042, D057, D058, D059, D078, D093, D102, D103, D109.*
+
+A reviewer can pull those sixteen rows and redo the median by hand. That is the standard.
+
+**Honest limit: this dealbook is fabricated.** A real acquirer's is the genuinely proprietary
+version. What is demonstrated here is the machinery and the shape of the reasoning, not a fact about
+any real portfolio.
+
+---
+
+## Experiment 10 — Outward research
+
+**The correction that produced it.** The first research layer read one more line item inside the
+CIM. That is a better reader, not a researcher. And the persona red-team failed because four critics
+were pointed at the same PDF — they can only surface what is already in it.
+
+**Five lenses, all facing outward**, in `skills/target-research/` with a `target-researcher` agent:
+
+1. **Operators** — founder and management tenure, prior exits, recent departures. Whether the
+   business survives its founder leaving, and whether anyone has already started leaving.
+2. **Ownership and board** — who owns it, prior institutional money and its vintage. *Why is this
+   for sale now*, which the CIM will never answer honestly.
+3. **Workforce** — headcount trend, engineering against sales mix, hiring signals. Whether the
+   organisation is investing or harvesting.
+4. **Customers as organisations** — the sharpest lens, and the one retention cannot reach.
+5. **Market and disruptors** — entrants, consolidation, AI exposure, the region and end industry.
+
+**Guardrails that are enforced, not promised.** The researcher holds `WebSearch` and `WebFetch` and
+nothing else — **no `Read`, so the confidential document cannot reach a web query.** A check fails
+the build if that changes, and a further check now fails if any agent ships without an allowlist
+spec at all.
+
+**Two rules that matter more than the lenses.** Absence is never evidence: "no distress found" and
+"could not research" are different outputs and may not be collapsed. And research covers the
+professional record only — filings, public statements, company history. Nothing a person would be
+startled to find in a deal memo.
+
+---
+
+## Experiment 11 — The scenario layer
+
+Every layer beneath this produces facts. This is the only one that produces a view, and **it
+deliberately does not produce a number.**
+
+The output is the assumptions the base rate rests on for this target, each carrying **what it rests
+on** and **what would falsify it**. An assumption nobody can disprove is a sentiment.
+
+From the Ashgrove memo, unedited:
+
+| Assumption | Rests on | Falsified by |
+|---|---|---|
+| The two distressed customers represent an isolated risk, not a systemic one | **C** | Evidence from the remaining 72% of ARR — the customers not researched — showing similar distress |
+| Revenue CAGR will be comparable to the cohort median of 2.1% because retention is above the historical floor | **A** | GRR dropping below 85% next year, if the current 81% is a trend rather than an anomaly |
+
+**Note what the first one did.** The customer signal reported 28% coverage, and the reasoner turned
+the *uncoverage* into the falsification surface. The coverage discipline propagated three layers up
+without being told to.
+
+Input blocks are labelled A through D — document, base rate, customer health, external research — so
+every assumption traces to the thing that produced it.
+
+---
+
+## Experiment 12 — Does it actually reason, or does it just write?
+
+**The eval that decides whether the scenario layer is worth anything, and almost nobody runs it.**
+Change the evidence. See whether the conclusion moves.
+
+Four conditions per target, each flipping one block: baseline, customer health removed, distress
+flipped to healthy, base rate replaced with a poor cohort. Similarity is Jaccard over content words
+against the baseline — **lower means the conclusion moved when the evidence moved.**
+
+| Condition | Mean similarity |
+|---|---|
+| Customer health removed | **0.218** |
+| Base rate replaced with a weak cohort | **0.252** |
+| Customer distress flipped to healthy | 0.411 |
+
+**The conclusions move substantially when the evidence moves.** Roughly four fifths of the content
+changes.
+
+**And the outlier is the most reassuring number in the table.** T01 Meridian scored **1.000** on the
+healthy condition — a byte-identical output. Meridian has no distressed customers, so flipping them
+to healthy changes nothing, and the pipeline correctly produced the same answer for the same input.
+Excluding that no-op, the healthy condition averages **0.263**, in line with the others.
+
+**Identical inputs give identical outputs; different inputs give different outputs.** That is the
+behaviour you want and it is not what a prose generator would produce.
+
+**What this does not establish.** It shows the reasoner responds to evidence. It says nothing about
+whether the assumptions are *correct*, and no threshold is asserted for what similarity ought to be,
+because nobody has established one and inventing a pass mark for the occasion would be worse than
+reporting the number.
+
+---
+
+## What the prediction system is, in one paragraph
+
+**Not a forecaster.** A base rate from past deals that only the acquirer can compute, the document
+read with citations, outward research with dates and coverage, and a reasoning layer that emits
+falsifiable assumptions rather than a number. Each layer is independently useful and fails loudly on
+its own terms. **None of them touches the score** — `run_checks.py` fails the build if the scoring
+path can so much as import a signal.
+
+And the answer to "we have no future history for this target" is that **you have every other
+company's future**, which is the one thing the seller's document could never contain.

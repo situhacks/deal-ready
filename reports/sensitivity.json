@@ -1,0 +1,89 @@
+{
+  "mean_similarity": {
+    "no_customers": 0.218,
+    "healthy": 0.411,
+    "weak_baserate": 0.252
+  },
+  "per_target": [
+    {
+      "target_id": "T01",
+      "code_name": "Meridian",
+      "statuses": {
+        "baseline": "ok (4)",
+        "no_customers": "ok (5)",
+        "healthy": "ok (4)",
+        "weak_baserate": "ok (5)"
+      },
+      "similarity_to_baseline": {
+        "no_customers": 0.216,
+        "healthy": 1.0,
+        "weak_baserate": 0.279
+      },
+      "assumptions_baseline": "The acquisition will achieve a revenue CAGR exceeding the historical median of 6.3%. B, specifically the underwriting logic that applied a 3.8 point optimistic adjustment to the median outcome based on retention band matching. Post-acquisition data showing actual annual revenue growth falling below 6.3%, indicating the optimistic underwriting was incorrect. The high Net Revenue Retention (108%) is sustainable and will not degrade to levels seen in distressed deals. B, which matched Meridian only on its retention band against a pool of 29 past deals. Evidence from the first year post-acquisition showing NRR dropping significantly below 108% or indicating churn patterns similar to deals that failed to meet underwriting assumptions. The absence of distress signals in the top 5 customers (covering 19% of ARR) is representative of the entire portfolio. C, which confirmed no distress signals across only 5 researched customers. Discovery of financial instability or operational issues among other significant customers not included in the initial research sample. The deal's fit score of 100.0 accurately reflects Meridian's alignment with the historical performance drivers of comparable acqu"
+    },
+    {
+      "target_id": "T02",
+      "code_name": "Halyard",
+      "statuses": {
+        "baseline": "ok (4)",
+        "no_customers": "ok (4)",
+        "healthy": "ok (5)",
+        "weak_baserate": "ok (5)"
+      },
+      "similarity_to_baseline": {
+        "no_customers": 0.179,
+        "healthy": 0.227,
+        "weak_baserate": 0.226
+      },
+      "assumptions_baseline": "The acquisition will achieve a revenue CAGR comparable to the median of past deals (6.3%) because Halyard's retention metrics (NRR 103%, recurring % 88%) match the specific band used for that underwriting. B Evidence showing that Halyard's customer concentration (Top 5 at 71% vs. Top 1 cap of 34%) creates a higher risk of churn than the 'retention band' used in past deals, or data indicating the median CAGR was driven by low-concentration companies. The two distressed customers identified (Tidewater Logistics Group and one other) represent an isolated anomaly that will not materially impact Halyard's future revenue. C Evidence confirming that these two customers account for 49% of ARR, which exceeds the typical distress threshold for material impact in this sector. The absence of external research (D) means there are no hidden systemic risks or market-wide trends affecting Halyard's growth trajectory. D Discovery of new external reports, regulatory filings, or industry analyses released after the initial screening that indicate a broader downturn in the logistics sector. Halyard's Tier 1 fit score (94.7) and high gross margin (74%) are sufficient proxies for long-term profitability"
+    },
+    {
+      "target_id": "T03",
+      "code_name": "Ridgeline",
+      "statuses": {
+        "baseline": "ok (5)",
+        "no_customers": "ok (5)",
+        "healthy": "ok (4)",
+        "weak_baserate": "ok (5)"
+      },
+      "similarity_to_baseline": {
+        "no_customers": 0.255,
+        "healthy": 0.296,
+        "weak_baserate": 0.253
+      },
+      "assumptions_baseline": "The acquisition will achieve a revenue CAGR exceeding the historical median of 4.21%. B Evidence showing that the target's top 5 customers (31% of ARR) collectively experience churn rates significantly higher than the industry average, or that the current gross margin of 52% cannot be sustained to meet the 65% floor required for comparable deal performance. The recurring revenue base is sufficient to support long-term growth without reliance on one-off sales. A Data indicating that the current recurring percentage of 58% falls below the 80% floor, suggesting a high dependency on non-recurring revenue streams which historically correlates with lower CAGR outcomes. Customer health risks are contained and do not threaten overall ARR stability. C Confirmation that the 8.0% of ARR associated with distressed customers (including Lenmark Academy Trust) results in actual churn or contract termination within the first year post-acquisition. The target's growth trajectory aligns with the median performance of similar past acquisitions. A Observation that the top customer concentration (31%) creates a single point of failure, where the loss of any one major client would disproportionately imp"
+    },
+    {
+      "target_id": "T04",
+      "code_name": "Kestrel",
+      "statuses": {
+        "baseline": "ok (5)",
+        "no_customers": "ok (4)",
+        "healthy": "ok (5)",
+        "weak_baserate": "ok (5)"
+      },
+      "similarity_to_baseline": {
+        "no_customers": 0.238,
+        "healthy": 0.299,
+        "weak_baserate": 0.251
+      },
+      "assumptions_baseline": "The acquisition will achieve positive EBITDA growth comparable to the median historical performance of similar deals. A (EBITDA of -$2.4M is negative) Evidence showing that Kestrel's current operating losses are due to temporary scaling costs rather than structural inefficiencies, or data proving that the company has already achieved profitability despite the negative EBITDA figure. The recurring revenue base is stable and will not experience significant churn beyond the net retention rate of 112%. A (NRR of 112%) Customer health data indicating distress signals among a disproportionate number of customers, or external research revealing industry-wide trends causing higher-than-expected churn. The top five customers represent a manageable concentration risk that does not threaten overall business continuity. A (Top 5 customer percentage is 26%) Evidence showing that one or more of the top five customers are actively planning to exit, have financial distress themselves, or represent a significant portion of total revenue loss if they leave. The company's growth trajectory is sustainable given its current year-over-year growth rate. A (YoY growth percentage is 22%) Evidence showing t"
+    },
+    {
+      "target_id": "T05",
+      "code_name": "Ashgrove",
+      "statuses": {
+        "baseline": "ok (5)",
+        "no_customers": "ok (5)",
+        "healthy": "ok (5)",
+        "weak_baserate": "ok (5)"
+      },
+      "similarity_to_baseline": {
+        "no_customers": 0.203,
+        "healthy": 0.231,
+        "weak_baserate": 0.251
+      },
+      "assumptions_baseline": "The acquisition will achieve a revenue CAGR comparable to the median of past deals (2.1%) because gross retention is above the historical floor. A Evidence showing Gross Retention (GRR) drops below 85% in the next fiscal year, specifically if the current 81% figure is an anomaly rather than a trend. The top customer concentration risk (28%) will not result in significant revenue volatility or churn. A Evidence of the largest customer, Kettleridge Grain Co-operative (11% ARR), initiating a contract termination or reducing spend by more than 50%. The two distressed customers identified in the research roster represent an isolated risk and do not indicate broader systemic issues. C Evidence from the remaining 72% of ARR (customers not researched) showing similar distress signals, such as delayed payments or reduced usage metrics. The underwriting margin applied to past acquisitions remains valid for this deal given its specific size and retention profile. B Evidence that the current deal's fit score (97.7) or growth rate (2.0%) deviates significantly from the 16 past deals used to establish the base rate. No external market factors will negatively impact Ashgrove's ability to retain c"
+    }
+  ]
+}

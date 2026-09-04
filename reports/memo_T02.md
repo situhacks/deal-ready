@@ -35,7 +35,22 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
+*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+
+<!--co-T02-judgement-001-->
+- The two co-founders hold day-to-day commercial relationships with the largest accounts while no CTO exists to oversee technical strategy or succession planning. (p9)
+
+<!--co-T02-judgement-002-->
+- Revenue growth of 9% combined with a Rule of 40 score of 29 indicates that organic expansion is insufficient to offset the risks posed by high customer concentration. (p8)
+
+<!--co-T02-judgement-003-->
+- The largest customer represents 34% of ARR, creating significant displacement risk if their operational needs change or they seek a cheaper alternative. (p13)
+
+<!--co-T02-judgement-004-->
+- Top five customers account for 71% of total revenue, meaning the company's financial stability is heavily dependent on retaining just a handful of clients. (p13)
+
+<!--co-T02-judgement-005-->
+- The product relies on a .NET monolith architecture with no documented test coverage or succession plan, creating generational technical risk rather than incremental one. (p10)
 
 ## Outside the document — for consideration, not scoring
 
@@ -54,6 +69,34 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Roster covers 71.43% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
 
 > **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
+
+**Base rate — what happened to businesses like this one.**
+
+Matched on **retention band only** against **29 past acquisitions**. This is not a forecast for this target; it is what comparable businesses went on to do.
+
+| | Revenue CAGR, 3 years after acquisition |
+|---|---|
+| 10th percentile | 3.88% |
+| **Median** | **6.3%** |
+| 90th percentile | 10.45% |
+| Shrank outright | 0.0% of the cohort |
+
+**Underwriting calibration on that same cohort: the case ran 3.8 points optimistic at the median, and was optimistic on 100.0% of them.** Read the median above with that in mind.
+
+*Cohort, for audit — every figure above recomputes from these 29 deals: D001, D002, D004, D006, D008, D017, D019, D020, D024, D030, D032, D036, D041, D045, D047, D048, D052, D062, D066, D082, D084, D089, D092, D096, D110, D112, D115, D119, D120.*
+
+## What would have to be true
+
+*Not a forecast. These are the assumptions the base rate rests on for this target, each one traceable to the input that produced it and each one stated so it can be disproved. An assumption nobody can disprove is a sentiment and does not belong here.*
+
+| # | Assumption | Rests on | Falsified by |
+|---|---|---|---|
+| 1 | The acquisition will achieve a revenue CAGR comparable to the median of past deals (6.3%) because Halyard's retention metrics are strong. | B, specifically the 'matched on retention band only across 29 past deals' and the resulting underwriting logic. | Evidence showing that Halyard's specific distress signals (49.43% of ARR) correlate with a failure to meet the median CAGR in similar historical cases. |
+| 2 | The top customer concentration risk is manageable because it falls within the documented cap rules for Tier 1 fit. | A, specifically the 'Largest customer is 34% of ARR' and 'Top five customers are 71% of ARR' data points against the stated caps. | Evidence from C showing that Tidewater Logistics Group (34.43%) is experiencing distress signals that could trigger churn, violating the implicit assumption of stability. |
+| 3 | The absence of external research indicates a lack of hidden risks rather than a gap in known data. | D, specifically 'none available'. | Evidence emerging from C regarding the distress signals at Tidewater Logistics Group that were not captured by external sources. |
+| 4 | The high gross margin and recurring revenue percentages will sustain growth without degradation. | A, specifically 'gross_margin_pct: 74.0', 'recurring_pct: 88.0', and 'nrr_pct: 103.0'. | Evidence from C indicating that the distress signals affecting nearly half of ARR could lead to margin compression or churn, negating the benefit of high NRR. |
+
+*Input blocks: **A** the document · **B** the base rate from past acquisitions · **C** customer health · **D** external research.*
 
 ## Ask the seller
 

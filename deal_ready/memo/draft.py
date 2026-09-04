@@ -270,7 +270,10 @@ def judge(doc_text: str, finding_headlines: list[str]) -> tuple[list[dict], str]
 def render_memo(result: dict, criteria: dict, callouts: list[dict],
                 observations: list[dict], judge_status: str,
                 examples_folded: int,
-                signal: dict | None = None) -> tuple[str, list[dict]]:
+                signal: dict | None = None,
+                base_rate: dict | None = None,
+                assumptions: list[dict] | None = None,
+                scenario_status: str = "") -> tuple[str, list[dict]]:
     """Assemble the markdown memo. Returns (markdown, all_callouts) - the judgement
     ids are minted here because they belong to specific sentences."""
 
@@ -407,6 +410,60 @@ def render_memo(result: dict, criteria: dict, callouts: list[dict],
                      "are perfectly consistent with each other.")
         lines.append("")
 
+    if base_rate and base_rate.get("status") == "ok":
+        s = base_rate
+        o, b = s["outcome_cagr_pct"], s["underwriting_bias_pts"]
+        lines.append("**Base rate — what happened to businesses like this one.**")
+        lines.append("")
+        lines.append(f"Matched on **{s['matched_on']}** against "
+                     f"**{s['n_comparables']} past acquisitions**. This is not a "
+                     f"forecast for this target; it is what comparable businesses "
+                     f"went on to do.")
+        lines.append("")
+        lines.append("| | Revenue CAGR, 3 years after acquisition |")
+        lines.append("|---|---|")
+        lines.append(f"| 10th percentile | {o['p10']}% |")
+        lines.append(f"| **Median** | **{o['median']}%** |")
+        lines.append(f"| 90th percentile | {o['p90']}% |")
+        lines.append(f"| Shrank outright | {o['share_negative']}% of the cohort |")
+        lines.append("")
+        lines.append(f"**Underwriting calibration on that same cohort: the case ran "
+                     f"{b['median']} points optimistic at the median, and was "
+                     f"optimistic on {b['share_optimistic']}% of them.** Read the "
+                     f"median above with that in mind.")
+        lines.append("")
+        lines.append(f"*Cohort, for audit — every figure above recomputes from these "
+                     f"{s['n_comparables']} deals: "
+                     f"{', '.join(s['deal_ids'])}.*")
+        lines.append("")
+    elif base_rate:
+        lines.append("**Base rate.** " + base_rate.get("status", "unavailable"))
+        lines.append("")
+
+    if assumptions:
+        lines.append("## What would have to be true")
+        lines.append("")
+        lines.append("*Not a forecast. These are the assumptions the base rate rests on "
+                     "for this target, each one traceable to the input that produced it "
+                     "and each one stated so it can be disproved. An assumption nobody "
+                     "can disprove is a sentiment and does not belong here.*")
+        lines.append("")
+        lines.append("| # | Assumption | Rests on | Falsified by |")
+        lines.append("|---|---|---|---|")
+        for i, a in enumerate(assumptions, 1):
+            lines.append(f"| {i} | {a['assumption']} | {a['rests_on']} | "
+                         f"{a['falsified_by']} |")
+        lines.append("")
+        lines.append("*Input blocks: **A** the document · **B** the base rate from past "
+                     "acquisitions · **C** customer health · **D** external research.*")
+        lines.append("")
+    elif scenario_status:
+        lines.append("## What would have to be true")
+        lines.append("")
+        lines.append(f"*{scenario_status}. Shipped without the scenario pass rather "
+                     f"than with a pretended one.*")
+        lines.append("")
+
     lines.append("## Ask the seller")
     lines.append("")
     qs = [c["question"] for c in by_kind.get("missing_metric", [])]
@@ -431,12 +488,23 @@ def render_memo(result: dict, criteria: dict, callouts: list[dict],
 
 def draft(result: dict, criteria: dict, doc_text: str | None = None,
           use_model: bool = True, page_texts: dict[int, str] | None = None,
-          signal: dict | None = None) -> dict:
+          signal: dict | None = None, base_rate: dict | None = None,
+          research: list[dict] | None = None) -> dict:
     """Full memo stage for one screened target. Returns artifacts dict."""
     callouts = derive_callouts(result, page_texts)
     observations, status = [], "narrative pass disabled (--no-model)"
     if use_model and doc_text:
         observations, status = judge(doc_text, [f["headline"] for f in result["findings"]])
+    assumptions, scen_status = [], "scenario pass disabled (--no-model)"
+    if use_model:
+        from ..signals import scenario as scenario_mod
+        objs, scen_status = scenario_mod.run(result, base_rate=base_rate,
+                                             signal=signal, research=research)
+        assumptions = [a.to_dict() for a in objs]
+
     md, all_callouts = render_memo(result, criteria, callouts, observations, status,
-                                   len(_load_examples()), signal=signal)
-    return {"markdown": md, "callouts": all_callouts, "judge_status": status}
+                                   len(_load_examples()), signal=signal,
+                                   base_rate=base_rate, assumptions=assumptions,
+                                   scenario_status=scen_status)
+    return {"markdown": md, "callouts": all_callouts, "judge_status": status,
+            "scenario_status": scen_status}

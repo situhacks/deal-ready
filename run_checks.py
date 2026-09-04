@@ -610,6 +610,7 @@ def check_agent_tool_allowlists() -> None:
         "page-reader":       {"forbidden": {"Write", "WebSearch", "WebFetch", "Task"}},
         "market-researcher": {"forbidden": {"Read", "Write", "Glob", "Grep", "Task"}},
         "memo-writer":       {"forbidden": {"WebSearch", "WebFetch", "Task"}},
+        "target-researcher": {"forbidden": {"Read", "Write", "Glob", "Grep", "Task"}},
     }
     problems, writers = [], []
     for name, spec in want.items():
@@ -626,6 +627,10 @@ def check_agent_tool_allowlists() -> None:
             problems.append(f"{name}: must not hold {sorted(bad)}")
         if "Write" in tools:
             writers.append(name)
+    on_disk = {p.stem for p in (PLUGIN / "agents").glob("*.md")}
+    unguarded = sorted(on_disk - set(want))
+    if unguarded:
+        problems.append(f"agents with no allowlist spec: {unguarded}")
     if writers != ["memo-writer"]:
         problems.append(f"exactly one agent may write; found {writers or 'none'}")
     check("agent tool allowlists hold", FAIL if problems else PASS,
@@ -649,12 +654,14 @@ def check_skill_frontmatter() -> None:
         desc = fm.get("description", "")
         if len(desc) < 40:
             problems.append(f"{folder}: description too thin to route on")
-    for agent in sorted((PLUGIN / "agents").glob("*.md")):
+    agents = sorted((PLUGIN / "agents").glob("*.md"))
+    for agent in agents:
         fm = _frontmatter(agent)
         if fm.get("name") != agent.stem:
             problems.append(f"{agent.name}: name is {fm.get('name')!r}")
     check("skill and agent frontmatter is routable", FAIL if problems else PASS,
-          "; ".join(problems) or f"{seen} skills, 4 agents, names match paths")
+          "; ".join(problems) or
+          f"{seen} skills, {len(agents)} agents, names match paths")
 
 
 def check_reviewer_catches_seeded_errors() -> None:

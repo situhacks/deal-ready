@@ -35,7 +35,22 @@ The score sorts an inbox; the flags below are the part worth reading.
 
 ## Judgement — read with suspicion
 
-*narrative pass disabled (--no-model). The memo ships without a narrative pass rather than with a pretended one.*
+*Model observations on the narrative. Each one is a suggestion with a name attached; accept, edit or strike it. Striking is signal too.*
+
+<!--co-T05-judgement-001-->
+- The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency where his absence would halt core operations. (p9)
+
+<!--co-T05-judgement-002-->
+- Revenue growth of 2% combined with a Rule of 40 score of 29 indicates that organic expansion is insufficient to outpace operational risks or capital requirements. (p8)
+
+<!--co-T05-judgement-003-->
+- The settlement logic relies on two decades of encoded provincial grading rules, yet the underlying Delphi application lacks automated test coverage and runs on an unsupported database version. (p10)
+
+<!--co-T05-judgement-004-->
+- Gross retention of 81% falls significantly below the 85% floor, suggesting that customer churn is not being effectively managed despite recurring revenue contracts. (p7)
+
+<!--co-T05-judgement-005-->
+- The document defines gross margin as excluding amortisation and EBITDA with specific add-backs, which obscures the true economic cost of maintaining the legacy technology stack. (p8)
 
 ## Outside the document — for consideration, not scoring
 
@@ -54,6 +69,35 @@ The score sorts an inbox; the flags below are the part worth reading.
 *Roster covers 28.0% of ARR. 5 researched, 0 not. An unresearched customer is an open question, not a clean bill of health.*
 
 > **Why this is not in the retention number.** Gross retention is a lagging measure. It cannot contain a customer that has not left yet, so a distressed customer base and a healthy retention history are perfectly consistent with each other.
+
+**Base rate — what happened to businesses like this one.**
+
+Matched on **size band + retention band** against **16 past acquisitions**. This is not a forecast for this target; it is what comparable businesses went on to do.
+
+| | Revenue CAGR, 3 years after acquisition |
+|---|---|
+| 10th percentile | -0.2% |
+| **Median** | **2.1%** |
+| 90th percentile | 6.35% |
+| Shrank outright | 12.5% of the cohort |
+
+**Underwriting calibration on that same cohort: the case ran 3.95 points optimistic at the median, and was optimistic on 100.0% of them.** Read the median above with that in mind.
+
+*Cohort, for audit — every figure above recomputes from these 16 deals: D005, D011, D013, D022, D023, D026, D035, D042, D057, D058, D059, D078, D093, D102, D103, D109.*
+
+## What would have to be true
+
+*Not a forecast. These are the assumptions the base rate rests on for this target, each one traceable to the input that produced it and each one stated so it can be disproved. An assumption nobody can disprove is a sentiment and does not belong here.*
+
+| # | Assumption | Rests on | Falsified by |
+|---|---|---|---|
+| 1 | The acquisition will achieve a revenue CAGR comparable to the median of past deals (2.1%) because gross retention is above the historical floor. | A | Evidence showing Gross Retention (GRR) drops below 85% in the next fiscal year, specifically if the current 81% figure is an anomaly rather than a trend. |
+| 2 | The top customer concentration risk (28%) will not result in significant revenue volatility or churn. | A | Evidence of the largest customer, Kettleridge Grain Co-operative (11% ARR), initiating a contract termination or reducing spend by more than 50%. |
+| 3 | The two distressed customers identified in the research roster represent an isolated risk and do not indicate broader systemic issues. | C | Evidence from the remaining 72% of ARR (customers not researched) showing similar distress signals, such as delayed payments or reduced usage metrics. |
+| 4 | The underwriting margin applied to past acquisitions remains valid for this deal given its specific size and retention profile. | B | Evidence that the current deal's fit score (97.7) or growth rate (2.0%) deviates significantly from the 16 past deals used to establish the base rate. |
+| 5 | No external market factors will negatively impact Ashgrove's ability to retain customers or grow revenue. | D | Emergence of new competitors, regulatory changes, or economic shifts that directly affect the target's industry sector. |
+
+*Input blocks: **A** the document · **B** the base rate from past acquisitions · **C** customer health · **D** external research.*
 
 ## Ask the seller
 

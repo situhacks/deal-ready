@@ -1,7 +1,7 @@
 {
   "target_id": "T05",
   "draft_version": "v2",
-  "judge_status": "narrative pass disabled (--no-model)",
+  "judge_status": "ok",
   "examples_folded": 3,
   "callouts": [
     {
@@ -35,6 +35,46 @@
       "confidence_pct": null,
       "evidence_page": 6,
       "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T05-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The founder is the sole architect of the settlement engine and personally manages relationships with the six largest customers, creating a critical dependency where his absence would halt core operations."
+    },
+    {
+      "id": "co-T05-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "Revenue growth of 2% combined with a Rule of 40 score of 29 indicates that organic expansion is insufficient to outpace operational risks or capital requirements."
+    },
+    {
+      "id": "co-T05-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 10,
+      "question": "The settlement logic relies on two decades of encoded provincial grading rules, yet the underlying Delphi application lacks automated test coverage and runs on an unsupported database version."
+    },
+    {
+      "id": "co-T05-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Gross retention of 81% falls significantly below the 85% floor, suggesting that customer churn is not being effectively managed despite recurring revenue contracts."
+    },
+    {
+      "id": "co-T05-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The document defines gross margin as excluding amortisation and EBITDA with specific add-backs, which obscures the true economic cost of maintaining the legacy technology stack."
     }
   ]
 }

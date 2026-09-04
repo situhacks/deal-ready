@@ -1,7 +1,7 @@
 {
   "target_id": "T03",
   "draft_version": "v2",
-  "judge_status": "narrative pass disabled (--no-model)",
+  "judge_status": "ok",
   "examples_folded": 3,
   "callouts": [
     {
@@ -35,6 +35,46 @@
       "confidence_pct": null,
       "evidence_page": 6,
       "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T03-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "The document relies on management-prepared unaudited figures for FY25 without external verification, creating significant uncertainty around the reported $1.0M EBITDA and 52% gross margin."
+    },
+    {
+      "id": "co-T03-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Retention metrics are defined inconsistently with net retention including expansion while gross retention excludes it, obscuring whether existing customers are actually churning or if growth is purely top-line driven."
+    },
+    {
+      "id": "co-T03-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The business model depends heavily on a services organisation of 39 people to configure instances rather than the core platform team, indicating a thin product layer and high operational dependency."
+    },
+    {
+      "id": "co-T03-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 6,
+      "question": "Revenue growth is described as '11% year over year' in the executive summary but the anchor customer table shows only one new entry (Ashfield County Schools) added to an existing list of five, suggesting the growth may be driven by a single large contract rather than broad market adoption."
+    },
+    {
+      "id": "co-T03-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 5,
+      "question": "The document claims customers access the system through a browser with a mobile companion application, yet provides no evidence regarding the technical architecture or compatibility of these components."
     }
   ]
 }

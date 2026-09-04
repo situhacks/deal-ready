@@ -1,7 +1,7 @@
 {
   "target_id": "T01",
   "draft_version": "v2",
-  "judge_status": "narrative pass disabled (--no-model)",
+  "judge_status": "ok",
   "examples_folded": 3,
   "callouts": [
     {
@@ -35,6 +35,46 @@
       "confidence_pct": null,
       "evidence_page": 6,
       "question": "Top-five customer share came from a printed chart label"
+    },
+    {
+      "id": "co-T01-judgement-001",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 9,
+      "question": "The document claims the founder stepped back in 2021 and lists a professional CEO, yet no CTO is named or described as having production authority, creating a critical gap in technical governance for a platform handling eleven years of clinical records."
+    },
+    {
+      "id": "co-T01-judgement-002",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "EBITDA is presented as positive at $1.9M but relies on significant add-backs for transaction preparation and legal expenses, obscuring the organic profitability required to sustain growth without external capital."
+    },
+    {
+      "id": "co-T01-judgement-003",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 7,
+      "question": "Retention metrics are defined broadly to include expansion revenue, which masks potential churn risks by inflating the denominator and failing to isolate the stickiness of the core base."
+    },
+    {
+      "id": "co-T01-judgement-004",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 2,
+      "question": "The narrative emphasizes high switching costs due to data migration complexity, yet provides no evidence regarding the technical feasibility or cost of migrating these records for a buyer versus the incumbent vendor."
+    },
+    {
+      "id": "co-T01-judgement-005",
+      "kind": "judgement",
+      "metric": null,
+      "confidence_pct": null,
+      "evidence_page": 8,
+      "question": "Revenue growth is described as 14% year over year while the Rule of 40 score indicates only 36%, suggesting that current revenue generation is insufficient to fund the stated expansion initiatives without dilution or debt."
     }
   ]
 }
