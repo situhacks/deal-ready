@@ -696,3 +696,104 @@ path can so much as import a signal.
 
 And the answer to "we have no future history for this target" is that **you have every other
 company's future**, which is the one thing the seller's document could never contain.
+
+---
+
+## Experiment 13 — Running the research layer for real, and what it broke
+
+Experiment 10 built the research layer and never ran it. That is a fair criticism of it: a skill
+file and an agent definition are not evidence of anything. It could not be run on the synthetic
+corpus, because those companies do not exist — there is no founder to look up and no customer to
+check — so it was run against a real one.
+
+**AppFolio**, chosen because the whole stack can run on it: filings already pulled for the
+forecasting work, a real vertical, a real customer base, a real end market. **A public company is an
+easier research target than a private one**, which is worth stating rather than glossing.
+
+### First, the skill was rebuilt deeper
+
+The original five lenses were the ones handed to me. An M&A team researches considerably more, and
+the screen itself should decide what matters. So the skill now opens by **composing a plan for the
+specific target** rather than running a checklist, and uses the rules that fired as targeting:
+
+| What the screen found | What that makes urgent |
+|---|---|
+| Concentration breach | **Change-of-control and assignment clauses** — a concentrated base that can walk *because the company changed hands* is a different asset |
+| Recurring below floor | What the non-recurring revenue actually **is** — services, perpetual, re-occurring hardware all price differently |
+| Retention below floor | Whether it is **cyclical or structural** |
+| Legacy stack | Security and breach history, **the talent market for that stack in that geography** |
+| Loss-making | Who funds the losses, and the vintage of the money |
+
+Standing lenses became operators, ownership-and-why-now, customers as organisations, market and
+disruptors, and **end-market health** — their customers' industry, not just their customers.
+Conditional lenses added contracts, security and certification, **vendor and platform dependency**
+(concentration runs both ways and only one direction is in the CIM), channel dependency, pricing
+power, competitive position from outside, talent market, workforce trajectory, litigation, and
+adjacent transactions.
+
+**And it is explicitly discretionary.** The lists are what is usually worth knowing; the agent is
+told to follow lines of enquiry nobody could have written down in advance, and to say why. What is
+*not* discretionary is the sourcing, the coverage reporting, and the refusal to treat absence as
+evidence.
+
+### What the research actually found
+
+Real searches, committed with sources and dates:
+
+- **Board chair and a long-serving director both retired 2026-06-29, and the CEO took the chair.**
+  Board independence reduced at the moment two long-tenured directors left. *(primary)*
+- **National asking rent growth decelerated to 0.1% year over year, weakest since Q4 2010.**
+  Customers price software against rent roll. *(practitioner, high materiality)*
+- **Property insurance up 15–30% annually in Florida, Texas and Louisiana.** The customer base is in
+  a margin squeeze, which is where software budgets get cut first. *(practitioner, high)*
+- **PMS-native AI shipped across all four incumbents in 2024–25 and is now treated as a complement
+  rather than a replacement.** AI parity is table stakes, not a moat. *(practitioner)*
+- **Category-leadership claims for the product come from the vendor's own blog.** *(vendor, marked
+  so it cannot be mistaken for third-party validation)*
+
+That last one is the source-tier discipline earning its keep in a real pass rather than in a rule.
+
+### Does research change the conclusion, or is it decoration?
+
+Ran the scenario layer twice on the same target, once with the research block and once without.
+
+**Similarity between the two: 0.228.** Roughly three quarters of the reasoning changed, and two
+assumptions exist only because of block D — including one that took the vendor-tier flag and turned
+it into something to challenge.
+
+**Outward research is not decoration. It moves the argument.**
+
+### And it broke the base rate, which is the most useful thing that happened
+
+AppFolio was matched to a cohort and the base rate reported *"matched on size band + retention band,
+n=10"* — cleanly, confidently, and wrongly.
+
+**The dealbook spans $2.0M to $27.9M of ARR. AppFolio is roughly $900M — thirty-two times larger
+than anything in the book.** The top size band is open-ended ("over $20M"), so a company of any size
+above that threshold fell into the same bucket as a $21M deal, and a median drawn from those deals
+was reported as if it described it.
+
+**That is exactly the failure the base rate was built to prevent**, and it survived until the layer
+was pointed at something real. A synthetic corpus of five targets all inside the mandate band could
+never have surfaced it.
+
+Fixed with an out-of-range guard that refuses and names the range:
+
+> *base rate unavailable — this target is outside the range of anything in the book. It is $900.0M
+> ARR against a history spanning $2.0M to $27.9M. A cohort median drawn from deals that size would
+> not describe it.*
+
+Verified at the boundaries: $4.3M and $25M still match, $900M and $0.5M both refuse.
+
+### What this establishes, and what it does not
+
+**Establishes:** the research layer runs, produces sourced dated findings against a real company,
+correctly marks vendor self-promotion, and materially changes the downstream reasoning.
+
+**Does not establish:** that the findings are complete, or that a private target would yield
+anything like this. A public filer publishes board changes; a founder-owned business does not. The
+coverage record says which lenses were skipped and why — ownership was not run because a public
+company has no sale process to explain, contracts were not run because no concentration flag
+justified it, and **no named customer was researched at all, because a public filer does not
+disclose an anchor roster.** On a real CIM that lens would be the most valuable one and here it was
+unavailable.

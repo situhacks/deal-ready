@@ -27,6 +27,8 @@ import numpy as np
 
 # Below this, a cohort median is noise wearing a number's clothes.
 MIN_COHORT = 8
+# How far outside the book a target may sit before the cohort stops describing it.
+OUT_OF_RANGE_FACTOR = 1.5
 # Progressive relaxation: try the tightest match first, widen only as far as needed,
 # and always report which rung actually produced the answer.
 MATCH_RUNGS = [
@@ -123,6 +125,20 @@ def compute(target: dict, dealbook: list[dict],
         return BaseRate(matched_on="none", status=(
             "base rate unavailable - needs ARR and gross retention, and at least one "
             "was not recovered from the document"))
+
+    # Out of range before anything else. The top size band is open-ended ("over
+    # $20M"), so without this a target thirty times larger than anything ever bought
+    # lands quietly in the same bucket as a $21M deal and the cohort median is
+    # reported as though it meant something. It does not, and the honest output is a
+    # refusal naming the range.
+    arrs = [d["arr_at_entry_usd"] for d in dealbook] or [0]
+    lo, hi = min(arrs), max(arrs)
+    if float(arr) > hi * OUT_OF_RANGE_FACTOR or float(arr) < lo / OUT_OF_RANGE_FACTOR:
+        return BaseRate(matched_on="none", status=(
+            f"base rate unavailable - this target is outside the range of anything in "
+            f"the book. It is ${float(arr)/1e6:.1f}M ARR against a history spanning "
+            f"${lo/1e6:.1f}M to ${hi/1e6:.1f}M. A cohort median drawn from deals that "
+            f"size would not describe it."))
 
     band = {"vertical": target.get("vertical"), "size": _size_band(float(arr)),
             "retention": _retention_band(float(grr))}
